@@ -1,0 +1,15 @@
+*.sym = ./obj;../A3/obj;../A3lib/sym
+*.obj = ./obj;../A3/obj
+*.tem = .;$!
+*.lib = .;../A3lib
+*.ob2 = .;../A3
+*.def = .;../A3lib/
+*.rc  = .
+*.def  = .
+*.mod  = .
+*.prj  = .
+*.lnk  = ./obj;.
+*.mkf  = .
+*.res  = ./obj;.
+xc.msg = .;$!
+xc.cfg = .;$!
