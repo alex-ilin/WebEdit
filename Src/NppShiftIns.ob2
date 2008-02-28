@@ -21,6 +21,10 @@ IMPORT
 
 CONST
    PluginName = 'NppShiftIns';
+   (* Menu items *)
+   RegisterStr = 'Register shortcuts';
+   AboutStr = 'About...';
+
    AboutMsg = 'This small plugin adds the standard Ctrl+INS, Shift+INS and Shift+DEL'
          +' key combinations to Scintilla.'+0DX+0AX
       +'Freeware for Notepad++ v.4.8 and later.'+0DX+0AX
@@ -69,7 +73,7 @@ VAR
    nppHandle: Win.HWND;
    scintillaMainHandle: Win.HWND;
    scintillaSecondHandle: Win.HWND;
-   FI: ARRAY 1 OF FuncItem;
+   FI: ARRAY 2 OF FuncItem;
 
 PROCEDURE ['C'] About ();
 BEGIN
@@ -82,6 +86,17 @@ BEGIN
    Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_CTRL  * 65536 + SCK_INSERT, SCI_COPY);
    Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_INSERT, SCI_PASTE);
 END RegisterHotkeys;
+
+PROCEDURE RegisterAll ();
+BEGIN
+   RegisterHotkeys (scintillaMainHandle);
+   RegisterHotkeys (scintillaSecondHandle);
+END RegisterAll;
+
+PROCEDURE ['C'] Register ();
+BEGIN
+   RegisterAll;
+END Register;
 
 PROCEDURE ['C'] setInfo* (npp, scintillaMain, scintillaSecond: Win.HWND);
 BEGIN
@@ -98,8 +113,7 @@ END getName;
 PROCEDURE ['C'] beNotified* (VAR note: SCNotification);
 BEGIN
    IF (note.nmhdr.hwndFrom = nppHandle) & (note.nmhdr.code = NPPN_READY) THEN
-      RegisterHotkeys (scintillaMainHandle);
-      RegisterHotkeys (scintillaSecondHandle);
+      RegisterAll;
    END
 END beNotified;
 
@@ -116,11 +130,17 @@ END getFuncsArray;
 
 PROCEDURE Init ();
 BEGIN
-   COPY ('About...', FI [0].itemName);
-   FI [0].pFunc := About;
+   COPY (RegisterStr, FI [0].itemName);
+   FI [0].pFunc := Register;
    FI [0].cmdID := 0;
    FI [0].initChk := 0;
    FI [0].shortcut := NIL;
+
+   COPY (AboutStr, FI [1].itemName);
+   FI [1].pFunc := About;
+   FI [1].cmdID := 0;
+   FI [1].initChk := 0;
+   FI [1].shortcut := NIL;
 END Init;
 
 BEGIN
