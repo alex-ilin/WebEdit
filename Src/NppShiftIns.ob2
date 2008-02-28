@@ -11,7 +11,12 @@ IMPORT
    SYSTEM,Win:=Windows;
 
 (* ---------------------------------------------------------------------------
- * This is a simple Notepad++ plugin (XDS Oberon module).
+ * This is a simple Notepad++ plugin (XDS Oberon module). It adds the standard
+ * Ctrl+INS, Shift+INS and Shift+DEL key combinations to both Scintilla
+ * components of the Notepad++ on startup. Recommended for Notepad++ 4.8 and
+ * later (version 4.8 is the first one that would not support those shortcuts
+ * out of the box).
+ * Known issue: Shortcut Mapper does not preserve the shortcuts.
  * --------------------------------------------------------------------------- *)
 
 CONST
