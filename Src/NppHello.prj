@@ -75,7 +75,7 @@
 !new linker = xds
 !new DLLNAME = NppHello.dll
 -GENDLL+
--USEDLL+
+-USEDLL-
 -DLLEXPORT+
 -IMPLIB-
 !module NppHello.ob2

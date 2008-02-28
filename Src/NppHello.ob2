@@ -18,12 +18,6 @@ CONST
    PluginName = 'NppHello';
 
 TYPE
-   NppData = RECORD
-      nppHandle: Win.HWND;
-      scintillaMainHandle: Win.HWND;
-      scintillaSecondHandle: Win.HWND;
-   END;
-
    Shortcut = POINTER TO ShortcutDesc;
    ShortcutDesc = RECORD
       ctrl : BOOLEAN;
@@ -41,22 +35,26 @@ TYPE
    END;
 
 VAR
-   localNppData: NppData;
+   nppHandle: Win.HWND;
+   scintillaMainHandle: Win.HWND;
+   scintillaSecondHandle: Win.HWND;
    FI: ARRAY 2 OF FuncItem;
 
 PROCEDURE ['C'] MyProc ();
 BEGIN
-   Win.MessageBox (NIL, 'hello', NIL, Win.MB_OK);
+   Win.MessageBox (nppHandle, 'MyProc', PluginName, Win.MB_OK);
 END MyProc;
 
 PROCEDURE ['C'] MyProc2 ();
 BEGIN
-   Win.MessageBox (NIL, 'hello2', NIL, Win.MB_OK);
+   Win.MessageBox (nppHandle, 'MyProc2', PluginName, Win.MB_OK);
 END MyProc2;
 
-PROCEDURE ['C'] setInfo* (nppData: NppData);
+PROCEDURE ['C'] setInfo* (npp, scintillaMain, scintillaSecond: Win.HWND);
 BEGIN
-   localNppData := nppData;
+   nppHandle := npp;
+   scintillaMainHandle := scintillaMain;
+   scintillaSecondHandle := scintillaSecond;
 END setInfo;
 
 PROCEDURE ['C'] getName* (): Win.PCHAR;
@@ -68,7 +66,7 @@ PROCEDURE ['C'] beNotified* ();
 BEGIN
 END beNotified;
 
-PROCEDURE ['C'] messageProc* (p1, p2, p3: LONGINT): LONGINT;
+PROCEDURE ['C'] messageProc* (msg: Win.UINT; wParam: Win.WPARAM; lParam: Win.LPARAM): Win.LRESULT;
 BEGIN
    RETURN 0
 END messageProc;
