@@ -129,12 +129,6 @@ BEGIN
    RETURN 0
 END messageProc;
 
-PROCEDURE ['C'] getFuncsArray* (VAR nFuncs: LONGINT): LONGINT;
-BEGIN
-   nFuncs := LEN (FI);
-   RETURN SYSTEM.ADR (FI);
-END getFuncsArray;
-
 PROCEDURE Init ();
 BEGIN
    COPY (RegisterStr, FI [0].itemName);
@@ -150,6 +144,11 @@ BEGIN
    FI [1].shortcut := NIL;
 END Init;
 
+PROCEDURE ['C'] getFuncsArray* (VAR nFuncs: LONGINT): LONGINT;
 BEGIN
    Init;
+   nFuncs := LEN (FI);
+   RETURN SYSTEM.ADR (FI);
+END getFuncsArray;
+
 END NppShiftIns.

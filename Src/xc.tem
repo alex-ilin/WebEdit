@@ -16,6 +16,9 @@
     !set libname = default
   !end
 !end
+!if not defined NoRuntimeLibs then
+  !new NoRuntimeLibs-
+!end
 !if not defined dllname then
   !new dllname=
 !end
@@ -68,33 +71,35 @@
     !end
   !end
   ! { main imp oberon : "%s\n",#>objext }
-  !if gendll then
-    ! "%s\n","xstartd"#libext
-  !else
-    ! "%s\n","xstart"#libext 
-  !end
-  !if usedll then
-    !if multithread then
-      ! "%s\n","xds25mi"#"lib"
-      !if defined topspeed then
-        ! "%s\n","xts25mi"#"lib"
-      !end
+  !if not NoRuntimeLibs then
+    !if gendll then
+      ! "%s\n","xstartd"#libext
     !else
-      ! "%s\n","xds25i"#"lib"
-      !if defined topspeed then
-        ! "%s\n","xts25i"#"lib"
-      !end
+      ! "%s\n","xstart"#libext 
     !end
-  !else
-    !if multithread then
-      ! "%s\n","libxdsmt"#"lib"
-      !if defined topspeed then
-        ! "%s\n","libtsmt"#"lib"
+    !if usedll then
+      !if multithread then
+        ! "%s\n","xds25mi"#"lib"
+        !if defined topspeed then
+          ! "%s\n","xts25mi"#"lib"
+        !end
+      !else
+        ! "%s\n","xds25i"#"lib"
+        !if defined topspeed then
+          ! "%s\n","xts25i"#"lib"
+        !end
       !end
     !else
-      ! "%s\n","libxds"#"lib"
-      !if defined topspeed then
-        ! "%s\n","libts"#"lib"
+      !if multithread then
+        ! "%s\n","libxdsmt"#"lib"
+        !if defined topspeed then
+          ! "%s\n","libtsmt"#"lib"
+        !end
+      !else
+        ! "%s\n","libxds"#"lib"
+        !if defined topspeed then
+          ! "%s\n","libts"#"lib"
+        !end
       !end
     !end
   !end

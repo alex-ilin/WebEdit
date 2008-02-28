@@ -74,8 +74,16 @@
 
 !new linker = xds
 !new DLLNAME = NppShiftIns.dll
+!new NoRuntimeLibs+
+% See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-
 -DLLEXPORT+
 -IMPLIB-
 !module NppShiftIns.ob2
+
+% Notes on NoRuntimeLibs option
+% Use it when you don't need the runtime library support for your application/library
+% to produce minimum size EXE/DLL. You will get: no BEGIN/FINALLY module sections
+% handling, no dynamic memory handling, no NEW, no garbage collection, etc.
+% This option requires additional support from xc.tem (linker command file template).
