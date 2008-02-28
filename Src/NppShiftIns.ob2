@@ -1,5 +1,5 @@
 <*+main*> (* This marks the main module of a program or library.               *)
-<*heaplimit="1000000"*> (* Maximum heap size should be set in the main module,
+<*heaplimit="10000"*> (* Maximum heap size should be set in the main module,
 because the changes do not take effect until the main module is recompiled.    *)
 MODULE NppShiftIns;
 
