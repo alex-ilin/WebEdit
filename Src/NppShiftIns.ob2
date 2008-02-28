@@ -22,6 +22,22 @@ CONST
       +0DX+0AX
       +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 28 Feb 2007.';
 
+   (* Scintilla keyboard constants *)
+   SCK_DELETE = 308;
+   SCK_INSERT = 309;
+   SCMOD_SHIFT = 1;
+   SCMOD_CTRL = 2;
+
+   (* Scintilla command codes *)
+   SCI_ASSIGNCMDKEY = 2070;
+   SCI_CUT = 2177;
+   SCI_COPY = 2178;
+   SCI_PASTE = 2179;
+   
+   (* Notepad++ notification codes *)
+   NPPN_FIRST = 1000;
+   NPPN_READY = NPPN_FIRST + 1;
+
 TYPE
    Shortcut = POINTER TO ShortcutDesc;
    ShortcutDesc = RECORD
@@ -39,6 +55,11 @@ TYPE
       shortcut: Shortcut;
    END;
 
+   SCNotification = RECORD
+      nmhdr: Win.NMHDR;
+      (* other fields are not used in this plugin *)
+   END;
+
 VAR
    nppHandle: Win.HWND;
    scintillaMainHandle: Win.HWND;
@@ -49,6 +70,13 @@ PROCEDURE ['C'] About ();
 BEGIN
    Win.MessageBox (nppHandle, AboutMsg, PluginName, Win.MB_OK);
 END About;
+
+PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
+BEGIN
+   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_DELETE, SCI_CUT);
+   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_CTRL  * 65536 + SCK_INSERT, SCI_COPY);
+   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_INSERT, SCI_PASTE);
+END RegisterHotkeys;
 
 PROCEDURE ['C'] setInfo* (npp, scintillaMain, scintillaSecond: Win.HWND);
 BEGIN
@@ -62,8 +90,12 @@ BEGIN
    RETURN SYSTEM.VAL (Win.PCHAR, SYSTEM.ADR (PluginName [0]));
 END getName;
 
-PROCEDURE ['C'] beNotified* ();
+PROCEDURE ['C'] beNotified* (VAR note: SCNotification);
 BEGIN
+   IF (note.nmhdr.hwndFrom = nppHandle) & (note.nmhdr.code = NPPN_READY) THEN
+      RegisterHotkeys (scintillaMainHandle);
+      RegisterHotkeys (scintillaSecondHandle);
+   END
 END beNotified;
 
 PROCEDURE ['C'] messageProc* (msg: Win.UINT; wParam: Win.WPARAM; lParam: Win.LPARAM): Win.LRESULT;
