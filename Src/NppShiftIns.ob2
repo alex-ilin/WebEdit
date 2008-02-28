@@ -112,7 +112,7 @@ END setInfo;
 
 PROCEDURE ['C'] getName* (): Win.PCHAR;
 BEGIN
-   RETURN SYSTEM.VAL (Win.PCHAR, SYSTEM.ADR (PluginName [0]));
+   RETURN SYSTEM.VAL (Win.PCHAR, SYSTEM.ADR (PluginName));
 END getName;
 
 PROCEDURE ['C'] beNotified* (VAR note: SCNotification);
