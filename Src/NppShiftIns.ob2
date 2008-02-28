@@ -36,7 +36,7 @@ CONST
       +'   Plugins -> '+PluginName+' -> '+RegisterStr+0DX+0AX
       +'or simply restart Notepad++.'+0DX+0AX
       +0DX+0AX
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 28 Feb 2007.';
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 28 Feb 2008.';
 
    (* Scintilla keyboard constants *)
    SCK_DELETE = 308;
