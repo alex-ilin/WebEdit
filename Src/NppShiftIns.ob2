@@ -1,7 +1,7 @@
 <*+main*> (* This marks the main module of a program or library.               *)
 <*heaplimit="1000000"*> (* Maximum heap size should be set in the main module,
 because the changes do not take effect until the main module is recompiled.    *)
-MODULE NppHello;
+MODULE NppShiftIns;
 
 (* ---------------------------------------------------------------------------
  * (C) 2008 by Alexander Iljin
@@ -15,7 +15,7 @@ IMPORT
  * --------------------------------------------------------------------------- *)
 
 CONST
-   PluginName = 'NppHello';
+   PluginName = 'NppShiftIns';
 
 TYPE
    Shortcut = POINTER TO ShortcutDesc;
@@ -108,4 +108,4 @@ END Init;
 
 BEGIN
    Init;
-END NppHello.
+END NppShiftIns.

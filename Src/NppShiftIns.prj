@@ -73,9 +73,9 @@
 -WOFF305-
 
 !new linker = xds
-!new DLLNAME = NppHello.dll
+!new DLLNAME = NppShiftIns.dll
 -GENDLL+
 -USEDLL-
 -DLLEXPORT+
 -IMPLIB-
-!module NppHello.ob2
+!module NppShiftIns.ob2
