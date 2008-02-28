@@ -17,6 +17,8 @@ IMPORT
  * later (version 4.8 is the first one that would not support those shortcuts
  * out of the box).
  * Known issue: Shortcut Mapper does not preserve the shortcuts.
+ * For the free XDS Modula-2/Oberon-2 compiler go to:
+ *   http://www.excelsior-usa.com/xdsx86win.html
  * --------------------------------------------------------------------------- *)
 
 CONST
