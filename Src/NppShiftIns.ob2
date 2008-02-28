@@ -43,7 +43,7 @@ VAR
    nppHandle: Win.HWND;
    scintillaMainHandle: Win.HWND;
    scintillaSecondHandle: Win.HWND;
-   FI: ARRAY 2 OF FuncItem;
+   FI: ARRAY 1 OF FuncItem;
 
 PROCEDURE ['C'] About ();
 BEGIN
