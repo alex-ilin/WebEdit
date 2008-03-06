@@ -61,6 +61,9 @@ CONST
 
    (* Scintilla command codes - get more from Scintilla.h *)
    SCI_INSERTTEXT = 2003;
+   SCI_GETCURRENTPOS = 2008;
+   SCI_SETANCHOR = 2026;
+   SCI_SETCURRENTPOS = 2141;
    SCI_GETSELECTIONSTART = 2143;
    SCI_GETSELECTIONEND = 2145;
 
@@ -118,21 +121,40 @@ BEGIN
    Win.SendMessage (scintilla, SCI_INSERTTEXT, pos, SYSTEM.ADR (text));
 END InsertText;
 
-PROCEDURE GetSelectionExtent (scintilla: Win.HWND; VAR start, end: LONGINT);
+PROCEDURE GetSelectionExtent (scintilla: Win.HWND; VAR start, end: LONGINT; VAR cursorAtEnd: BOOLEAN);
 (* Return the current selection extent (start < end). If there is no selection,
- * start = end = curent caret position. *)
+ * start = end = curent caret position. cursorAtEnd = TRUE if the cursor is at
+ * the end of the selected text stretch. *)
 BEGIN
    start := Win.SendMessage (scintilla, SCI_GETSELECTIONSTART, 0, 0);
    end := Win.SendMessage (scintilla, SCI_GETSELECTIONEND, 0, 0);
+   cursorAtEnd := (start = end)
+      OR (end = Win.SendMessage (scintilla, SCI_GETCURRENTPOS, 0, 0));
 END GetSelectionExtent;
 
-PROCEDURE SurroundSelection (scintilla: Win.HWND; leftText, rightText: ARRAY OF CHAR);
-VAR start, end: LONGINT;
+PROCEDURE SetSelectionExtent (scintilla: Win.HWND; start, end: LONGINT; cursorAtEnd: BOOLEAN);
 BEGIN
-   GetSelectionExtent (scintilla, start, end);
-   InsertText (scintilla, start, leftText);
-   INC (end, LEN (leftText) - 1);
+   IF cursorAtEnd THEN
+      Win.SendMessage (scintilla, SCI_SETANCHOR, start, 0);
+      Win.SendMessage (scintilla, SCI_SETCURRENTPOS, end, 0);
+   ELSE
+      Win.SendMessage (scintilla, SCI_SETCURRENTPOS, start, 0);
+      Win.SendMessage (scintilla, SCI_SETANCHOR, end, 0);
+   END;
+END SetSelectionExtent;
+
+PROCEDURE SurroundSelection (scintilla: Win.HWND; leftText, rightText: ARRAY OF CHAR);
+VAR
+   start, end, i: LONGINT;
+   bool: BOOLEAN;
+BEGIN
+   GetSelectionExtent (scintilla, start, end, bool);
    InsertText (scintilla, end, rightText);
+   InsertText (scintilla, start, leftText);
+   i := LEN (leftText) - 1;
+   INC (start, i);
+   INC (end, i);
+   SetSelectionExtent (scintilla, start, end, bool);
 END SurroundSelection;
 
 PROCEDURE ['C'] MakePBlock ();
