@@ -1,5 +1,7 @@
 xc =p NppWebEdit.prj
-mkdir obj
-move *.obj obj
-move *.sym obj
-move tmp.lnk obj
+
+@echo off
+mkdir obj 2> NUL
+move *.obj obj > NUL
+move *.sym obj > NUL
+move tmp.lnk obj > NUL
