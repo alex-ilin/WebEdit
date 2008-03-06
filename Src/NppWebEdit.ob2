@@ -32,16 +32,11 @@ CONST
    MakePBlockStr = '<p>...</p>';
    AboutStr = 'About...';
 
-   AboutMsg = 'This is a freeware plugin for Notepad++ v.4.8 and later.'+0DX+0AX
-      +'This small plugin adds the standard Ctrl+INS, Shift+INS and Shift+DEL'
-         +' key combinations to Scintilla on startup.'+0DX+0AX
-      +0DX+0AX
-      +'Known problem: the Shortcut Mapper does not preserve shortcuts registered by this plugin.'+0DX+0AX
-      +"After you've used the Shortcut Mapper you may want to manually register those again using menu:"+0DX+0AX
-      +'   Plugins -> '+PluginName+' -> '+RegisterStr+0DX+0AX
-      +'or simply restart Notepad++.'+0DX+0AX
-      +0DX+0AX
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 28 Feb 2008.';
+   CRLF = ''+0DX+0AX;
+   AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
+      +'Assign shortcuts via Settings - Shortcut Mapper - Plugin commands.'+CRLF
+      +CRLF
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06 Mar 2008.';
 
    (* Scintilla keyboard constants *)
    SCK_DELETE = 308;
