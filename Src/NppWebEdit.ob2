@@ -205,13 +205,13 @@ END messageProc;
 PROCEDURE Init ();
 (* Initialize the global FI array - list of exported functions. *)
 BEGIN
-   COPY (MakePBlockStr, FI [0].itemName); (* string assignment is performed via COPY *)
+   FI [0].itemName := MakePBlockStr;
    FI [0].pFunc := MakePBlock;
    FI [0].cmdID := 0;
    FI [0].initChk := 0;
    FI [0].shortcut := NIL;
 
-   COPY (AboutStr, FI [1].itemName);
+   FI [1].itemName := AboutStr;
    FI [1].pFunc := About;
    FI [1].cmdID := 0;
    FI [1].initChk := 0;
