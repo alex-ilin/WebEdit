@@ -29,7 +29,7 @@ IMPORT
 CONST
    PluginName = 'NppWebEdit';
    (* Menu items *)
-   RegisterStr = 'Register shortcuts';
+   MakePBlockStr = '<p>...</p>';
    AboutStr = 'About...';
 
    AboutMsg = 'This is a freeware plugin for Notepad++ v.4.8 and later.'+0DX+0AX
@@ -134,24 +134,6 @@ BEGIN
    SurroundSelection (sci, '<p>', '</p>');
 END MakePBlock;
 
-PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
-BEGIN
-   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_DELETE, SCI_CUT);
-   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_CTRL  * 65536 + SCK_INSERT, SCI_COPY);
-   Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_INSERT, SCI_PASTE);
-END RegisterHotkeys;
-
-PROCEDURE RegisterAll ();
-BEGIN
-   RegisterHotkeys (scintillaMainHandle);
-   RegisterHotkeys (scintillaSecondHandle);
-END RegisterAll;
-
-PROCEDURE ['C'] Register ();
-BEGIN
-   RegisterAll;
-END Register;
-
 PROCEDURE ['C'] About ();
 BEGIN
    Win.MessageBox (nppHandle, AboutMsg, PluginName, Win.MB_OK);
@@ -172,7 +154,6 @@ END getName;
 PROCEDURE ['C'] beNotified* (VAR note: SCNotification);
 BEGIN
    IF (note.nmhdr.hwndFrom = nppHandle) & (note.nmhdr.code = NPPN_READY) THEN
-      RegisterAll;
    END
 END beNotified;
 
@@ -183,8 +164,8 @@ END messageProc;
 
 PROCEDURE Init ();
 BEGIN
-   COPY (RegisterStr, FI [0].itemName);
-   FI [0].pFunc := Register;
+   COPY (MakePBlockStr, FI [0].itemName);
+   FI [0].pFunc := MakePBlock;
    FI [0].cmdID := 0;
    FI [0].initChk := 0;
    FI [0].shortcut := NIL;
