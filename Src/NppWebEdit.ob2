@@ -127,6 +127,13 @@ BEGIN
    InsertText (scintilla, end, rightText);
 END SurroundSelection;
 
+PROCEDURE ['C'] MakePBlock ();
+VAR sci: Win.HWND;
+BEGIN
+   sci := GetCurrentScintilla ();
+   SurroundSelection (sci, '<p>', '</p>');
+END MakePBlock;
+
 PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
 BEGIN
    Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_DELETE, SCI_CUT);
