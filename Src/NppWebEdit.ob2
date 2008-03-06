@@ -38,20 +38,10 @@ CONST
       +CRLF
       +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06 Mar 2008.';
 
-   (* Scintilla keyboard constants *)
-   SCK_DELETE = 308;
-   SCK_INSERT = 309;
-   SCMOD_SHIFT = 1;
-   SCMOD_CTRL = 2;
-
    (* Scintilla command codes - get more from Scintilla.h *)
    SCI_INSERTTEXT = 2003;
-   SCI_ASSIGNCMDKEY = 2070;
    SCI_GETSELECTIONSTART = 2143;
    SCI_GETSELECTIONEND = 2145;
-   SCI_CUT = 2177;
-   SCI_COPY = 2178;
-   SCI_PASTE = 2179;
    
    (* Notepad++ notification codes *)
    NPPN_FIRST = 1000;
