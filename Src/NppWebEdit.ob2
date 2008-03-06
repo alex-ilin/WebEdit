@@ -59,6 +59,10 @@ CONST
    NPPN_FIRST = 1000;
    NPPN_READY = NPPN_FIRST + 1;
 
+   (* Notepad++ command codes *)
+   NPPMSG = Win.WM_USER + 1000;
+   NPPM_GETCURRENTSCINTILLA = NPPMSG + 4;
+
 TYPE
    Shortcut = POINTER TO ShortcutDesc;
    ShortcutDesc = RECORD
@@ -86,6 +90,21 @@ VAR
    scintillaMainHandle: Win.HWND;
    scintillaSecondHandle: Win.HWND;
    FI: ARRAY 2 OF FuncItem;
+
+PROCEDURE GetCurrentScintilla (): Win.HWND;
+(* Return handle of the currently active Scintilla view. *)
+VAR res: LONGINT;
+BEGIN
+   Win.SendMessage (nppHandle, NPPM_GETCURRENTSCINTILLA, 0, SYSTEM.ADR (res));
+   IF res = 1 THEN
+      RETURN scintillaSecondHandle
+   ELSE
+      IF res # 0 THEN
+         Win.MessageBox (nppHandle, 'Unknown NPPM_GETCURRENTSCINTILLA result.', PluginName, Win.MB_OK);
+      END;
+      RETURN scintillaMainHandle
+   END;
+END GetCurrentScintilla;
 
 PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
 BEGIN
