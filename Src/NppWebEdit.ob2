@@ -52,6 +52,8 @@ CONST
    (* Scintilla command codes - get more from Scintilla.h *)
    SCI_INSERTTEXT = 2003;
    SCI_ASSIGNCMDKEY = 2070;
+   SCI_GETSELECTIONSTART = 2143;
+   SCI_GETSELECTIONEND = 2145;
    SCI_CUT = 2177;
    SCI_COPY = 2178;
    SCI_PASTE = 2179;
@@ -109,6 +111,12 @@ PROCEDURE InsertText (scintilla: Win.HWND; pos: LONGINT; VAR text: ARRAY OF CHAR
 BEGIN
    Win.SendMessage (scintilla, SCI_INSERTTEXT, pos, SYSTEM.ADR (text));
 END InsertText;
+
+PROCEDURE GetSelectionExtent (scintilla: Win.HWND; VAR start, end: LONGINT);
+BEGIN
+   start := Win.SendMessage (scintilla, SCI_GETSELECTIONSTART, 0, 0);
+   end := Win.SendMessage (scintilla, SCI_GETSELECTIONEND, 0, 0);
+END GetSelectionExtent;
 
 PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
 BEGIN
