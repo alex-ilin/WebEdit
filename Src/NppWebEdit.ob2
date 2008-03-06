@@ -11,14 +11,19 @@ IMPORT
    SYSTEM,Win:=Windows;
 
 (* ---------------------------------------------------------------------------
- * This is a simple Notepad++ plugin (XDS Oberon module). It adds the standard
- * Ctrl+INS, Shift+INS and Shift+DEL key combinations to both Scintilla
- * components of the Notepad++ on startup. Recommended for Notepad++ 4.8 and
- * later (version 4.8 is the first one that would not support those shortcuts
- * out of the box).
- * Known issue: Shortcut Mapper does not preserve the shortcuts.
+ * This is a simple Notepad++ plugin (XDS Oberon module). It can wrap a stretch
+ * of selected text with a pair of strings, e.g. HTML tags.
+ *
  * For the free XDS Modula-2/Oberon-2 compiler go to:
  *   http://www.excelsior-usa.com/xdsx86win.html
+ * Oberon-2 is object-oriented programming language, both powerful and simple.
+ * The full language report is only 20 pages long:
+ *   http://europrog.ru/paper/oberon-2.pdf
+ * It was created by prof. N.Wirth. Some of his publications:
+ *   Programming in Oberon: http://europrog.ru/book/obnw2004e.pdf
+ *   Compiler Construction: http://europrog.ru/book/ccnw2005e.pdf
+ *   Project Oberon — The Design of an Operating System and Compiler:
+ *     http://europrog.ru/book/ponw2005e.pdf
  * --------------------------------------------------------------------------- *)
 
 CONST
@@ -44,7 +49,7 @@ CONST
    SCMOD_SHIFT = 1;
    SCMOD_CTRL = 2;
 
-   (* Scintilla command codes *)
+   (* Scintilla command codes - get more from Scintilla.h *)
    SCI_ASSIGNCMDKEY = 2070;
    SCI_CUT = 2177;
    SCI_COPY = 2178;
