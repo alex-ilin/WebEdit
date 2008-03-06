@@ -118,6 +118,15 @@ BEGIN
    end := Win.SendMessage (scintilla, SCI_GETSELECTIONEND, 0, 0);
 END GetSelectionExtent;
 
+PROCEDURE SurroundSelection (scintilla: Win.HWND; leftText, rightText: ARRAY OF CHAR);
+VAR start, end: LONGINT;
+BEGIN
+   GetSelectionExtent (scintilla, start, end);
+   InsertText (scintilla, start, leftText);
+   INC (end, LEN (leftText) - 1);
+   InsertText (scintilla, end, rightText);
+END SurroundSelection;
+
 PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
 BEGIN
    Win.SendMessage (scintillaHandle, SCI_ASSIGNCMDKEY, SCMOD_SHIFT * 65536 + SCK_DELETE, SCI_CUT);
