@@ -92,18 +92,16 @@ VAR
    FI: ARRAY 2 OF FuncItem;
 
 PROCEDURE GetCurrentScintilla (): Win.HWND;
-(* Return handle of the currently active Scintilla view. *)
+(* Return handle of the currently active Scintilla view or NIL on error. *)
 VAR res: LONGINT;
 BEGIN
    Win.SendMessage (nppHandle, NPPM_GETCURRENTSCINTILLA, 0, SYSTEM.ADR (res));
-   IF res = 1 THEN
-      RETURN scintillaSecondHandle
-   ELSE
-      IF res # 0 THEN
-         Win.MessageBox (nppHandle, 'Unknown NPPM_GETCURRENTSCINTILLA result.', PluginName, Win.MB_OK);
-      END;
+   IF res = 0 THEN
       RETURN scintillaMainHandle
+   ELSIF res = 1 THEN
+      RETURN scintillaSecondHandle
    END;
+   RETURN NIL
 END GetCurrentScintilla;
 
 PROCEDURE RegisterHotkeys (scintillaHandle: Win.HWND);
