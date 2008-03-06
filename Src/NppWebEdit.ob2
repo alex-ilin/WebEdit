@@ -1,7 +1,7 @@
 <*+main*> (* This marks the main module of a program or library.               *)
 <*heaplimit="10000"*> (* Maximum heap size should be set in the main module,
 because the changes do not take effect until the main module is recompiled.    *)
-MODULE NppShiftIns;
+MODULE NppWebEdit;
 
 (* ---------------------------------------------------------------------------
  * (C) 2008 by Alexander Iljin
@@ -22,7 +22,7 @@ IMPORT
  * --------------------------------------------------------------------------- *)
 
 CONST
-   PluginName = 'NppShiftIns';
+   PluginName = 'NppWebEdit';
    (* Menu items *)
    RegisterStr = 'Register shortcuts';
    AboutStr = 'About...';
@@ -151,4 +151,4 @@ BEGIN
    RETURN SYSTEM.ADR (FI);
 END getFuncsArray;
 
-END NppShiftIns.
+END NppWebEdit.

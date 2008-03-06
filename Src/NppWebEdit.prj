@@ -73,14 +73,14 @@
 -WOFF305-
 
 !new linker = xds
-!new DLLNAME = NppShiftIns.dll
+!new DLLNAME = NppWebEdit.dll
 !new NoRuntimeLibs+
 % See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-
 -DLLEXPORT+
 -IMPLIB-
-!module NppShiftIns.ob2
+!module NppWebEdit.ob2
 
 % Notes on NoRuntimeLibs option
 % Use it when you don't need the runtime library support for your application/library
