@@ -57,7 +57,7 @@ CONST
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
       +'Assign shortcuts via Settings - Shortcut Mapper - Plugin commands.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06 Mar 2008.';
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06-08 Mar 2008.';
 
    (* Scintilla command codes - get more from Scintilla.h *)
    SCI_INSERTTEXT = 2003;
