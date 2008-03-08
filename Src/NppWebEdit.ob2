@@ -63,6 +63,8 @@ CONST
    SCI_INSERTTEXT = 2003;
    SCI_GETCURRENTPOS = 2008;
    SCI_SETANCHOR = 2026;
+   SCI_BEGINUNDOACTION = 2078;
+   SCI_ENDUNDOACTION = 2079;
    SCI_SETCURRENTPOS = 2141;
    SCI_GETSELECTIONSTART = 2143;
    SCI_GETSELECTIONEND = 2145;
@@ -121,6 +123,16 @@ BEGIN
    Win.SendMessage (scintilla, SCI_INSERTTEXT, pos, SYSTEM.ADR (text));
 END InsertText;
 
+PROCEDURE BeginUndoAction (scintilla: Win.HWND);
+BEGIN
+   Win.SendMessage (scintilla, SCI_BEGINUNDOACTION, 0, 0);
+END BeginUndoAction;
+
+PROCEDURE EndUndoAction (scintilla: Win.HWND);
+BEGIN
+   Win.SendMessage (scintilla, SCI_ENDUNDOACTION, 0, 0);
+END EndUndoAction;
+
 PROCEDURE GetSelectionExtent (scintilla: Win.HWND; VAR start, end: LONGINT; VAR cursorAtEnd: BOOLEAN);
 (* Return the current selection extent (start < end). If there is no selection,
  * start = end = curent caret position. cursorAtEnd = TRUE if the cursor is at
@@ -148,6 +160,7 @@ VAR
    start, end, i: LONGINT;
    bool: BOOLEAN;
 BEGIN
+   BeginUndoAction (scintilla);
    GetSelectionExtent (scintilla, start, end, bool);
    InsertText (scintilla, end, rightText);
    InsertText (scintilla, start, leftText);
@@ -155,6 +168,7 @@ BEGIN
    INC (start, i);
    INC (end, i);
    SetSelectionExtent (scintilla, start, end, bool);
+   EndUndoAction (scintilla);
 END SurroundSelection;
 
 PROCEDURE ['C'] MakePBlock ();
