@@ -2,7 +2,7 @@
 *.obj = ./obj;../A3/obj
 *.tem = .;$!
 *.lib = .;../A3lib
-*.ob2 = .;../A3
+*.ob2 = .;../A3;../Lib
 *.def = .;../A3lib/
 *.rc  = .
 *.def  = .

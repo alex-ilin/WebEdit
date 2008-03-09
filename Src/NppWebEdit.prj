@@ -74,7 +74,7 @@
 
 !new linker = xds
 !new DLLNAME = NppWebEdit.dll
-!new NoRuntimeLibs+
+!new NoRuntimeLibs-
 % See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-

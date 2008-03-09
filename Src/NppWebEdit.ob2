@@ -8,7 +8,7 @@ MODULE NppWebEdit;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows;
+   SYSTEM,Win:=Windows,Sci:=Scintilla;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -59,16 +59,6 @@ CONST
       +CRLF
       +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06-08 Mar 2008.';
 
-   (* Scintilla command codes - get more from Scintilla.h *)
-   SCI_INSERTTEXT = 2003;
-   SCI_GETCURRENTPOS = 2008;
-   SCI_SETANCHOR = 2026;
-   SCI_BEGINUNDOACTION = 2078;
-   SCI_ENDUNDOACTION = 2079;
-   SCI_SETCURRENTPOS = 2141;
-   SCI_GETSELECTIONSTART = 2143;
-   SCI_GETSELECTIONEND = 2145;
-
    (* Notepad++ notification codes - not used *)
    NPPN_FIRST = 1000;
    NPPN_READY = NPPN_FIRST + 1;
@@ -101,11 +91,11 @@ TYPE
 
 VAR
    nppHandle: Win.HWND;
-   scintillaMainHandle: Win.HWND;
-   scintillaSecondHandle: Win.HWND;
+   scintillaMainHandle: Sci.Handle;
+   scintillaSecondHandle: Sci.Handle;
    FI: ARRAY NumFuncs OF FuncItem;
 
-PROCEDURE GetCurrentScintilla (): Win.HWND;
+PROCEDURE GetCurrentScintilla (): Sci.Handle;
 (* Return handle of the currently active Scintilla view or NIL on error. *)
 VAR res: LONGINT;
 BEGIN
@@ -118,57 +108,20 @@ BEGIN
    RETURN NIL
 END GetCurrentScintilla;
 
-PROCEDURE InsertText (scintilla: Win.HWND; pos: LONGINT; VAR text: ARRAY OF CHAR);
-BEGIN
-   Win.SendMessage (scintilla, SCI_INSERTTEXT, pos, SYSTEM.ADR (text));
-END InsertText;
-
-PROCEDURE BeginUndoAction (scintilla: Win.HWND);
-BEGIN
-   Win.SendMessage (scintilla, SCI_BEGINUNDOACTION, 0, 0);
-END BeginUndoAction;
-
-PROCEDURE EndUndoAction (scintilla: Win.HWND);
-BEGIN
-   Win.SendMessage (scintilla, SCI_ENDUNDOACTION, 0, 0);
-END EndUndoAction;
-
-PROCEDURE GetSelectionExtent (scintilla: Win.HWND; VAR start, end: LONGINT; VAR cursorAtEnd: BOOLEAN);
-(* Return the current selection extent (start < end). If there is no selection,
- * start = end = curent caret position. cursorAtEnd = TRUE if the cursor is at
- * the end of the selected text stretch. *)
-BEGIN
-   start := Win.SendMessage (scintilla, SCI_GETSELECTIONSTART, 0, 0);
-   end := Win.SendMessage (scintilla, SCI_GETSELECTIONEND, 0, 0);
-   cursorAtEnd := (start = end)
-      OR (end = Win.SendMessage (scintilla, SCI_GETCURRENTPOS, 0, 0));
-END GetSelectionExtent;
-
-PROCEDURE SetSelectionExtent (scintilla: Win.HWND; start, end: LONGINT; cursorAtEnd: BOOLEAN);
-BEGIN
-   IF cursorAtEnd THEN
-      Win.SendMessage (scintilla, SCI_SETANCHOR, start, 0);
-      Win.SendMessage (scintilla, SCI_SETCURRENTPOS, end, 0);
-   ELSE
-      Win.SendMessage (scintilla, SCI_SETCURRENTPOS, start, 0);
-      Win.SendMessage (scintilla, SCI_SETANCHOR, end, 0);
-   END;
-END SetSelectionExtent;
-
-PROCEDURE SurroundSelection (scintilla: Win.HWND; leftText, rightText: ARRAY OF CHAR);
+PROCEDURE SurroundSelection (sc: Sci.Handle; leftText, rightText: ARRAY OF CHAR);
 VAR
    start, end, i: LONGINT;
    bool: BOOLEAN;
 BEGIN
-   BeginUndoAction (scintilla);
-   GetSelectionExtent (scintilla, start, end, bool);
-   InsertText (scintilla, end, rightText);
-   InsertText (scintilla, start, leftText);
+   Sci.BeginUndoAction (sc);
+   Sci.GetSelectionExtent (sc, start, end, bool);
+   Sci.InsertText (sc, end, rightText);
+   Sci.InsertText (sc, start, leftText);
    i := LEN (leftText) - 1;
    INC (start, i);
    INC (end, i);
-   SetSelectionExtent (scintilla, start, end, bool);
-   EndUndoAction (scintilla);
+   Sci.SetSelectionExtent (sc, start, end, bool);
+   Sci.EndUndoAction (sc);
 END SurroundSelection;
 
 PROCEDURE ['C'] MakePBlock ();
