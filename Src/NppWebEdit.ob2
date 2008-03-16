@@ -175,7 +175,7 @@ VAR
    line: ARRAY 1024 OF CHAR;
    hFile: Win.HANDLE;
    ch: CHAR;
-   eof: BOOLEAN;
+   eof, section: BOOLEAN;
 
    PROCEDURE ReadChar;
    (* Read ch from hFile, set eof = TRUE on error. *)
@@ -186,11 +186,14 @@ VAR
    END ReadChar;
 
    PROCEDURE ReadLine (): BOOLEAN;
-   (* Read until not empty line is read, return TRUE on success. *)
+   (* Read until not empty line is read, return TRUE on success. If a new section header is found,
+    * return FALSE, line will contain the section string "[section name]", section = TRUE, otherwise
+    * section = FALSE.   *)
    VAR
       i: INTEGER;
       eol: BOOLEAN;
    BEGIN
+      section := FALSE;
       REPEAT
          i := 0;
          eol := FALSE;
@@ -207,12 +210,16 @@ VAR
          IF (i = LEN (line) - 1) & ~eol & ~eof THEN (* line too long *)
             i := 0;
             eof := TRUE
-         ELSIF (i > 0) & (line [0] = commentChar) THEN (* comment *)
-            i := 0
+         ELSIF i > 0 THEN
+            IF line [0] = commentChar THEN (* comment *)
+               i := 0
+            ELSIF (line [0] = '[') & (line [i - 1] = ']') THEN (* new section *)
+               section := TRUE
+            END
          END
-      UNTIL eof OR (i > 0);
+      UNTIL eof OR section OR (i > 0);
       line [i] := 0X;
-      RETURN i > 0
+      RETURN (i > 0) & ~section
    END ReadLine;
 
    PROCEDURE SkipToLine (target: ARRAY OF CHAR): BOOLEAN;
