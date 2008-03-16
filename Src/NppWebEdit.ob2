@@ -310,6 +310,10 @@ BEGIN
    END
 END LoadConfig;
 
+PROCEDURE OnReady ();
+BEGIN LoadConfig
+END OnReady;
+
 PROCEDURE Init ();
 VAR
    i: INTEGER;
@@ -334,6 +338,7 @@ BEGIN
    funcs [13] := Func13;
    funcs [14] := Func14;
    Npp.PluginName := PluginName;
+   Npp.onReady := OnReady;
    i := 0;
    WHILE i < MaxFuncs DO
       Npp.AddFunction (NotUsedFuncStr, funcs [i], FALSE, NIL);
