@@ -55,6 +55,17 @@ TYPE
 VAR
    pairs: ARRAY MaxFuncs OF Pair;
 
+PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
+(* Return length of the null-terminated string str. *)
+VAR res: LONGINT;
+BEGIN
+   res := 0;
+   WHILE str [res] # 0X DO
+      INC (res)
+   END;
+   RETURN res
+END Length;
+
 PROCEDURE SurroundSelection (sc: Sci.Handle; VAR leftText, rightText: ARRAY OF CHAR);
 VAR
    start, end, i: LONGINT;
@@ -64,7 +75,7 @@ BEGIN
    Sci.GetSelectionExtent (sc, start, end, bool);
    Sci.InsertText (sc, end, rightText);
    Sci.InsertText (sc, start, leftText);
-   i := LEN (leftText) - 1;
+   i := Length (leftText);
    INC (start, i);
    INC (end, i);
    Sci.SetSelectionExtent (sc, start, end, bool);
@@ -144,17 +155,6 @@ PROCEDURE ['C'] About ();
 BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
-
-PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
-(* Return length of the null-terminated string str. *)
-VAR res: LONGINT;
-BEGIN
-   res := 0;
-   WHILE str [res] # 0X DO
-      INC (res)
-   END;
-   RETURN res
-END Length;
 
 PROCEDURE AppendStr (VAR str: ARRAY OF CHAR; end: ARRAY OF CHAR);
 (* Append end to str, both strings and the result are null-terminated. *)
@@ -238,11 +238,34 @@ VAR
       END;
       RETURN line = target
    END SkipToLine;
-   
+
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
    (* Initialize pair with data from line, return TRUE on success. *)
    VAR i, eqPos, selPos, len: INTEGER;
-   
+
+      PROCEDURE UnescapeStr (VAR str: ARRAY OF CHAR);
+      (* Process line replacing escaped characters with their literal equivalents.
+       * Unescaped string is shorter or of equal length, null-terminated. *)
+      VAR i, c: INTEGER;
+      BEGIN
+         i := 0;
+         c := 0;
+         WHILE str [i] # 0X DO
+            IF str [i] = '\' THEN
+               CASE str [i + 1] OF
+               |  't': str [c] := 09X; INC (i)
+               |  'n': str [c] := 0AX; INC (i)
+               |  'r': str [c] := 0DX; INC (i)
+               ELSE str [c] := str [i]
+               END
+            ELSE
+               str [c] := str [i]
+            END;
+            INC (i); INC (c)
+         END;
+         str [c] := 0X
+      END UnescapeStr;
+
       PROCEDURE CopyToBeg (VAR src, dst: ARRAY OF CHAR; beg, end: INTEGER);
       (* Copy [beg, end[ characters from str to the beginning of dst, append 0X to dst. *)
       VAR i: INTEGER;
@@ -254,7 +277,7 @@ VAR
          END;
          dst [i] := 0X
       END CopyToBeg;
-   
+
    BEGIN
       eqPos := 0;
       WHILE (line [eqPos] # 0X) & (line [eqPos] # '=') DO
@@ -280,6 +303,8 @@ VAR
       CopyToBeg (line, pair.name^, 0, eqPos);
       CopyToBeg (line, pair.left^, eqPos + 1, selPos);
       CopyToBeg (line, pair.right^, selPos + 1, len);
+      UnescapeStr (pair.left^);
+      UnescapeStr (pair.right^);
       RETURN TRUE
    END LineToPair;
 
