@@ -1,4 +1,4 @@
-xc =p NppWebEdit.prj
+xc =p WebEdit.prj
 
 @echo off
 mkdir obj 2> NUL

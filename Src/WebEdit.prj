@@ -73,14 +73,14 @@
 -WOFF305-
 
 !new linker = xds
-!new DLLNAME = NppWebEdit.dll
+!new DLLNAME = WebEdit.dll
 !new NoRuntimeLibs-
 % See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-
 -DLLEXPORT+
 -IMPLIB-
-!module NppWebEdit.ob2
+!module WebEdit.ob2
 
 % Notes on NoRuntimeLibs option
 % Use it when you don't need the runtime library support for your application/library

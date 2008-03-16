@@ -2,7 +2,7 @@
 <*heaplimit="20000"*> (* Maximum heap size should be set in the main module,
 because the changes do not take effect until the main module is recompiled.    *)
 
-MODULE NppWebEdit;
+MODULE WebEdit;
 
 (* ---------------------------------------------------------------------------
  * (C) 2008 by Alexander Iljin
@@ -30,7 +30,7 @@ IMPORT
  * --------------------------------------------------------------------------- *)
 
 CONST
-   PluginName = 'NppWebEdit';
+   PluginName = 'WebEdit';
    MaxFuncs = 15;
 
    (* Menu items *)
@@ -393,4 +393,4 @@ BEGIN
 END Init;
 
 BEGIN Init
-END NppWebEdit.
+END WebEdit.
