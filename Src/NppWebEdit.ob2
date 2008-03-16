@@ -167,10 +167,10 @@ BEGIN
    numFuncsRead := 0;
    i := 0;
    WHILE i < numFuncsRead DO
-      Npp.AddFunction (pairs [i].name^, funcs [i], 0, FALSE, NIL);
+      Npp.AddFunction (pairs [i].name^, funcs [i], FALSE, NIL);
       INC (i)
    END;
-   Npp.AddFunction (AboutStr, About, 0, FALSE, NIL)
+   Npp.AddFunction (AboutStr, About, FALSE, NIL)
 END Init;
 
 BEGIN Init
