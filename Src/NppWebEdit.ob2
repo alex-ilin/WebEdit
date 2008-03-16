@@ -362,8 +362,8 @@ VAR
    i: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
 BEGIN
-   IF MaxFuncs + 2 > Npp.DefNumMenuItems THEN
-      Npp.SetNumMenuItems (MaxFuncs + 2)
+   IF MaxFuncs + 3 > Npp.DefNumMenuItems THEN
+      Npp.SetNumMenuItems (MaxFuncs + 3)
    END;
    funcs [00] := Func00;
    funcs [01] := Func01;
@@ -387,6 +387,7 @@ BEGIN
       Npp.AddMenuItem (NotUsedFuncStr, funcs [i], FALSE, NIL);
       INC (i)
    END;
+   Npp.AddMenuSeparator;
    Npp.AddMenuItem (LoadConfigStr, LoadConfig, FALSE, NIL);
    Npp.AddMenuItem (AboutStr, About, FALSE, NIL)
 END Init;
