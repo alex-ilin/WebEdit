@@ -172,7 +172,8 @@ END AppendStr;
 PROCEDURE ReadConfig (VAR numRead: INTEGER);
 CONST commentChar = ';';
 VAR
-   line: ARRAY 1024 OF CHAR;
+   buff, line: ARRAY 1024 OF CHAR;
+   buffPos, buffLen: INTEGER;
    hFile: Win.HANDLE;
    ch: CHAR;
    eof, section: BOOLEAN;
@@ -181,8 +182,16 @@ VAR
    (* Read ch from hFile, set eof = TRUE on error. *)
    VAR read: Win.DWORD;
    BEGIN
-      eof := ~Win.ReadFile (hFile, SYSTEM.VAL (Win.PVOID, SYSTEM.ADR (ch)), 1, read, NIL)
-         OR (read # 1)
+      IF buffPos >= buffLen THEN;
+         buffPos := 0;
+         eof := ~Win.ReadFile (hFile, SYSTEM.VAL (Win.PVOID, SYSTEM.ADR (buff)), LEN (buff), read, NIL)
+            OR (read = 0) OR (read > LEN (buff));
+         buffLen := SHORT (read)
+      END;
+      IF ~eof THEN
+         ch := buff [buffPos];
+         INC (buffPos)
+      END
    END ReadChar;
 
    PROCEDURE ReadLine (): BOOLEAN;
@@ -276,6 +285,8 @@ VAR
 
 BEGIN
    eof := FALSE;
+   buffPos := 0;
+   buffLen := 0;
    numRead := 0;
    Npp.GetPluginConfigDir (line);
    AppendStr (line, '\' + IniFileName);
