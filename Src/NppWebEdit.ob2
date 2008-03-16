@@ -339,16 +339,16 @@ BEGIN
    (* enable and update text for loaded menu items *)
    i := 0;
    WHILE i < numFuncsRead DO
-      Win.ModifyMenu (hMenu, Npp.FI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.FI [i].cmdID,
+      Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
          SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (pairs [i].name [0])));
-      Win.EnableMenuItem (hMenu, Npp.FI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_ENABLED);
+      Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_ENABLED);
       INC (i)
    END;
    (* disable and clear text for the rest *)
    WHILE i < MaxFuncs DO
-      Win.ModifyMenu (hMenu, Npp.FI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.FI [i].cmdID,
+      Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
          SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (NotUsedFuncStr)));
-      Win.EnableMenuItem (hMenu, Npp.FI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED);
+      Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED);
       INC (i)
    END
 END LoadConfig;
@@ -362,8 +362,8 @@ VAR
    i: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
 BEGIN
-   IF MaxFuncs + 2 > Npp.DefNumFuncs THEN
-      Npp.SetNumFunctions (MaxFuncs + 2)
+   IF MaxFuncs + 2 > Npp.DefNumMenuItems THEN
+      Npp.SetNumMenuItems (MaxFuncs + 2)
    END;
    funcs [00] := Func00;
    funcs [01] := Func01;
@@ -384,11 +384,11 @@ BEGIN
    Npp.onReady := OnReady;
    i := 0;
    WHILE i < MaxFuncs DO
-      Npp.AddFunction (NotUsedFuncStr, funcs [i], FALSE, NIL);
+      Npp.AddMenuItem (NotUsedFuncStr, funcs [i], FALSE, NIL);
       INC (i)
    END;
-   Npp.AddFunction (LoadConfigStr, LoadConfig, FALSE, NIL);
-   Npp.AddFunction (AboutStr, About, FALSE, NIL)
+   Npp.AddMenuItem (LoadConfigStr, LoadConfig, FALSE, NIL);
+   Npp.AddMenuItem (AboutStr, About, FALSE, NIL)
 END Init;
 
 BEGIN Init
