@@ -78,7 +78,7 @@
 % See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-
--DLLEXPORT+
+-DLLEXPORT-
 -IMPLIB-
 !module WebEdit.ob2
 
