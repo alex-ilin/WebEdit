@@ -49,9 +49,10 @@ CONST
    IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
-      +'Assign shortcuts via Settings - Shortcut Mapper - Plugin commands.'+CRLF
+      +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06-08 Mar 2008.';
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, 06-18 Mar 2008.'+CRLF
+      +'Contact e-mail: AlexIljin@users.SourceForge.net';
 
 TYPE
    Pair = RECORD
