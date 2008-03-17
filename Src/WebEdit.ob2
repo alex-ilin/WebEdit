@@ -15,6 +15,13 @@ IMPORT
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
  * stretch of selected text with a pair of strings, e.g. HTML tags.
  *
+ * If you want this plugin to support more than 15 commands, do the following:
+ * - set MaxFuncs constant to the desired value;
+ * - create new FuncXX functions up to the required number (last XX = 
+ *   MaxFuncs - 1);
+ * - append the funcs array initialization in the Init procedure;
+ * - recompile the project.
+ *
  * For the free XDS Modula-2/Oberon-2 compiler go to:
  *   http://www.excelsior-usa.com/xdsx86win.html
  *   (6.6 Mb to download, 17 Mb installed);
