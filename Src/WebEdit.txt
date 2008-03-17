@@ -1,0 +1,30 @@
+WebEdit v.1.0 - freeware plugin for Notepad++.
+
+This plugin allows you to define up to 15 commands. Each command will surround the currently selected text with the Left and Right text defined for the command. If there is no selection, the Left text is inserted to the left of current caret position, and the Right text is inserted to the right. In any case the selection and relative cursor position are preserved. Clipboard is not used. Both text insertions can be undone/redone as a single action.
+The commands are to be defined in WebEdit.ini file, in the "[Commands]" section. File format:
+- any character with code below 32 (space) terminates a line;
+- if you want a line to contain such characters, you must escape it with backslash; the following escape sequences are supported:
+  - \t = 09 - TAB character;
+  - \n = 10 - new-line (LF) character;
+  - \r = 13 - carriage return (CR) character;
+  - \ = "\" - the backslash character does not need escaping;
+- unescaped line length must not exceed 1022 characters (if a longer line is encountered, file processing is aborted at that point);
+- any line starting with a semicolon character (;) is considered a comment and ignored;
+- the minimum valid line is "=|" any line not containing "=" and "|" after it is ignored;
+- line syntax: [menu item] "=" [Left text] "|" [Right text], for example: "<p>...</p>=<p>|</p>";
+- syntax explanation:
+  - [menu item] is the text displayed in the plugin menu;
+  - [Left text] is the text inserted to the left of current selection;
+  - [Right text] is the text inserted to the right of current selection;
+  - all of the above strings are optional;
+  - limitations: you can't use "=" in the menu text, and you can't use "|" in the Left text.
+At most 15 commands may be defined in the "[Commands]" section, all superfluous commands are ignored. The defined commands are listed in the plugin menu in the order they appear in the file. Unused menu slots appear as disabled and show text "not used" or similar.
+The configuration file is looked for in the standard plugin configuration folder of the Notepad++ (if Notepad++ is installed in portable mode, the folder is "Notepad++\plugins\Config").
+
+You may assign shortcuts to the menu items via Settings - Shortcut Mapper - Plugin commands.
+
+Hint: if you want to set a menu accelerator, use ampersand character (&) in the menu item text. For example: "&Paragraph tag=<p>|</p>". The character after ampersand ("P" in this case) will be underlined in the plugin menu, which makes it possible to simply type "p" on the keyboard instead of selecting the menu item with mouse or cursor keys. The accelerator, of course, will only work when the plugin menu is popped up.
+
+PS: If you feel that the limit of 15 functions maximum is too constricting, you may increase the number. See instructions in the WebEdit.ob2 source file.
+
+Created by Alexander Iljin (Amadeus IT Solutions) on March 06-18, 2008. You may contact me via e-mail: AlexIljin@users.SourceForge.net

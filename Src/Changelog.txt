@@ -1,0 +1,12 @@
+WebEdit chandelog.
+
+Version 1.0. 18 Mar 2008.
+- Plugin renamed to WebEdit (was NppWebEdit) to simplify navigation in the "Plugins" menu.
+- Added WebEdit.txt file with the plugin description.
+- The plugin now has 15 menu slots for used-defined functions read from WebEdit.ini.
+
+Version 0.2. 08 Mar 2008.
+- Insertion of a pair of tags is undone as a single action.
+
+Version 0.1. 06 Mar 2008.
+Initial release.
