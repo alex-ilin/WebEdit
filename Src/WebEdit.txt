@@ -25,6 +25,8 @@ You may assign shortcuts to the menu items via Settings - Shortcut Mapper - Plug
 
 Hint: if you want to set a menu accelerator, use ampersand character (&) in the menu item text. For example: "&Paragraph tag=<p>|</p>". The character after ampersand ("P" in this case) will be underlined in the plugin menu, which makes it possible to simply type "p" on the keyboard instead of selecting the menu item with mouse or cursor keys. The accelerator, of course, will only work when the plugin menu is popped up.
 
+Installation note. To use this plugin you have to copy the WebEdit.ini file into Notepad++\plugins\Config folder (it may be either in "Program Files" or in "Application Data" of your current user, depending on the way you installed Notepad++). If the file is absent you will see that the plugin menu consists entirely of grayed "not used" items.
+
 PS: If you feel that the limit of 15 functions maximum is too constricting, you may increase the number. See instructions in the WebEdit.ob2 source file.
 
 Created by Alexander Iljin (Amadeus IT Solutions) on March 06-18, 2008. You may contact me via e-mail: AlexIljin@users.SourceForge.net
