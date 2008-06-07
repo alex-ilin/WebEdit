@@ -38,7 +38,7 @@ IMPORT
 
 CONST
    PluginName = 'WebEdit';
-   MaxFuncs = 15;
+   MaxFuncs = 15; (* 0 < MaxFuncs < 100 *)
 
    (* Menu items *)
    NumChar = 'X'; (* this character is a placeholder for a number in NotUsedFuncStr *)
@@ -339,6 +339,7 @@ BEGIN
 END ReadConfig;
 
 PROCEDURE GetCharPos (VAR str: ARRAY OF CHAR; ch: CHAR): INTEGER;
+(* Return index of the first occurence of the ch character in str, -1 if none found. *)
 VAR res: INTEGER;
 BEGIN
    res := 0;
@@ -352,7 +353,8 @@ BEGIN
 END GetCharPos;
 
 PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF CHAR; pos, num: INTEGER);
-(* Replace characters at pos and (pos+1) in str with num decimal notation. *)
+(* Replace characters at pos and (pos+1) in str with num decimal notation.
+ * If pos < 0, do nothing. *)
 BEGIN
    ASSERT ((0 <= num) & (num < 100), 20);
    IF pos >= 0 THEN
@@ -377,7 +379,7 @@ BEGIN
       Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_ENABLED);
       INC (i)
    END;
-   (* disable and clear text for the rest *)
+   (* disable and reset text for the rest *)
    IF i < MaxFuncs THEN
       fname := NotUsedFuncStr;
       numPos := GetCharPos (fname, NumChar);
