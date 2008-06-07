@@ -265,6 +265,7 @@ VAR
                |  't': str [c] := 09X; INC (i)
                |  'n': str [c] := 0AX; INC (i)
                |  'r': str [c] := 0DX; INC (i)
+               |  '\': str [c] := '\'; INC (i)
                ELSE str [c] := str [i]
                END
             ELSE
