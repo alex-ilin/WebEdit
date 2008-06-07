@@ -41,7 +41,8 @@ CONST
    MaxFuncs = 15;
 
    (* Menu items *)
-   NotUsedFuncStr = 'not used';
+   NumChar = 'X'; (* this character is a placeholder for a number in NotUsedFuncStr *)
+   NotUsedFuncStr = 'WebEdit Slot XX';
    LoadConfigStr = 'Load Config';
    AboutStr = 'About...';
 
@@ -337,9 +338,33 @@ BEGIN
    END
 END ReadConfig;
 
+PROCEDURE GetCharPos (VAR str: ARRAY OF CHAR; ch: CHAR): INTEGER;
+VAR res: INTEGER;
+BEGIN
+   res := 0;
+   WHILE (str [res] # 0X) & (str [res] # NumChar) DO
+      INC (res)
+   END;
+   IF str [res] # NumChar THEN
+      res := -1;
+   END;
+   RETURN res
+END GetCharPos;
+
+PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF CHAR; pos, num: INTEGER);
+(* Replace characters at pos and (pos+1) in str with num decimal notation. *)
+BEGIN
+   ASSERT ((0 <= num) & (num < 100), 20);
+   IF pos >= 0 THEN
+      str [pos] := CHR ((num DIV 10) + ORD ('0'));
+      str [pos + 1] := CHR ((num MOD 10) + ORD ('0'))
+   END
+END MakeDummyFuncName;
+
 PROCEDURE ['C'] LoadConfig ();
 VAR
-   i, numFuncsRead: INTEGER;
+   i, numFuncsRead, numPos: INTEGER;
+   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
    hMenu: Win.HMENU;
 BEGIN
    ReadConfig (numFuncsRead);
@@ -353,11 +378,16 @@ BEGIN
       INC (i)
    END;
    (* disable and clear text for the rest *)
-   WHILE i < MaxFuncs DO
-      Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
-         SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (NotUsedFuncStr)));
-      Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED);
-      INC (i)
+   IF i < MaxFuncs THEN
+      fname := NotUsedFuncStr;
+      numPos := GetCharPos (fname, NumChar);
+      REPEAT
+         MakeDummyFuncName (fname, numPos, i + 1);
+         Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
+            SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (fname)));
+         Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED);
+         INC (i)
+      UNTIL i >= MaxFuncs
    END
 END LoadConfig;
 
@@ -367,8 +397,9 @@ END OnReady;
 
 PROCEDURE Init ();
 VAR
-   i: INTEGER;
+   i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
+   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;   
 BEGIN
    IF MaxFuncs + 3 > Npp.DefNumMenuItems THEN
       Npp.SetNumMenuItems (MaxFuncs + 3)
@@ -390,9 +421,12 @@ BEGIN
    funcs [14] := Func14;
    Npp.PluginName := PluginName;
    Npp.onReady := OnReady;
+   fname := NotUsedFuncStr;
+   numPos := GetCharPos (fname, NumChar);
    i := 0;
    WHILE i < MaxFuncs DO
-      Npp.AddMenuItem (NotUsedFuncStr, funcs [i], FALSE, NIL);
+      MakeDummyFuncName (fname, numPos, i + 1);
+      Npp.AddMenuItem (fname, funcs [i], FALSE, NIL);
       INC (i)
    END;
    Npp.AddMenuSeparator;
