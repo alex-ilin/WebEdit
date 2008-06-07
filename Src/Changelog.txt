@@ -1,4 +1,11 @@
-WebEdit chandelog.
+WebEdit changelog.
+
+Version 1.1. 07 Jun 2008.
+- The dummy menu entries are renamed from "not used" to "WebEdit Slot XX", where
+  XX is the number of the slot. This helps greatly to find the items in the Shortcut
+  Mapper and differentiate between them.
+- The double slash is now recognized as an escape sequence in the ini-file.
+- Added version information resource to the DLL.
 
 Version 1.0. 18 Mar 2008.
 - Plugin renamed to WebEdit (was NppWebEdit) to simplify navigation in the "Plugins" menu.
