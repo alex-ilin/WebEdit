@@ -22,14 +22,14 @@ IMPORT
  * - append the funcs array initialization in the Init procedure;
  * - recompile the project.
  *
- * For the free XDS Modula-2/Oberon-2 compiler go to:
+ * For the free optimizing XDS Modula-2/Oberon-2 compiler go to:
  *   http://www.excelsior-usa.com/xdsx86win.html
  *   (6.6 Mb to download, 17 Mb installed);
  * Oberon-2 is object-oriented programming language, both powerful and simple.
  * The full language report is only 20 pages long:
  *   http://europrog.ru/paper/oberon-2.pdf
- * It was created by prof. N.Wirth, author of Pascal and Modula. Some of his
- * publications:
+ * It was created by prof. N.Wirth, author of Pascal-family of programming
+ * languages. Some of his publications (available in full text):
  *   Programming in Oberon: http://europrog.ru/book/obnw2004e.pdf
  *   Compiler Construction: http://europrog.ru/book/ccnw2005e.pdf
  *   Project Oberon — The Design of an Operating System and Compiler:
