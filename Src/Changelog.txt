@@ -1,8 +1,9 @@
 WebEdit changelog.
 
 Version 1.2. 18 Jun 2008.
-- Notepad++ 5.0 and later only: the Shortcut Mapper will show actual menu
-  item names instead of dummy "WebEdit XX", e.g. "WebEdit - Paragraph Tag".
+- New feature for Notepad++ 5.0 and later: the Shortcut Mapper will show the
+  actual menu item names instead of dummy "WebEdit XX", e.g. "WebEdit -
+  Paragraph Tag".
   Note: to update strings displayed by the Shortcut Mapper you have to restart
   Notepad++. If you have used "Load Config" to update the plugin configuration,
   the shortcut table may be out of date.
