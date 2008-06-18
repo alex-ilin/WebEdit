@@ -32,4 +32,8 @@ WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\Scintilla.ob2
 	zip -m -9 WebEdit WebEdit/*
 	rd WebEdit
 
-dist: WebEdit.zip
+%.md5: %
+	md5sum $< > $@
+
+dist: WebEdit.zip.md5
+	md5sum --check $<
