@@ -41,10 +41,17 @@ text "WebEdit Slot XX", where XX is the number of the slot.
 
 The configuration file is looked for in the standard plugin configuration
 folder of the Notepad++ (if Notepad++ is installed in portable mode, the folder
-is "Notepad++\plugins\Config").
+is "Notepad++\plugins\Config"). You may edit the file and update the plugin
+configuration without restarting Notepad++ by selecting the "Load Config"
+command from the plugin menu.
 
 You may assign shortcuts to the plugin menu items via Settings - Shortcut
-Mapper - Plugin commands.
+Mapper - Plugin commands. If you are running Notepad++ 5.0, you will see the
+actual command names, i.e. instead of the dummy text "WebEdit XX" you will see
+"WebEdit - Command name", where the "Command name" is the text as displayed in
+the plugin menu. Due to insufficient support of the dynamic menus by Notepad++
+the text in the Shortcut Mapper will only be updated on restart. I'm sorry for
+the inconvenience.
 
 Hint: if you want to set a menu accelerator, use ampersand character (&) in the
 menu item text. For example: "&Paragraph tag=<p>|</p>". The character after the
