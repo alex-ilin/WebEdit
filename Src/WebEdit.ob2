@@ -167,11 +167,12 @@ END About;
 
 PROCEDURE AppendStr (VAR str: ARRAY OF CHAR; end: ARRAY OF CHAR);
 (* Append end to str, both strings and the result are null-terminated. *)
-VAR i, c: LONGINT;
+VAR i, c, max: LONGINT;
 BEGIN
    i := Length (str);
    c := 0;
-   WHILE end [c] # 0X DO
+   max := LEN (str) - 1;
+   WHILE (end [c] # 0X) & (i < max) DO
       str [i] := end [c];
       INC (i); INC (c)
    END;
