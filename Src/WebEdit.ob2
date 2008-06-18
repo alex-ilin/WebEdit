@@ -17,7 +17,7 @@ IMPORT
  *
  * If you want this plugin to support more than 15 commands, do the following:
  * - set MaxFuncs constant to the desired value;
- * - create new FuncXX functions up to the required number (last XX = 
+ * - create new FuncXX functions up to the required number (last XX =
  *   MaxFuncs - 1);
  * - append the funcs array initialization in the Init procedure;
  * - recompile the project.
@@ -335,7 +335,7 @@ BEGIN
             END
          END
       END;
-      Win.CloseHandle (hFile) 
+      Win.CloseHandle (hFile)
    END
 END ReadConfig;
 
@@ -354,7 +354,7 @@ BEGIN
 END GetCharPos;
 
 PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF CHAR; pos, num: INTEGER);
-(* Replace characters at pos and (pos+1) in str with num decimal notation.
+(* Replace characters at pos and (pos+1) in str with num in decimal notation.
  * If pos < 0, do nothing. *)
 BEGIN
    ASSERT ((0 <= num) & (num < 100), 20);
@@ -402,7 +402,7 @@ PROCEDURE Init ();
 VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
-   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;   
+   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
 BEGIN
    IF MaxFuncs + 3 > Npp.DefNumMenuItems THEN
       Npp.SetNumMenuItems (MaxFuncs + 3)
