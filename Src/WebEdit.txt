@@ -1,4 +1,4 @@
-WebEdit v.1.1 - freeware open-source plugin for Notepad++.
+WebEdit v.1.2 - freeware open-source plugin for Notepad++.
 
 This plugin allows you to define up to 15 commands. Each command will surround the currently selected text with the Left and Right text defined for the command. If there is no selection, the Left text is inserted to the left of current caret position, and the Right text is inserted to the right. In any case the selection and relative cursor position are preserved. Clipboard is not used. Both text insertions can be undone/redone as a single action.
 The commands are to be defined in WebEdit.ini file, in the "[Commands]" section. File format:
