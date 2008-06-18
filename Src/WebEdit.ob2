@@ -63,6 +63,7 @@ TYPE
 
 VAR
    pairs: ARRAY MaxFuncs OF Pair;
+   numPairs: INTEGER;
 
 PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
 (* Return length of the null-terminated string str. *)
@@ -365,20 +366,23 @@ BEGIN
    END
 END MakeDummyFuncName;
 
-PROCEDURE ['C'] LoadConfig ();
+PROCEDURE UpdateMenuItems (forShortcutMapper: BOOLEAN);
 VAR
-   i, numFuncsRead, numPos: INTEGER;
-   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
-   hMenu: Win.HMENU;
+   i, numPos: INTEGER;
+   fname: ARRAY Npp.MenuItemNameLength OF CHAR;
 BEGIN
-   ReadConfig (numFuncsRead);
-   hMenu := Npp.GetMenu ();
    (* enable and update text for loaded menu items *)
    i := 0;
-   WHILE i < numFuncsRead DO
-      Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
-         SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (pairs [i].name [0])));
-      Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_ENABLED);
+   WHILE i < numPairs DO
+      IF forShortcutMapper THEN
+         fname := PluginName;
+         AppendStr (fname, ' - ')
+      ELSE
+         fname := ''
+      END;
+      AppendStr (fname, pairs [i].name^);
+      Npp.SetMenuItemName (i, fname);
+      Npp.EnableMenuItem (i, TRUE);
       INC (i)
    END;
    (* disable and reset text for the rest *)
@@ -387,17 +391,29 @@ BEGIN
       numPos := GetCharPos (fname, NumChar);
       REPEAT
          MakeDummyFuncName (fname, numPos, i + 1);
-         Win.ModifyMenu (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_STRING, Npp.MI [i].cmdID,
-            SYSTEM.VAL (Win.PCSTR, SYSTEM.ADR (fname)));
-         Win.EnableMenuItem (hMenu, Npp.MI [i].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED);
+         Npp.SetMenuItemName (i, fname);
+         Npp.EnableMenuItem (i, FALSE);
          INC (i)
       UNTIL i >= MaxFuncs
    END
+END UpdateMenuItems;
+
+PROCEDURE ['C'] LoadConfig ();
+BEGIN
+   ReadConfig (numPairs);
+   UpdateMenuItems (FALSE)
 END LoadConfig;
 
 PROCEDURE OnReady ();
-BEGIN LoadConfig
+BEGIN
+   UpdateMenuItems (FALSE)
 END OnReady;
+
+PROCEDURE OnSetInfo ();
+BEGIN
+   ReadConfig (numPairs);
+   UpdateMenuItems (TRUE)
+END OnSetInfo;
 
 PROCEDURE Init ();
 VAR
@@ -425,6 +441,7 @@ BEGIN
    funcs [14] := Func14;
    Npp.PluginName := PluginName;
    Npp.onReady := OnReady;
+   Npp.onSetInfo := OnSetInfo;
    fname := NotUsedFuncStr;
    numPos := GetCharPos (fname, NumChar);
    i := 0;
