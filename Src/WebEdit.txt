@@ -49,7 +49,8 @@ The configuration file is looked for in the standard plugin configuration
 folder of the Notepad++ (if Notepad++ is installed in portable mode, the folder
 is "Notepad++\plugins\Config"). You may edit the file and update the plugin
 configuration without restarting Notepad++ by selecting the "Load Config"
-command from the plugin menu.
+command from the plugin menu. (Note, the toolbar is only updated on Notepad++
+startup.)
 
 You may assign shortcuts to the plugin menu items via Settings - Shortcut
 Mapper - Plugin commands. If you are running Notepad++ 5.0, you will see the
