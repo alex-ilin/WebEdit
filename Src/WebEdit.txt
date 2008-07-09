@@ -1,4 +1,4 @@
-WebEdit v.1.2 - freeware open-source plugin for Notepad++.
+WebEdit v.1.3 - freeware open-source plugin for Notepad++.
 
 This plugin allows you to define up to 15 commands. Each command will surround
 the currently selected text with the Left and Right text defined for the
@@ -39,6 +39,12 @@ commands are ignored. The defined commands are listed in the plugin menu in the
 order they appear in the file. Unused menu slots appear as disabled and show
 text "WebEdit Slot XX", where XX is the number of the slot.
 
+The "[Toolbar]" section determines which of the command slots will be placed on
+the toolbar. Syntax: <slot number> "=" <file name>
+Example: 1=Paragraph.bmp
+Slot numbers are 1..15. The file should be placed in the plugins/Config folder
+and should contain a bitmap image suitable for the toolbar.
+
 The configuration file is looked for in the standard plugin configuration
 folder of the Notepad++ (if Notepad++ is installed in portable mode, the folder
 is "Notepad++\plugins\Config"). You may edit the file and update the plugin
@@ -69,7 +75,7 @@ the plugin menu consists entirely of grayed items.
 PS: If you feel that the limit of 15 functions maximum is too constricting, you
 may increase the number. See instructions in the WebEdit.ob2 source file.
 
-Created by Alexander Iljin (Amadeus IT Solutions) on March-June, 2008. You may
+Created by Alexander Iljin (Amadeus IT Solutions) on March-July, 2008. You may
 contact me via e-mail: AlexIljin@users.SourceForge.net
 The preferred method for feedback is the Notepad++ forum. Post your feature
 requests and bug reports here:
