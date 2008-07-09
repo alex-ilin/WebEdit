@@ -47,6 +47,7 @@ CONST
    AboutStr = 'About...';
 
    CommandsIniSection = 'Commands';
+   ToolbarIniSection  = 'Toolbar';
    IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
@@ -64,6 +65,17 @@ TYPE
 VAR
    pairs: ARRAY MaxFuncs OF Pair;
    numPairs: INTEGER;
+
+PROCEDURE LoadBitmap (VAR fname: ARRAY OF CHAR): Win.HBITMAP;
+(* Load a bitmap image from the given file name and return the handle. *)
+BEGIN
+   RETURN SYSTEM.VAL (Win.HBITMAP,
+      Win.LoadImage (
+         NIL, SYSTEM.VAL (Win.PSTR, SYSTEM.ADR (fname)), Win.IMAGE_BITMAP, 0, 0,
+         Win.LR_DEFAULTSIZE + Win.LR_LOADMAP3DCOLORS + Win.LR_LOADFROMFILE
+      )
+   )
+END LoadBitmap;
 
 PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
 (* Return length of the null-terminated string str. *)
@@ -197,11 +209,12 @@ BEGIN
    RETURN CHR ((digit MOD 10) + ORD ('0'))
 END DigitToChar;
 
-PROCEDURE ReadConfig (VAR numRead: INTEGER);
+PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
 CONST commentChar = ';';
 VAR
    buff, line: ARRAY 1024 OF CHAR;
-   buffPos, buffLen: INTEGER;
+   configDir, fname: ARRAY Win.MAX_PATH OF CHAR;
+   buffPos, buffLen, configDirLen, maxFnameLen: INTEGER;
    hFile: Win.HANDLE;
    ch: CHAR;
    eof, section: BOOLEAN;
@@ -329,14 +342,46 @@ VAR
       RETURN TRUE
    END LineToPair;
 
+   PROCEDURE LineToToolbar ();
+   VAR i, num, len: INTEGER;
+   BEGIN
+      i := 0;
+      len := SHORT (Length (line));
+      WHILE (i < len) & (line [i] # '=') DO
+         INC (i)
+      END;
+      ASSERT ((0 < MaxFuncs) & (MaxFuncs < 100), 20);
+      IF (i > 0) & (i <= 2) (* 2 digits maximum *)
+         & IsDigit (line [0]) & ((i = 1) OR (IsDigit (line [1])))
+      THEN
+         num := CharToDigit (line [0]);
+         IF i = 2 THEN
+            num := num * 10 + CharToDigit (line [1])
+         END;
+         IF num < MaxFuncs THEN
+            DEC (num); (* items are numbered from 1, in ini-file *)
+            INC (i); (* skip '=' *)
+            IF (i < len) & (len - i <= maxFnameLen) THEN
+               COPY (configDir, fname);
+               CopyTo (line, fname, i, len, configDirLen);
+               Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
+            END
+         END
+      END
+   END LineToToolbar;
+
 BEGIN
    eof := FALSE;
    buffPos := 0;
    buffLen := 0;
    numRead := 0;
-   Npp.GetPluginConfigDir (line);
-   AppendStr (line, '\' + IniFileName);
-   hFile := Win.CreateFile (line, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
+   Npp.GetPluginConfigDir (configDir);
+   AppendStr (configDir, '\');
+   configDirLen := SHORT (Length (configDir));
+   maxFnameLen := LEN (configDir) - configDirLen - 1;
+   COPY (configDir, fname);
+   AppendStr (fname, IniFileName);
+   hFile := Win.CreateFile (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
       WHILE ReadLine () DO
@@ -352,6 +397,11 @@ BEGIN
             IF ~(numRead < MaxFuncs) THEN
                WHILE ReadLine () DO
                END
+            END
+         ELSIF initToolbar & (line = '[' + ToolbarIniSection + ']') THEN
+            (* read toolbar items *)
+            WHILE ReadLine () DO
+               LineToToolbar ()
             END
          ELSE
             WHILE ReadLine () DO
@@ -421,7 +471,7 @@ END UpdateMenuItems;
 
 PROCEDURE ['C'] LoadConfig ();
 BEGIN
-   ReadConfig (numPairs);
+   ReadConfig (numPairs, FALSE);
    UpdateMenuItems (FALSE)
 END LoadConfig;
 
@@ -432,7 +482,7 @@ END OnReady;
 
 PROCEDURE OnSetInfo ();
 BEGIN
-   ReadConfig (numPairs);
+   ReadConfig (numPairs, TRUE);
    UpdateMenuItems (TRUE)
 END OnSetInfo;
 
