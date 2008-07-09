@@ -250,6 +250,18 @@ VAR
       RETURN line = target
    END SkipToLine;
 
+   PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
+   (* Copy [beg, end) characters from str to dst [to, to+end-beg], append 0X to dst. *)
+   VAR i: INTEGER;
+   BEGIN
+      i := to;
+      WHILE beg < end DO
+         dst [i] := src [beg];
+         INC (i); INC (beg)
+      END;
+      dst [i] := 0X
+   END CopyTo;
+
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
    (* Initialize pair with data from line, return TRUE on success. *)
    VAR i, eqPos, selPos, len: INTEGER;
@@ -278,18 +290,6 @@ VAR
          str [c] := 0X
       END UnescapeStr;
 
-      PROCEDURE CopyToBeg (VAR src, dst: ARRAY OF CHAR; beg, end: INTEGER);
-      (* Copy [beg, end[ characters from str to the beginning of dst, append 0X to dst. *)
-      VAR i: INTEGER;
-      BEGIN
-         i := 0;
-         WHILE beg < end DO
-            dst [i] := src [beg];
-            INC (i); INC (beg)
-         END;
-         dst [i] := 0X
-      END CopyToBeg;
-
    BEGIN
       eqPos := 0;
       WHILE (line [eqPos] # 0X) & (line [eqPos] # '=') DO
@@ -312,9 +312,9 @@ VAR
       NEW (pair.name, eqPos + 1);
       NEW (pair.left, selPos - eqPos);
       NEW (pair.right, len - selPos);
-      CopyToBeg (line, pair.name^, 0, eqPos);
-      CopyToBeg (line, pair.left^, eqPos + 1, selPos);
-      CopyToBeg (line, pair.right^, selPos + 1, len);
+      CopyTo (line, pair.name^, 0, eqPos, 0);
+      CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
+      CopyTo (line, pair.right^, selPos + 1, len, 0);
       UnescapeStr (pair.left^);
       UnescapeStr (pair.right^);
       RETURN TRUE
