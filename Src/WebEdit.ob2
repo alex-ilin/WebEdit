@@ -180,6 +180,23 @@ BEGIN
    str [i] := 0X
 END AppendStr;
 
+PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
+BEGIN
+   RETURN ('0' <= ch) & (ch <= '9')
+END IsDigit;
+
+PROCEDURE CharToDigit (ch: CHAR): SHORTINT;
+BEGIN
+   ASSERT (IsDigit (ch), 20);
+   RETURN SHORT (ORD (ch) - ORD ('0'))
+END CharToDigit;
+
+PROCEDURE DigitToChar (digit: INTEGER): CHAR;
+(* Return the last decimal digit  *)
+BEGIN
+   RETURN CHR ((digit MOD 10) + ORD ('0'))
+END DigitToChar;
+
 PROCEDURE ReadConfig (VAR numRead: INTEGER);
 CONST commentChar = ';';
 VAR
@@ -365,8 +382,8 @@ PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF CHAR; pos, num: INTEGER);
 BEGIN
    ASSERT ((0 <= num) & (num < 100), 20);
    IF pos >= 0 THEN
-      str [pos] := CHR ((num DIV 10) + ORD ('0'));
-      str [pos + 1] := CHR ((num MOD 10) + ORD ('0'))
+      str [pos] := DigitToChar (num DIV 10);
+      str [pos + 1] := DigitToChar (num)
    END
 END MakeDummyFuncName;
 
