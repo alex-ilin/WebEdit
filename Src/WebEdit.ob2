@@ -242,14 +242,6 @@ VAR
       RETURN (i > 0) & ~section
    END ReadLine;
 
-   PROCEDURE SkipToLine (target: ARRAY OF CHAR): BOOLEAN;
-   (* Read hFile until line = target is found, return TRUE on success. *)
-   BEGIN
-      WHILE ReadLine () & (line # target) DO
-      END;
-      RETURN line = target
-   END SkipToLine;
-
    PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
    (* Copy [beg, end) characters from str to dst [to, to+end-beg], append 0X to dst. *)
    VAR i: INTEGER;
@@ -330,10 +322,22 @@ BEGIN
    hFile := Win.CreateFile (line, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
-      IF SkipToLine ('[' + CommandsIniSection + ']') THEN
-         WHILE (numRead < MaxFuncs) & ReadLine () DO
-            IF LineToPair (pairs [numRead]) THEN
-               INC (numRead)
+      WHILE ReadLine () DO
+      END;
+      WHILE section DO
+         IF line = '[' + CommandsIniSection + ']' THEN
+            (* read menu items *)
+            WHILE (numRead < MaxFuncs) & ReadLine () DO
+               IF LineToPair (pairs [numRead]) THEN
+                  INC (numRead)
+               END
+            END;
+            IF ~(numRead < MaxFuncs) THEN
+               WHILE ReadLine () DO
+               END
+            END
+         ELSE
+            WHILE ReadLine () DO
             END
          END
       END;
