@@ -239,6 +239,7 @@ VAR
    (* Read until not empty line is read, return TRUE on success. If a new section header is found,
     * return FALSE, line will contain the section string "[section name]", section = TRUE, otherwise
     * section = FALSE.   *)
+   CONST Tab = 09X;
    VAR
       i: INTEGER;
       eol: BOOLEAN;
@@ -249,7 +250,7 @@ VAR
          eol := FALSE;
          ReadChar;
          WHILE ~eof & ~eol & (i < LEN (line) - 1) DO
-            IF ch < ' ' THEN
+            IF (ch < ' ') & (ch # Tab) THEN
                eol := TRUE
             ELSE
                line [i] := ch;
