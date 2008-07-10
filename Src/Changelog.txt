@@ -1,5 +1,8 @@
 WebEdit changelog.
 
+Version 1.3.1. 11 Jul 2008.
+- Tab character does not terminate a line in the ini-file anymore.
+
 Version 1.3. 09 Jul 2008.
 - The plugin can be configured to add its commands to the toolbar.
 
