@@ -3,7 +3,7 @@
 ; Version numbers for the project:
 Ver1=1
 Ver2=3
-Ver3=0
+Ver3=1
 Ver4=0
 ; Available file flags: 0 | VS_FF_DEBUG | VS_FF_PRERELEASE | VS_FF_PRIVATEBUILD
 FileFlags=0
