@@ -61,8 +61,8 @@ startup.)
 
 You may assign shortcuts to the plugin menu items via Settings - Shortcut
 Mapper - Plugin commands. If you are running Notepad++ 5.0 and later, you will
-see the actual command names, i.e. instead of the dummy text "WebEdit XX" you
-will see "WebEdit - Command name", where the "Command name" is the text as
+see the actual command names, i.e. instead of the dummy text "WebEdit Slot XX"
+you will see "WebEdit - Command name", where the "Command name" is the text as
 displayed in the plugin menu. Due to insufficient support of the dynamic menus
 by Notepad++ the text in the Shortcut Mapper will only be updated on restart.
 
@@ -81,7 +81,8 @@ Notepad++ in the Portable mode or not). If the file is absent you will see that
 the plugin menu consists entirely of grayed items.
 
 PS: If you feel that the limit of 15 functions maximum is too constricting, you
-may increase the number. See instructions in the WebEdit.ob2 source file.
+may painlessly increase the number up to 99, but you will have to recompile the
+plugin. See instructions in the WebEdit.ob2 source file.
 
 Created by Alexander Iljin (Amadeus IT Solutions) on March-July, 2008. You may
 contact me via e-mail: AlexIljin@users.SourceForge.net
