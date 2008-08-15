@@ -15,7 +15,7 @@ IMPORT
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
  * stretch of selected text with a pair of strings, e.g. HTML tags.
  *
- * If you want this plugin to support more than 15 commands, do the following:
+ * If you want this plugin to support more than 30 commands, do the following:
  * - set MaxFuncs constant to the desired value;
  * - create new FuncXX functions up to the required number (last XX =
  *   MaxFuncs - 1);
@@ -38,7 +38,7 @@ IMPORT
 
 CONST
    PluginName = 'WebEdit';
-   MaxFuncs = 15; (* 0 < MaxFuncs < 100 *)
+   MaxFuncs = 30; (* 0 < MaxFuncs < 100 *)
 
    (* Menu items *)
    NumChar = 'X'; (* this character is a placeholder for a number in NotUsedFuncStr *)
@@ -171,6 +171,66 @@ END Func13;
 PROCEDURE ['C'] Func14 ();
 BEGIN ApplyPair (pairs [14])
 END Func14;
+
+PROCEDURE ['C'] Func15 ();
+BEGIN ApplyPair (pairs [15])
+END Func15;
+
+PROCEDURE ['C'] Func16 ();
+BEGIN ApplyPair (pairs [16])
+END Func16;
+
+PROCEDURE ['C'] Func17 ();
+BEGIN ApplyPair (pairs [17])
+END Func17;
+
+PROCEDURE ['C'] Func18 ();
+BEGIN ApplyPair (pairs [18])
+END Func18;
+
+PROCEDURE ['C'] Func19 ();
+BEGIN ApplyPair (pairs [19])
+END Func19;
+
+PROCEDURE ['C'] Func20 ();
+BEGIN ApplyPair (pairs [20])
+END Func20;
+
+PROCEDURE ['C'] Func21 ();
+BEGIN ApplyPair (pairs [21])
+END Func21;
+
+PROCEDURE ['C'] Func22 ();
+BEGIN ApplyPair (pairs [22])
+END Func22;
+
+PROCEDURE ['C'] Func23 ();
+BEGIN ApplyPair (pairs [23])
+END Func23;
+
+PROCEDURE ['C'] Func24 ();
+BEGIN ApplyPair (pairs [24])
+END Func24;
+
+PROCEDURE ['C'] Func25 ();
+BEGIN ApplyPair (pairs [25])
+END Func25;
+
+PROCEDURE ['C'] Func26 ();
+BEGIN ApplyPair (pairs [26])
+END Func26;
+
+PROCEDURE ['C'] Func27 ();
+BEGIN ApplyPair (pairs [27])
+END Func27;
+
+PROCEDURE ['C'] Func28 ();
+BEGIN ApplyPair (pairs [28])
+END Func28;
+
+PROCEDURE ['C'] Func29 ();
+BEGIN ApplyPair (pairs [29])
+END Func29;
 
 PROCEDURE ['C'] About ();
 (* Show info about this plugin. *)
@@ -511,6 +571,21 @@ BEGIN
    funcs [12] := Func12;
    funcs [13] := Func13;
    funcs [14] := Func14;
+   funcs [15] := Func15;
+   funcs [16] := Func16;
+   funcs [17] := Func17;
+   funcs [18] := Func18;
+   funcs [19] := Func19;
+   funcs [20] := Func20;
+   funcs [21] := Func21;
+   funcs [22] := Func22;
+   funcs [23] := Func23;
+   funcs [24] := Func24;
+   funcs [25] := Func25;
+   funcs [26] := Func26;
+   funcs [27] := Func27;
+   funcs [28] := Func28;
+   funcs [29] := Func29;
    Npp.PluginName := PluginName;
    Npp.onReady := OnReady;
    Npp.onSetInfo := OnSetInfo;
