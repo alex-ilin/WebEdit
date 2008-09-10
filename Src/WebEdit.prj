@@ -9,6 +9,7 @@
 -DOREORDER+
 -PROCINLINE-
 -GENPTRINIT+
+-CC=MSVC
 
 % Run-time checks
 -IOVERFLOW-
