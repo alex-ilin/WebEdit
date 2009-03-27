@@ -238,6 +238,18 @@ BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
 
+PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
+(* Copy [beg, end) characters from src to dst [to, to+end-beg], append 0X to dst. *)
+VAR i: INTEGER;
+BEGIN
+   i := to;
+   WHILE beg < end DO
+      dst [i] := src [beg];
+      INC (i); INC (beg)
+   END;
+   dst [i] := 0X
+END CopyTo;
+
 PROCEDURE AppendStr (VAR str: ARRAY OF CHAR; end: ARRAY OF CHAR);
 (* Append end to str, both strings and the result are null-terminated. *)
 VAR i, c, max: LONGINT;
@@ -332,18 +344,6 @@ VAR
       line [i] := 0X;
       RETURN (i > 0) & ~section
    END ReadLine;
-
-   PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
-   (* Copy [beg, end) characters from src to dst [to, to+end-beg], append 0X to dst. *)
-   VAR i: INTEGER;
-   BEGIN
-      i := to;
-      WHILE beg < end DO
-         dst [i] := src [beg];
-         INC (i); INC (beg)
-      END;
-      dst [i] := 0X
-   END CopyTo;
 
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
    (* Initialize pair with data from line, return TRUE on success. *)
