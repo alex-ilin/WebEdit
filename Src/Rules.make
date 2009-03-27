@@ -21,7 +21,7 @@ include ../A3Lib/Rules.make
 %Ver.res: %Ver.rc
 	gorc /r $<
 
-%.dll: %.prj %Ver.res ../Lib/*.ob2 *.ob2 $(sym_files)
+%.dll: %.prj %Ver.res ../Lib/*.ob2 %.ob2 $(sym_files)
 	xc =project $<
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
