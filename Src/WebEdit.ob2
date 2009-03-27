@@ -478,10 +478,10 @@ PROCEDURE GetCharPos (VAR str: ARRAY OF CHAR; ch: CHAR): INTEGER;
 VAR res: INTEGER;
 BEGIN
    res := 0;
-   WHILE (str [res] # 0X) & (str [res] # NumChar) DO
+   WHILE (str [res] # 0X) & (str [res] # ch) DO
       INC (res)
    END;
-   IF str [res] # NumChar THEN
+   IF str [res] # ch THEN
       res := -1;
    END;
    RETURN res
