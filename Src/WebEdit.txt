@@ -84,8 +84,8 @@ PS: If you feel that the limit of 30 functions maximum is too constricting, you
 may painlessly increase the number up to 99, but you will have to recompile the
 plugin. See instructions in the WebEdit.ob2 source file.
 
-Created by Alexander Iljin (Amadeus IT Solutions) on March-July, 2008. You may
-contact me via e-mail: AlexIljin@users.SourceForge.net
+Created by Alexander Iljin (Amadeus IT Solutions) on March 2008 - March 2009.
+You may contact me via e-mail: AlexIljin@users.SourceForge.net
 The preferred method for feedback is the Notepad++ forum. Post your feature
 requests and bug reports here:
 https://sourceforge.net/forum/forum.php?thread_id=1959856&forum_id=482781
