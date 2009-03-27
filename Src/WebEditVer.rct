@@ -12,7 +12,7 @@ FILETYPE VFT_APP
   BLOCK "040904b0" //e4
   {
    VALUE "CompanyName", "Amadeus IT Solutions\000"
-   VALUE "LegalCopyright", "© 2008 by @[Authors]\000"
+   VALUE "LegalCopyright", "© 2008 - 2009 by @[Authors]\000"
    VALUE "FileDescription", "WebEdit plugin for Notepad++.\000"
    VALUE "FileVersion", "@[Ver1].@[Ver2].@[Ver3].@[Ver4]\000"
    VALUE "ProductVersion", "@[Ver1].@[Ver2].@[Ver3].@[Ver4]\000"
