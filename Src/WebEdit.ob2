@@ -347,7 +347,7 @@ VAR
 
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
    (* Initialize pair with data from line, return TRUE on success. *)
-   VAR i, eqPos, selPos, len: INTEGER;
+   VAR eqPos, selPos, len: INTEGER;
 
       PROCEDURE UnescapeStr (VAR str: ARRAY OF CHAR);
       (* Process line replacing escaped characters with their literal equivalents.
