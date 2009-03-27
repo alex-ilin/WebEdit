@@ -9,7 +9,7 @@ MODULE WebEditU;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPPU;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -41,7 +41,7 @@ CONST
    MaxFuncs = 30; (* 0 < MaxFuncs < 100 *)
 
    (* Menu items *)
-   NumChar = 'X'; (* this character is a placeholder for a number in NotUsedFuncStr *)
+   NumChar = ORD ('X'); (* the placeholder character for a number in NotUsedFuncStr *)
    NotUsedFuncStr = 'WebEdit Slot XX';
    LoadConfigStr = 'Load Config';
    AboutStr = 'About...';
@@ -66,12 +66,12 @@ VAR
    pairs: ARRAY MaxFuncs OF Pair;
    numPairs: INTEGER;
 
-PROCEDURE LoadBitmap (VAR fname: ARRAY OF CHAR): Win.HBITMAP;
+PROCEDURE LoadBitmap (VAR fname: ARRAY OF Npp.Char): Win.HBITMAP;
 (* Load a bitmap image from the given file name and return the handle. *)
 BEGIN
    RETURN SYSTEM.VAL (Win.HBITMAP,
-      Win.LoadImage (
-         NIL, SYSTEM.VAL (Win.PSTR, SYSTEM.ADR (fname)), Win.IMAGE_BITMAP, 0, 0,
+      Win.LoadImageW (
+         NIL, SYSTEM.VAL (Win.PWSTR, SYSTEM.ADR (fname)), Win.IMAGE_BITMAP, 0, 0,
          Win.LR_DEFAULTSIZE + Win.LR_LOADMAP3DCOLORS + Win.LR_LOADFROMFILE
       )
    )
@@ -87,6 +87,17 @@ BEGIN
    END;
    RETURN res
 END Length;
+
+PROCEDURE LengthU (VAR str: ARRAY OF Npp.Char): LONGINT;
+(* Unicode version of the Length procedure. *)
+VAR res: LONGINT;
+BEGIN
+   res := 0;
+   WHILE str [res] # 0 DO
+      INC (res)
+   END;
+   RETURN res
+END LengthU;
 
 PROCEDURE SurroundSelection (sc: Sci.Handle; VAR leftText, rightText: ARRAY OF CHAR);
 VAR
@@ -250,19 +261,41 @@ BEGIN
    dst [i] := 0X
 END CopyTo;
 
-PROCEDURE AppendStr (VAR str: ARRAY OF CHAR; end: ARRAY OF CHAR);
-(* Append end to str, both strings and the result are null-terminated. *)
+PROCEDURE CopyToU (VAR src: ARRAY OF CHAR; VAR dst: ARRAY OF Npp.Char; beg, end, to: INTEGER);
+(* Same as CopyTo, but src is copied to the Unicode dst with conversion. *)
+VAR res: LONGINT;
+BEGIN
+   res := to;
+   IF beg < end THEN
+      res := Win.MultiByteToWideChar (Win.CP_ACP, Win.MULTIBYTE_SET {},
+         src [beg], end - beg, dst [to], LEN (dst) - to - 1);
+      ASSERT (res # 0, 60);
+      INC (res, to)
+   END;
+   dst [res] := 0
+END CopyToU;
+
+PROCEDURE AppendStr (VAR str: ARRAY OF Npp.Char; end: ARRAY OF CHAR);
+(* Append end to str, both strings and the result are null-terminated. End is
+ * converted to Unicode on the fly. *)
 VAR i, c, max: LONGINT;
 BEGIN
-   i := Length (str);
-   c := 0;
-   max := LEN (str) - 1;
-   WHILE (end [c] # 0X) & (i < max) DO
-      str [i] := end [c];
-      INC (i); INC (c)
+   i := LengthU (str);
+   c := Length (end);
+   max := LEN (str) - i - 1;
+   IF c > max THEN
+      c := max
    END;
-   str [i] := 0X
+   CopyToU (end, str, 0, SHORT (c), SHORT (i));
+   str [i + c] := 0
 END AppendStr;
+
+PROCEDURE AssignStr (VAR str: ARRAY OF Npp.Char; value: ARRAY OF CHAR);
+(* Assign the contents of 'value' to 'str'. *)
+BEGIN
+   str [0] := 0;
+   AppendStr (str, value)
+END AssignStr;
 
 PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
 BEGIN
@@ -275,17 +308,17 @@ BEGIN
    RETURN SHORT (ORD (ch) - ORD ('0'))
 END CharToDigit;
 
-PROCEDURE DigitToChar (digit: INTEGER): CHAR;
+PROCEDURE DigitToChar (digit: INTEGER): Npp.Char;
 (* Return the last decimal digit  *)
 BEGIN
-   RETURN CHR ((digit MOD 10) + ORD ('0'))
+   RETURN (digit MOD 10) + ORD ('0')
 END DigitToChar;
 
 PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
 CONST commentChar = ';';
 VAR
    buff, line: ARRAY 1024 OF CHAR;
-   configDir, fname: ARRAY Win.MAX_PATH OF CHAR;
+   configDir, fname: ARRAY Win.MAX_PATH OF Npp.Char;
    buffPos, buffLen, configDirLen, maxFnameLen: INTEGER;
    hFile: Win.HANDLE;
    ch: CHAR;
@@ -423,8 +456,8 @@ VAR
             DEC (num); (* items are numbered from 1, in ini-file *)
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
-               COPY (configDir, fname);
-               CopyTo (line, fname, i, len, configDirLen);
+               Npp.Copy (configDir, fname);
+               CopyToU (line, fname, i, len, configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
          END
@@ -438,11 +471,11 @@ BEGIN
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
    AppendStr (configDir, '\');
-   configDirLen := SHORT (Length (configDir));
+   configDirLen := SHORT (LengthU (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
-   COPY (configDir, fname);
+   Npp.Copy (configDir, fname);
    AppendStr (fname, IniFileName);
-   hFile := Win.CreateFile (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
+   hFile := Win.CreateFileW (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
       WHILE ReadLine () DO
@@ -473,12 +506,12 @@ BEGIN
    END
 END ReadConfig;
 
-PROCEDURE GetCharPos (VAR str: ARRAY OF CHAR; ch: CHAR): INTEGER;
+PROCEDURE GetCharPos (VAR str: ARRAY OF Npp.Char; ch: Npp.Char): INTEGER;
 (* Return index of the first occurence of the ch character in str, -1 if none found. *)
 VAR res: INTEGER;
 BEGIN
    res := 0;
-   WHILE (str [res] # 0X) & (str [res] # ch) DO
+   WHILE (str [res] # 0) & (str [res] # ch) DO
       INC (res)
    END;
    IF str [res] # ch THEN
@@ -487,7 +520,7 @@ BEGIN
    RETURN res
 END GetCharPos;
 
-PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF CHAR; pos, num: INTEGER);
+PROCEDURE MakeDummyFuncName (VAR str: ARRAY OF Npp.Char; pos, num: INTEGER);
 (* Replace characters at pos and (pos+1) in str with num in decimal notation.
  * If pos < 0, do nothing. *)
 BEGIN
@@ -501,16 +534,15 @@ END MakeDummyFuncName;
 PROCEDURE UpdateMenuItems (forShortcutMapper: BOOLEAN);
 VAR
    i, numPos: INTEGER;
-   fname: ARRAY Npp.MenuItemNameLength OF CHAR;
+   fname: ARRAY Npp.MenuItemNameLength OF Npp.Char;
 BEGIN
    (* enable and update text for loaded menu items *)
    i := 0;
    WHILE i < numPairs DO
+      fname [0] := 0;
       IF forShortcutMapper THEN
-         fname := PluginName;
-         AppendStr (fname, ' - ')
-      ELSE
-         fname := ''
+         AppendStr (fname, PluginName);
+         AppendStr (fname, ' - ');
       END;
       AppendStr (fname, pairs [i].name^);
       Npp.SetMenuItemName (i, fname);
@@ -519,7 +551,7 @@ BEGIN
    END;
    (* disable and reset text for the rest *)
    IF i < MaxFuncs THEN
-      fname := NotUsedFuncStr;
+      AssignStr (fname, NotUsedFuncStr);
       numPos := GetCharPos (fname, NumChar);
       REPEAT
          MakeDummyFuncName (fname, numPos, i + 1);
@@ -551,7 +583,9 @@ PROCEDURE Init ();
 VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
-   fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
+   fname: ARRAY LEN (NotUsedFuncStr) OF Npp.Char;
+   loadConfigStr: ARRAY LEN (LoadConfigStr) OF Npp.Char;
+   aboutStr: ARRAY LEN (AboutStr) OF Npp.Char;
 BEGIN
    IF MaxFuncs + 3 > Npp.DefNumMenuItems THEN
       Npp.SetNumMenuItems (MaxFuncs + 3)
@@ -586,10 +620,10 @@ BEGIN
    funcs [27] := Func27;
    funcs [28] := Func28;
    funcs [29] := Func29;
-   Npp.PluginName := PluginName;
+   AssignStr (Npp.PluginName, PluginName);
    Npp.onReady := OnReady;
    Npp.onSetInfo := OnSetInfo;
-   fname := NotUsedFuncStr;
+   AssignStr (fname, NotUsedFuncStr);
    numPos := GetCharPos (fname, NumChar);
    i := 0;
    WHILE i < MaxFuncs DO
@@ -598,8 +632,10 @@ BEGIN
       INC (i)
    END;
    Npp.AddMenuSeparator;
-   Npp.AddMenuItem (LoadConfigStr, LoadConfig, FALSE, NIL);
-   Npp.AddMenuItem (AboutStr, About, FALSE, NIL)
+   AssignStr (loadConfigStr, LoadConfigStr);
+   Npp.AddMenuItem (loadConfigStr, LoadConfig, FALSE, NIL);
+   AssignStr (aboutStr, AboutStr);
+   Npp.AddMenuItem (aboutStr, About, FALSE, NIL)
 END Init;
 
 BEGIN Init
