@@ -13,7 +13,7 @@ FILETYPE VFT_APP
   {
    VALUE "CompanyName", "Amadeus IT Solutions\000"
    VALUE "LegalCopyright", "© 2008 - 2009 by @[Authors]\000"
-   VALUE "FileDescription", "WebEdit plugin for Notepad++ (ANSI).\000"
+   VALUE "FileDescription", "WebEdit plugin for Notepad++ (Unicode).\000"
    VALUE "FileVersion", "@[Ver1].@[Ver2].@[Ver3].@[Ver4]\000"
    VALUE "ProductVersion", "@[Ver1].@[Ver2].@[Ver3].@[Ver4]\000"
    VALUE "ProductName", "WebEdit\000"

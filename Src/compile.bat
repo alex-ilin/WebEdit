@@ -1,4 +1,5 @@
 xc =p WebEdit.prj
+xc =p WebEditU.prj
 
 @echo off
 mkdir obj 2> NUL

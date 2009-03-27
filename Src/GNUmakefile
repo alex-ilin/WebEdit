@@ -8,7 +8,7 @@
 # Default rule: make *.prj into *.dll
 
 # space-separated list of .prj files to compile into *.dll
-PROJECT := WebEdit.prj
+PROJECT := WebEdit.prj WebEditU.prj
 
 PRJ_EXE := $(patsubst %.prj,%.dll,$(PROJECT))
 
