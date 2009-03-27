@@ -5,7 +5,7 @@ because the changes do not take effect until the main module is recompiled.    *
 MODULE WebEdit;
 
 (* ---------------------------------------------------------------------------
- * (C) 2008 by Alexander Iljin
+ * (C) 2008 - 2009 by Alexander Iljin
  * --------------------------------------------------------------------------- *)
 
 IMPORT
@@ -53,7 +53,7 @@ CONST
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
       +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March-July 2008.'+CRLF
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2009.'+CRLF
       +'Contact e-mail: AlexIljin@users.SourceForge.net';
 
 TYPE
