@@ -334,7 +334,7 @@ VAR
    END ReadLine;
 
    PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
-   (* Copy [beg, end) characters from str to dst [to, to+end-beg], append 0X to dst. *)
+   (* Copy [beg, end) characters from src to dst [to, to+end-beg], append 0X to dst. *)
    VAR i: INTEGER;
    BEGIN
       i := to;
