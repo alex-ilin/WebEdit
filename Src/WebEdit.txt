@@ -52,6 +52,10 @@ Example: 1=Paragraph.bmp
 Slot numbers are 1..30. The file should be placed in the plugins/Config folder
 and should contain a bitmap image suitable for the toolbar.
 
+To display custom toolbar buttons Notepad++ should be configured to use "Small
+standard icons" (it is by default). To find this option go to the "Settings -
+Preferences..." menu, and in the "Global" tab look for the "Tool bar" group.
+
 The configuration file is looked for in the standard plugin configuration
 folder of the Notepad++ (if Notepad++ is installed in portable mode, the folder
 is "Notepad++\plugins\Config"). You may edit the file and update the plugin
