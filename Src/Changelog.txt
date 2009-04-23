@@ -1,5 +1,8 @@
 WebEdit changelog.
 
+Version 1.3.2.2 23 Apr 2009.
+- Included a sample bitmap in the distribution package.
+
 Version 1.3.2.1 02 Apr 2009.
 - Populated the WebEdit.ini with some HTML tags (based on the sample set provided by Jonas Flint (jive) http://www.zero1productions.com).
 - The sample WebEdit.ini is moved to Config subfolder of the distribution package for easier installation.
