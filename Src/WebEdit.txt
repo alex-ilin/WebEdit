@@ -24,6 +24,8 @@ otherwise it is not.) If the WebEdit.dll file is not installed, you will not
 see the "WebEdit" menu under the Plugins menu. If the WebEdit.ini file is not
 installed, you will see that the Plugins - WebEdit menu consists entirely of
 disabled items.
+The Config folder of the distribution package contains a sample WebEdit.ini
+and a sample bitmap for the toolbar button.
 
 The WebEdit plugin allows you to create commands to wrap the selected text in
 tags. The commands are to be defined in the "[Commands]" section of the
