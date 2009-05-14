@@ -9,3 +9,6 @@
 
 default:
 	$(MAKE) -C Src
+
+test:
+	echo No tests for this application exist.
