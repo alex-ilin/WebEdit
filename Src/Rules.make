@@ -28,9 +28,14 @@ include ../A3Lib/Rules.make
 
 WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ini WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res WebEditSample.bmp
 	md WebEdit\Config
-	cp $? WebEdit
-	cmd /c move WebEdit\WebEdit.ini WebEdit\Config\WebEdit.ini
-	cmd /c move WebEdit\WebEditSample.bmp WebEdit\Config\WebEditSample.bmp
+	md WebEdit\Source
+	cp $? WebEdit\Source
+	cmd /c move WebEdit\Source\WebEdit.ini WebEdit\Config\WebEdit.ini
+	cmd /c move WebEdit\Source\WebEditSample.bmp WebEdit\Config\WebEditSample.bmp
+	cmd /c move WebEdit\Source\WebEdit.dll WebEdit\WebEdit.dll
+	cmd /c move WebEdit\Source\WebEditU.dll WebEdit\WebEditU.dll
+	cmd /c move WebEdit\Source\WebEdit.txt WebEdit\WebEdit.txt
+	cmd /c move WebEdit\Source\Changelog.txt WebEdit\Changelog.txt
 	zip -m -9 -r WebEdit WebEdit/*
 	rd WebEdit
 
