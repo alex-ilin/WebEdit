@@ -30,7 +30,7 @@ WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
-	$(if $(filter Config/%,             $?), cmd /c move $(subst Config/, WebEdit\Config\, $(filter Config/%, $?)) WebEdit\Config\)
+	$(if $(filter Config/%,             $?), mv $(subst Config/, WebEdit/Source/, $(filter Config/%, $?)) WebEdit/Config)
 	$(if $(findstring WebEdit.dll,      $?), cmd /c move WebEdit\Source\WebEdit.dll   WebEdit\)
 	$(if $(findstring WebEditU.dll,     $?), cmd /c move WebEdit\Source\WebEditU.dll  WebEdit\)
 	$(if $(findstring WebEdit.txt,      $?), cmd /c move WebEdit\Source\WebEdit.txt   WebEdit\)
