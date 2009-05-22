@@ -419,7 +419,7 @@ VAR
          IF i = 2 THEN
             num := num * 10 + CharToDigit (line [1])
          END;
-         IF num < MaxFuncs THEN
+         IF (0 < num) & (num <= numRead) THEN
             DEC (num); (* items are numbered from 1, in ini-file *)
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
