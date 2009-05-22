@@ -26,12 +26,11 @@ include ../A3Lib/Rules.make
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
 
-WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ini WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res WebEditSample.bmp
+WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/WebEditSample.bmp
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
-	$(if $(findstring WebEdit.ini,      $?), cmd /c move WebEdit\Source\WebEdit.ini       WebEdit\Config\)
-	$(if $(findstring WebEditSample.bmp,$?), cmd /c move WebEdit\Source\WebEditSample.bmp WebEdit\Config\)
+	$(if $(filter Config/%,             $?), cmd /c move $(subst Config/, WebEdit\Config\, $(filter Config/%, $?)) WebEdit\Config\)
 	$(if $(findstring WebEdit.dll,      $?), cmd /c move WebEdit\Source\WebEdit.dll   WebEdit\)
 	$(if $(findstring WebEditU.dll,     $?), cmd /c move WebEdit\Source\WebEditU.dll  WebEdit\)
 	$(if $(findstring WebEdit.txt,      $?), cmd /c move WebEdit\Source\WebEdit.txt   WebEdit\)
