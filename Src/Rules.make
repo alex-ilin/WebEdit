@@ -26,7 +26,7 @@ include ../A3Lib/Rules.make
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
 
-WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/WebEditSample.bmp
+WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/*.bmp
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
