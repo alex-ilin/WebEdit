@@ -12,9 +12,9 @@ not used. Both text insertions can be undone/redone as a single action.
 INSTALLATION AND SETUP
 
 To use this plugin you have to copy two files:
-- either WebEdit.dll (for ANSI version) or WebEditU.dll (for Unicode version)
-  to Notepad++\plugins\ folder;
-- WebEdit.ini to Notepad++\plugins\Config\ folder.
+- file 1: either WebEdit.dll (if you use ANSI version of Notepad++) 
+  or WebEditU.dll (for the Unicode version) to Notepad++\plugins\ folder;
+- file 2: WebEdit.ini to Notepad++\plugins\Config\ folder.
 Both folders are to be found either in "Program Files" or in "Application Data"
 of your current user, depending on whether you installed Notepad++ in the
 Portable mode or not. (Hint: to determine whether Notepad++ is installed in
