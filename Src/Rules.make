@@ -16,7 +16,7 @@ include ../A3Lib/Rules.make
 .PRECIOUS: %Ver.res
 
 %Ver.rc: %Ver %Ver.rct
-	cte $< $<.rct $@
+	sed --file=$< < $<.rct > $@
 
 %Ver.res: %Ver.rc
 	gorc /r $<
