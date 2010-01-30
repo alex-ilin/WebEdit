@@ -18,7 +18,7 @@ FILETYPE VFT_APP
    VALUE "ProductVersion", "$Ver1.$Ver2.$Ver3.$Ver4\000"
    VALUE "ProductName", "WebEdit\000"
    VALUE "InternalName", "WebEdit\000"
-   VALUE "OriginalFilename", "WebEdit.dll\000"
+   VALUE "OriginalFilename", "WebEditU.dll\000"
    VALUE "Programming language", "Oberon-2\000"
    VALUE "Tools", "XDS, Notepad++, GNU Make, GoRC\000"
    VALUE "Comments", "This plugin is freeware and open-source. You may contact me via e-mail: AlexIljin@users.SourceForge.net.\000"
