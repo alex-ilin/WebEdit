@@ -2,6 +2,6 @@ s/$Ver1/1/
 s/$Ver2/3/
 s/$Ver3/3/
 s/$Ver4/0/
-# Available file flags: 0 | VS_FF_DEBUG | VS_FF_PRERELEASE | VS_FF_PRIVATEBUILD
+# Available file flags (VS_FF_XXX): 0 | DEBUG | PATCHED | PRERELEASE | INFOINFERRED | PRIVATEBUILD | SPECIALBUILD 
 s/$FileFlags/0/
 s/$Authors/Alexander Iljin/
