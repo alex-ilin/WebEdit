@@ -117,7 +117,7 @@ END SurroundSelection;
 
 PROCEDURE ApplyPair (VAR pair: Pair);
 (* Surround currently selected text in the current Scintilla view with a pair of tags. *)
-VAR sci: Win.HWND;
+VAR sci: Sci.Handle;
 BEGIN
    sci := Npp.GetCurrentScintilla ();
    SurroundSelection (sci, pair.left^, pair.right^)
