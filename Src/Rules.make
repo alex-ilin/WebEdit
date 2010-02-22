@@ -26,6 +26,12 @@ include ../A3Lib/Rules.make
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
 
+install: WebEdit.dll
+	-"d:\Program Files\System\SysInt\pskill.exe" notepad++
+	sleep 1
+	cp -f $< "d:/Program Files/Utils/Notepad++/plugins"
+	start "" "d:\Program Files\Utils\Notepad++\Notepad++.exe"
+
 WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/*.bmp
 	md WebEdit\Config
 	md WebEdit\Source
