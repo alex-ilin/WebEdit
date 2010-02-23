@@ -9,7 +9,7 @@ MODULE WebEdit;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,Str;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -239,32 +239,6 @@ BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
 
-PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
-(* Copy [beg, end) characters from src to dst [to, to+end-beg], append 0X to dst. *)
-VAR i: INTEGER;
-BEGIN
-   i := to;
-   WHILE beg < end DO
-      dst [i] := src [beg];
-      INC (i); INC (beg)
-   END;
-   dst [i] := 0X
-END CopyTo;
-
-PROCEDURE AppendStr (VAR str: ARRAY OF CHAR; end: ARRAY OF CHAR);
-(* Append end to str, both strings and the result are null-terminated. *)
-VAR i, c, max: LONGINT;
-BEGIN
-   i := Length (str);
-   c := 0;
-   max := LEN (str) - 1;
-   WHILE (end [c] # 0X) & (i < max) DO
-      str [i] := end [c];
-      INC (i); INC (c)
-   END;
-   str [i] := 0X
-END AppendStr;
-
 PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
 BEGIN
    RETURN ('0' <= ch) & (ch <= '9')
@@ -396,9 +370,9 @@ VAR
       NEW (pair.name, eqPos + 1);
       NEW (pair.left, selPos - eqPos);
       NEW (pair.right, len - selPos);
-      CopyTo (line, pair.name^, 0, eqPos, 0);
-      CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
-      CopyTo (line, pair.right^, selPos + 1, len, 0);
+      Str.CopyTo (line, pair.name^, 0, eqPos, 0);
+      Str.CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
+      Str.CopyTo (line, pair.right^, selPos + 1, len, 0);
       UnescapeStr (pair.left^);
       UnescapeStr (pair.right^);
       RETURN TRUE
@@ -425,7 +399,7 @@ VAR
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
                COPY (configDir, fname);
-               CopyTo (line, fname, i, len, configDirLen);
+               Str.CopyTo (line, fname, i, len, configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
          END
@@ -438,11 +412,11 @@ BEGIN
    buffLen := 0;
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
-   AppendStr (configDir, '\');
+   Str.AppendC (configDir, '\');
    configDirLen := SHORT (Length (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
    COPY (configDir, fname);
-   AppendStr (fname, IniFileName);
+   Str.AppendC (fname, IniFileName);
    hFile := Win.CreateFile (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
@@ -509,11 +483,11 @@ BEGIN
    WHILE i < numPairs DO
       IF forShortcutMapper THEN
          fname := PluginName;
-         AppendStr (fname, ' - ')
+         Str.AppendC (fname, ' - ')
       ELSE
          fname := ''
       END;
-      AppendStr (fname, pairs [i].name^);
+      Str.Append (fname, pairs [i].name^);
       Npp.SetMenuItemName (i, fname);
       Npp.EnableMenuItem (i, TRUE);
       INC (i)
@@ -536,8 +510,8 @@ PROCEDURE ['C'] EditConfig ();
 VAR fname: ARRAY Win.MAX_PATH OF Npp.Char;
 BEGIN
    Npp.GetPluginConfigDir (fname);
-   AppendStr (fname, '\');
-   AppendStr (fname, IniFileName);
+   Str.AppendC (fname, '\');
+   Str.AppendC (fname, IniFileName);
    IF ~Npp.OpenFile (fname) THEN
       Win.MessageBox (Npp.handle, 'Error while opening config file.', PluginName, Win.MB_OK);
    END;

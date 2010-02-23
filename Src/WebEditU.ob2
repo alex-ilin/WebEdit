@@ -9,7 +9,7 @@ MODULE WebEditU;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPPU;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPPU,Str,StrU;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -78,28 +78,6 @@ BEGIN
    )
 END LoadBitmap;
 
-PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
-(* Return length of the null-terminated string str. *)
-VAR res: LONGINT;
-BEGIN
-   res := 0;
-   WHILE str [res] # 0X DO
-      INC (res)
-   END;
-   RETURN res
-END Length;
-
-PROCEDURE LengthU (VAR str: ARRAY OF Npp.Char): LONGINT;
-(* Unicode version of the Length procedure. *)
-VAR res: LONGINT;
-BEGIN
-   res := 0;
-   WHILE str [res] # 0 DO
-      INC (res)
-   END;
-   RETURN res
-END LengthU;
-
 PROCEDURE SurroundSelection (sc: Sci.Handle; VAR leftText, rightText: ARRAY OF CHAR);
 VAR
    start, end, i: LONGINT;
@@ -109,7 +87,7 @@ BEGIN
    Sci.GetSelectionExtent (sc, start, end, bool);
    Sci.InsertText (sc, end, rightText);
    Sci.InsertText (sc, start, leftText);
-   i := Length (leftText);
+   i := Str.Length (leftText);
    INC (start, i);
    INC (end, i);
    Sci.SetSelectionExtent (sc, start, end, bool);
@@ -250,54 +228,6 @@ BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
 
-PROCEDURE CopyTo (VAR src, dst: ARRAY OF CHAR; beg, end, to: INTEGER);
-(* Copy [beg, end) characters from src to dst [to, to+end-beg], append 0X to dst. *)
-VAR i: INTEGER;
-BEGIN
-   i := to;
-   WHILE beg < end DO
-      dst [i] := src [beg];
-      INC (i); INC (beg)
-   END;
-   dst [i] := 0X
-END CopyTo;
-
-PROCEDURE CopyToU (VAR src: ARRAY OF CHAR; VAR dst: ARRAY OF Npp.Char; beg, end, to: INTEGER);
-(* Same as CopyTo, but src is copied to the Unicode dst with conversion. *)
-VAR res: LONGINT;
-BEGIN
-   res := to;
-   IF beg < end THEN
-      res := Win.MultiByteToWideChar (Win.CP_ACP, Win.MULTIBYTE_SET {},
-         src [beg], end - beg, dst [to], LEN (dst) - to - 1);
-      ASSERT (res # 0, 60);
-      INC (res, to)
-   END;
-   dst [res] := 0
-END CopyToU;
-
-PROCEDURE AppendStr (VAR str: ARRAY OF Npp.Char; end: ARRAY OF CHAR);
-(* Append end to str, both strings and the result are null-terminated. End is
- * converted to Unicode on the fly. *)
-VAR i, c, max: LONGINT;
-BEGIN
-   i := LengthU (str);
-   c := Length (end);
-   max := LEN (str) - i - 1;
-   IF c > max THEN
-      c := max
-   END;
-   CopyToU (end, str, 0, SHORT (c), SHORT (i));
-   str [i + c] := 0
-END AppendStr;
-
-PROCEDURE AssignStr (value: ARRAY OF CHAR; VAR str: ARRAY OF Npp.Char);
-(* Assign the contents of 'value' to 'str'. *)
-BEGIN
-   str [0] := 0;
-   AppendStr (str, value)
-END AssignStr;
-
 PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
 BEGIN
    RETURN ('0' <= ch) & (ch <= '9')
@@ -429,9 +359,9 @@ VAR
       NEW (pair.name, eqPos + 1);
       NEW (pair.left, selPos - eqPos);
       NEW (pair.right, len - selPos);
-      CopyTo (line, pair.name^, 0, eqPos, 0);
-      CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
-      CopyTo (line, pair.right^, selPos + 1, len, 0);
+      Str.CopyTo (line, pair.name^, 0, eqPos, 0);
+      Str.CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
+      Str.CopyTo (line, pair.right^, selPos + 1, len, 0);
       UnescapeStr (pair.left^);
       UnescapeStr (pair.right^);
       RETURN TRUE
@@ -441,7 +371,7 @@ VAR
    VAR i, num, len: INTEGER;
    BEGIN
       i := 0;
-      len := SHORT (Length (line));
+      len := SHORT (Str.Length (line));
       WHILE (i < len) & (line [i] # '=') DO
          INC (i)
       END;
@@ -458,7 +388,7 @@ VAR
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
                Npp.Copy (configDir, fname);
-               CopyToU (line, fname, i, len, configDirLen);
+               StrU.CopyTo (line, fname, i, len, configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
          END
@@ -471,11 +401,11 @@ BEGIN
    buffLen := 0;
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
-   AppendStr (configDir, '\');
-   configDirLen := SHORT (LengthU (configDir));
+   StrU.Append (configDir, '\');
+   configDirLen := SHORT (StrU.Length (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
    Npp.Copy (configDir, fname);
-   AppendStr (fname, IniFileName);
+   StrU.Append (fname, IniFileName);
    hFile := Win.CreateFileW (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
@@ -542,17 +472,17 @@ BEGIN
    WHILE i < numPairs DO
       fname [0] := 0;
       IF forShortcutMapper THEN
-         AppendStr (fname, PluginName);
-         AppendStr (fname, ' - ');
+         StrU.Append (fname, PluginName);
+         StrU.Append (fname, ' - ');
       END;
-      AppendStr (fname, pairs [i].name^);
+      StrU.Append (fname, pairs [i].name^);
       Npp.SetMenuItemName (i, fname);
       Npp.EnableMenuItem (i, TRUE);
       INC (i)
    END;
    (* disable and reset text for the rest *)
    IF i < MaxFuncs THEN
-      AssignStr (NotUsedFuncStr, fname);
+      StrU.Assign (NotUsedFuncStr, fname);
       numPos := GetCharPos (fname, NumChar);
       REPEAT
          MakeDummyFuncName (fname, numPos, i + 1);
@@ -568,8 +498,8 @@ PROCEDURE ['C'] EditConfig ();
 VAR fname: ARRAY Win.MAX_PATH OF Npp.Char;
 BEGIN
    Npp.GetPluginConfigDir (fname);
-   AppendStr (fname, '\');
-   AppendStr (fname, IniFileName);
+   StrU.Append (fname, '\');
+   StrU.Append (fname, IniFileName);
    IF ~Npp.OpenFile (fname) THEN
       Win.MessageBox (Npp.handle, 'Error while opening config file.', PluginName, Win.MB_OK);
    END;
@@ -634,10 +564,10 @@ BEGIN
    funcs [27] := Func27;
    funcs [28] := Func28;
    funcs [29] := Func29;
-   AssignStr (PluginName, Npp.PluginName);
+   StrU.Assign (PluginName, Npp.PluginName);
    Npp.onReady := OnReady;
    Npp.onSetInfo := OnSetInfo;
-   AssignStr (NotUsedFuncStr, fname);
+   StrU.Assign (NotUsedFuncStr, fname);
    numPos := GetCharPos (fname, NumChar);
    i := 0;
    WHILE i < MaxFuncs DO
@@ -646,11 +576,11 @@ BEGIN
       INC (i)
    END;
    Npp.AddMenuSeparator;
-   AssignStr (EditConfigStr, editConfigStr);
+   StrU.Assign (EditConfigStr, editConfigStr);
    Npp.AddMenuItem (editConfigStr, EditConfig, FALSE, NIL);
-   AssignStr (LoadConfigStr, loadConfigStr);
+   StrU.Assign (LoadConfigStr, loadConfigStr);
    Npp.AddMenuItem (loadConfigStr, LoadConfig, FALSE, NIL);
-   AssignStr (AboutStr, aboutStr);
+   StrU.Assign (AboutStr, aboutStr);
    Npp.AddMenuItem (aboutStr, About, FALSE, NIL)
 END Init;
 
