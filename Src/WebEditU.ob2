@@ -401,11 +401,11 @@ BEGIN
    buffLen := 0;
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
-   StrU.Append (configDir, '\');
+   StrU.AppendC (configDir, '\');
    configDirLen := SHORT (StrU.Length (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
    Npp.Copy (configDir, fname);
-   StrU.Append (fname, IniFileName);
+   StrU.AppendC (fname, IniFileName);
    hFile := Win.CreateFileW (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
    IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
@@ -472,8 +472,8 @@ BEGIN
    WHILE i < numPairs DO
       fname [0] := 0;
       IF forShortcutMapper THEN
-         StrU.Append (fname, PluginName);
-         StrU.Append (fname, ' - ');
+         StrU.AppendC (fname, PluginName);
+         StrU.AppendC (fname, ' - ');
       END;
       StrU.Append (fname, pairs [i].name^);
       Npp.SetMenuItemName (i, fname);
@@ -498,8 +498,8 @@ PROCEDURE ['C'] EditConfig ();
 VAR fname: ARRAY Win.MAX_PATH OF Npp.Char;
 BEGIN
    Npp.GetPluginConfigDir (fname);
-   StrU.Append (fname, '\');
-   StrU.Append (fname, IniFileName);
+   StrU.AppendC (fname, '\');
+   StrU.AppendC (fname, IniFileName);
    IF ~Npp.OpenFile (fname) THEN
       Win.MessageBox (Npp.handle, 'Error while opening config file.', PluginName, Win.MB_OK);
    END;
