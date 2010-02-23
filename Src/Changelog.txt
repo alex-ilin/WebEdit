@@ -1,5 +1,10 @@
 WebEdit changelog.
 
+Version 1.4, 23 Feb 2010.
+- Added "Edit Config" menu item.
+- Updated documentation, clarified wording.
+- Scintilla "direct access" function is used for a tiny bit of speed improvement.
+
 Version 1.3.3, 22 May 2009.
 - Added a set of bitmaps and a few new commands published by acialk@users.sourceforge.net.
 - Fixed a couple of crash bugs caused by invalid slot numbers for the toolbar buttons.
