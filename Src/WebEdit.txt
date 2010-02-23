@@ -67,9 +67,11 @@ order they appear in the file. Unused menu slots appear as disabled and show
 text "WebEdit Slot XX", where XX is the number of the slot. The first slot is
 numbered "01".
 
-You may edit the ini-file and update the plugin configuration without
-restarting Notepad++ by selecting the "Load Config" command from the Plugins -
-WebEdit menu. (Note, the toolbar is only updated on Notepad++ startup.)
+You may edit the ini-file in Notepad++ by selecting "Edit Config" command from
+Plugins - WebEdit menu. Edit the file, save it, and update the plugin
+configuration by selecting "Load Config" command from the Plugins - WebEdit
+menu (you don't have to restart Notepad++, but note that toolbar is only
+updated on startup).
 
 The "[Toolbar]" section determines which of the command slots will be placed on
 the toolbar. Syntax: <slot number> "=" <file name>
