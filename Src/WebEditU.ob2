@@ -291,7 +291,7 @@ BEGIN
    str [i + c] := 0
 END AppendStr;
 
-PROCEDURE AssignStr (VAR str: ARRAY OF Npp.Char; value: ARRAY OF CHAR);
+PROCEDURE AssignStr (value: ARRAY OF CHAR; VAR str: ARRAY OF Npp.Char);
 (* Assign the contents of 'value' to 'str'. *)
 BEGIN
    str [0] := 0;
@@ -552,7 +552,7 @@ BEGIN
    END;
    (* disable and reset text for the rest *)
    IF i < MaxFuncs THEN
-      AssignStr (fname, NotUsedFuncStr);
+      AssignStr (NotUsedFuncStr, fname);
       numPos := GetCharPos (fname, NumChar);
       REPEAT
          MakeDummyFuncName (fname, numPos, i + 1);
@@ -634,10 +634,10 @@ BEGIN
    funcs [27] := Func27;
    funcs [28] := Func28;
    funcs [29] := Func29;
-   AssignStr (Npp.PluginName, PluginName);
+   AssignStr (PluginName, Npp.PluginName);
    Npp.onReady := OnReady;
    Npp.onSetInfo := OnSetInfo;
-   AssignStr (fname, NotUsedFuncStr);
+   AssignStr (NotUsedFuncStr, fname);
    numPos := GetCharPos (fname, NumChar);
    i := 0;
    WHILE i < MaxFuncs DO
@@ -646,11 +646,11 @@ BEGIN
       INC (i)
    END;
    Npp.AddMenuSeparator;
-   AssignStr (editConfigStr, EditConfigStr);
+   AssignStr (EditConfigStr, editConfigStr);
    Npp.AddMenuItem (editConfigStr, EditConfig, FALSE, NIL);
-   AssignStr (loadConfigStr, LoadConfigStr);
+   AssignStr (LoadConfigStr, loadConfigStr);
    Npp.AddMenuItem (loadConfigStr, LoadConfig, FALSE, NIL);
-   AssignStr (aboutStr, AboutStr);
+   AssignStr (AboutStr, aboutStr);
    Npp.AddMenuItem (aboutStr, About, FALSE, NIL)
 END Init;
 
