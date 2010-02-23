@@ -36,6 +36,15 @@ WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
+# Fix NotepadPP module so that it would compile with the standard Windows module
+	cd WebEdit\Source\ && rename NotepadPP.ob2 NotepadPP.ob2.tmp
+	cd WebEdit\Source\ && rename NotepadPPU.ob2 NotepadPPU.ob2.tmp
+	cd WebEdit\Source\ && @echo s/Win\.MF_BYCOMMAND + Win\.MF_STRING,/SYSTEM.VAL (SYSTEM.CARD32, Win.MF_BYCOMMAND + Win.MF_STRING),/ >SedRules.txt
+	cd WebEdit\Source\ && @echo s/Win\.MF_BYCOMMAND + Win\.MF_SEPARATOR,/SYSTEM.VAL (SYSTEM.CARD32, Win.MF_BYCOMMAND + Win.MF_SEPARATOR),/ >>SedRules.txt
+	cd WebEdit\Source\ && sed -f SedRules.txt <NotepadPP.ob2.tmp >NotepadPP.ob2
+	cd WebEdit\Source\ && sed -f SedRules.txt <NotepadPPU.ob2.tmp >NotepadPPU.ob2
+	cd WebEdit\Source\ && del SedRules.txt NotepadPP.ob2.tmp NotepadPPU.ob2.tmp
+# End of fix
 	$(if $(filter Config/%,          $?), mv $(subst Config/, WebEdit/Source/, $(filter Config/%, $?)) WebEdit/Config)
 	$(if $(findstring WebEdit.dll,   $?), mv WebEdit\Source\WebEdit.dll   WebEdit)
 	$(if $(findstring WebEditU.dll,  $?), mv WebEdit\Source\WebEditU.dll  WebEdit)
