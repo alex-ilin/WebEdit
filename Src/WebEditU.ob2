@@ -387,7 +387,7 @@ VAR
             DEC (num); (* items are numbered from 1, in ini-file *)
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
-               Npp.Copy (configDir, fname);
+               StrU.Copy (configDir, fname);
                StrU.CopyTo (line, fname, i, len, configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
@@ -404,7 +404,7 @@ BEGIN
    StrU.AppendC (configDir, '\');
    configDirLen := SHORT (StrU.Length (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
-   Npp.Copy (configDir, fname);
+   StrU.Copy (configDir, fname);
    StrU.AppendC (fname, IniFileName);
    hFile := Win.CreateFileW (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
       NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
