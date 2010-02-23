@@ -5,7 +5,7 @@ because the changes do not take effect until the main module is recompiled.    *
 MODULE WebEditU;
 
 (* ---------------------------------------------------------------------------
- * (C) 2008 - 2009 by Alexander Iljin
+ * (C) 2008 - 2010 by Alexander Iljin
  * --------------------------------------------------------------------------- *)
 
 IMPORT
@@ -43,6 +43,7 @@ CONST
    (* Menu items *)
    NumChar = ORD ('X'); (* the placeholder character for a number in NotUsedFuncStr *)
    NotUsedFuncStr = 'WebEdit Slot XX';
+   EditConfigStr = 'Edit Config';
    LoadConfigStr = 'Load Config';
    AboutStr = 'About...';
 
@@ -53,7 +54,7 @@ CONST
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
       +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - May 2009.'+CRLF
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - February 2010.'+CRLF
       +'Contact e-mail: AlexIljin@users.SourceForge.net';
 
 TYPE
@@ -562,6 +563,18 @@ BEGIN
    END
 END UpdateMenuItems;
 
+PROCEDURE ['C'] EditConfig ();
+(* Open ini-file for editing in Notepad++. *)
+VAR fname: ARRAY Win.MAX_PATH OF Npp.Char;
+BEGIN
+   Npp.GetPluginConfigDir (fname);
+   AppendStr (fname, '\');
+   AppendStr (fname, IniFileName);
+   IF ~Npp.OpenFile (fname) THEN
+      Win.MessageBox (Npp.handle, 'Error while opening config file.', PluginName, Win.MB_OK);
+   END;
+END EditConfig;
+
 PROCEDURE ['C'] LoadConfig ();
 BEGIN
    ReadConfig (numPairs, FALSE);
@@ -584,11 +597,12 @@ VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
    fname: ARRAY LEN (NotUsedFuncStr) OF Npp.Char;
+   editConfigStr: ARRAY LEN (EditConfigStr) OF Npp.Char;
    loadConfigStr: ARRAY LEN (LoadConfigStr) OF Npp.Char;
    aboutStr: ARRAY LEN (AboutStr) OF Npp.Char;
 BEGIN
-   IF MaxFuncs + 3 > Npp.DefNumMenuItems THEN
-      Npp.SetNumMenuItems (MaxFuncs + 3)
+   IF MaxFuncs + 4 > Npp.DefNumMenuItems THEN
+      Npp.SetNumMenuItems (MaxFuncs + 4)
    END;
    funcs [00] := Func00;
    funcs [01] := Func01;
@@ -632,6 +646,8 @@ BEGIN
       INC (i)
    END;
    Npp.AddMenuSeparator;
+   AssignStr (editConfigStr, EditConfigStr);
+   Npp.AddMenuItem (editConfigStr, EditConfig, FALSE, NIL);
    AssignStr (loadConfigStr, LoadConfigStr);
    Npp.AddMenuItem (loadConfigStr, LoadConfig, FALSE, NIL);
    AssignStr (aboutStr, AboutStr);
