@@ -37,7 +37,7 @@ del Src\%projectName%.zip.md5
 :: create the tag
 svn copy . %projectPath%/tags/%1 -m "Tagged %projectName% v.%1 release."
 if %errorlevel% NEQ 0 goto :Svnfailed
-svn revert Src\%projectName%Ver
+svn revert Src\%projectName%Ver Src\%projectName%UVer
 if %errorlevel% NEQ 0 goto :Svnfailed
 echo The tag was created successfully.
 goto :eof
