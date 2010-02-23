@@ -1,0 +1,6 @@
+File release in Notepad++ Plugins project: 
+   https://sourceforge.net/project/admin/explorer.php?group_id=189927
+Drop note in Notepad++/Plugin Development forum: 
+   https://sourceforge.net/forum/forum.php?thread_id=1959856&forum_id=482781
+Update PluginCentral Wiki page:
+   https://sourceforge.net/apps/mediawiki/notepad-plus/index.php?title=Plugin_Central
