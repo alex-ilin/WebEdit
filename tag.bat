@@ -2,7 +2,7 @@
 set projectPath=https://svn2.hosted-projects.com/Amadeus/Npp/WebEdit
 set projectName=WebEdit
 if "%1" NEQ "" goto start
-echo Tag - create a tag of the current branch
+echo Tag - create a tag of the current branch. The script does NOT set the version number.
 echo Usage: "tag <version-to-tag-as>"
 echo Example: tag 2.0.2
 goto :eof
@@ -27,7 +27,7 @@ if %errorlevel% NEQ 0 goto Makefailed
 make test
 if %errorlevel% NEQ 0 goto Makefailed
 
-:: create distribution package
+:: create distribution package with version number in zip-file name and md5-file
 make dist -C Src
 if %errorlevel% NEQ 0 goto Makefailed
 move Src\%projectName%.zip Src\%projectName%.%1.zip
