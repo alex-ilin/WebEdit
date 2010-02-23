@@ -32,7 +32,7 @@ install: WebEdit.dll
 	cp -f $< "d:/Program Files/Utils/Notepad++/plugins"
 	start "" "d:\Program Files\Utils\Notepad++\Notepad++.exe"
 
-WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/*.bmp
+WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 WebEdit.prj WebEditU.prj WebEdit.txt WebEditVer.res WebEditUVer.res Config/WebEdit.ini Config/*.bmp ..\Lib\Str.ob2 ..\Lib\StrU.ob2
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
