@@ -103,7 +103,7 @@ plugin. See instructions in the WebEdit.ob2 source file.
 AUTHOR
 
 The WebEdit plugin was created by Alexander Iljin (Amadeus IT Solutions) on
-March 2008 - May 2009.
+March 2008 - February 2010.
 You may contact me via e-mail: AlexIljin@users.SourceForge.net
 The preferred method for feedback is the Notepad++ forum. Post your feature
 requests and bug reports here:
