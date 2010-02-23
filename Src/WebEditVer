@@ -1,6 +1,6 @@
 s/$Ver1/1/
-s/$Ver2/3/
-s/$Ver3/3/
+s/$Ver2/4/
+s/$Ver3/0/
 s/$Ver4/0/
 # Available file flags (VS_FF_XXX): 0 | DEBUG | PATCHED | PRERELEASE | INFOINFERRED | PRIVATEBUILD | SPECIALBUILD 
 s/$FileFlags/0/
