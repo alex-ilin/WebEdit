@@ -83,7 +83,7 @@ PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
 VAR res: LONGINT;
 BEGIN
    res := 0;
-   WHILE str [res] # 0X DO
+   WHILE str [res] # Str.Null DO
       INC (res)
    END;
    RETURN res
@@ -316,7 +316,7 @@ VAR
             END
          END
       UNTIL eof OR section OR (i > 0);
-      line [i] := 0X;
+      line [i] := Str.Null;
       RETURN (i > 0) & ~section
    END ReadLine;
 
@@ -331,7 +331,7 @@ VAR
       BEGIN
          i := 0;
          c := 0;
-         WHILE str [i] # 0X DO
+         WHILE str [i] # Str.Null DO
             IF str [i] = '\' THEN
                CASE str [i + 1] OF
                |  't': str [c] := 09X; INC (i)
@@ -345,26 +345,26 @@ VAR
             END;
             INC (i); INC (c)
          END;
-         str [c] := 0X
+         str [c] := Str.Null
       END UnescapeStr;
 
    BEGIN
       eqPos := 0;
-      WHILE (line [eqPos] # 0X) & (line [eqPos] # '=') DO
+      WHILE (line [eqPos] # Str.Null) & (line [eqPos] # '=') DO
          INC (eqPos)
       END;
-      IF line [eqPos] = 0X THEN
+      IF line [eqPos] = Str.Null THEN
          RETURN FALSE
       END;
       selPos := eqPos + 1;
-      WHILE (line [selPos] # 0X) & (line [selPos] # '|') DO
+      WHILE (line [selPos] # Str.Null) & (line [selPos] # '|') DO
          INC (selPos)
       END;
-      IF line [selPos] = 0X THEN
+      IF line [selPos] = Str.Null THEN
          RETURN FALSE
       END;
       len := selPos + 1;
-      WHILE line [len] # 0X DO
+      WHILE line [len] # Str.Null DO
          INC (len)
       END;
       NEW (pair.name, eqPos + 1);
@@ -453,7 +453,7 @@ PROCEDURE GetCharPos (VAR str: ARRAY OF CHAR; ch: CHAR): INTEGER;
 VAR res: INTEGER;
 BEGIN
    res := 0;
-   WHILE (str [res] # 0X) & (str [res] # ch) DO
+   WHILE (str [res] # Str.Null) & (str [res] # ch) DO
       INC (res)
    END;
    IF str [res] # ch THEN
