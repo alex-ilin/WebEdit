@@ -78,17 +78,6 @@ BEGIN
    )
 END LoadBitmap;
 
-PROCEDURE Length (VAR str: ARRAY OF CHAR): LONGINT;
-(* Return length of the null-terminated string str. *)
-VAR res: LONGINT;
-BEGIN
-   res := 0;
-   WHILE str [res] # Str.Null DO
-      INC (res)
-   END;
-   RETURN res
-END Length;
-
 PROCEDURE SurroundSelection (sc: Sci.Handle; VAR leftText, rightText: ARRAY OF CHAR);
 VAR
    start, end, i: LONGINT;
@@ -98,7 +87,7 @@ BEGIN
    Sci.GetSelectionExtent (sc, start, end, bool);
    Sci.InsertText (sc, end, rightText);
    Sci.InsertText (sc, start, leftText);
-   i := Length (leftText);
+   i := Str.Length (leftText);
    INC (start, i);
    INC (end, i);
    Sci.SetSelectionExtent (sc, start, end, bool);
@@ -382,7 +371,7 @@ VAR
    VAR i, num, len: INTEGER;
    BEGIN
       i := 0;
-      len := SHORT (Length (line));
+      len := SHORT (Str.Length (line));
       WHILE (i < len) & (line [i] # '=') DO
          INC (i)
       END;
@@ -413,7 +402,7 @@ BEGIN
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
    Str.AppendC (configDir, '\');
-   configDirLen := SHORT (Length (configDir));
+   configDirLen := SHORT (Str.Length (configDir));
    maxFnameLen := LEN (configDir) - configDirLen - 1;
    COPY (configDir, fname);
    Str.AppendC (fname, IniFileName);
