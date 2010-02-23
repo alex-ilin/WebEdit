@@ -1,8 +1,8 @@
-*.sym = ./obj;../A3/obj;../A3lib/sym
-*.obj = ./obj;../A3/obj
+*.sym = ./obj;../A3lib/sym
+*.obj = ./obj
 *.tem = .;$!
 *.lib = .;../A3lib
-*.ob2 = .;../A3;../Lib
+*.ob2 = .;../Lib
 *.def = .;../A3lib/
 *.rc  = .
 *.def  = .
