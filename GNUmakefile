@@ -7,6 +7,8 @@
 # Default rule: make all Amadeus applications (A3, A3Edit and A3Lib are built
 # implicitly)
 
+.PHONY: default test
+
 default:
 	$(MAKE) -C Src
 
