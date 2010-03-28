@@ -524,13 +524,15 @@ BEGIN
 END OnSetInfo;
 
 PROCEDURE Init ();
+CONST
+   AdditionalMenuItems = 4; (* Number of item added to MaxFuncs *)
 VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
    fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
 BEGIN
-   IF MaxFuncs + 4 > Npp.DefNumMenuItems THEN
-      Npp.SetNumMenuItems (MaxFuncs + 4)
+   IF MaxFuncs + AdditionalMenuItems > Npp.DefNumMenuItems THEN
+      Npp.SetNumMenuItems (MaxFuncs + AdditionalMenuItems)
    END;
    funcs [00] := Func00;
    funcs [01] := Func01;
