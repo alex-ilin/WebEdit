@@ -9,7 +9,7 @@ MODULE WebEdit;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,Str;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,Str,Tags;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -43,6 +43,7 @@ CONST
    (* Menu items *)
    NumChar = 'X'; (* this character is a placeholder for a number in NotUsedFuncStr *)
    NotUsedFuncStr = 'WebEdit Slot XX';
+   ReplaceTagStr = 'Replace Tag';
    EditConfigStr = 'Edit Config';
    LoadConfigStr = 'Load Config';
    AboutStr = 'About...';
@@ -227,6 +228,12 @@ PROCEDURE ['C'] About ();
 BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
+
+PROCEDURE ['C'] ReplaceTag ();
+(* Replace current tag with a replacement text. *)
+BEGIN
+   Tags.Do (Npp.GetCurrentScintilla ());
+END ReplaceTag;
 
 PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
 BEGIN
@@ -525,11 +532,13 @@ END OnSetInfo;
 
 PROCEDURE Init ();
 CONST
-   AdditionalMenuItems = 4; (* Number of item added to MaxFuncs *)
+   AdditionalMenuItems = 5; (* Number of item added to MaxFuncs *)
+   EnterKey = 0DX;
 VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
    fname: ARRAY LEN (NotUsedFuncStr) OF CHAR;
+   shortcut: Npp.Shortcut;
 BEGIN
    IF MaxFuncs + AdditionalMenuItems > Npp.DefNumMenuItems THEN
       Npp.SetNumMenuItems (MaxFuncs + AdditionalMenuItems)
@@ -575,6 +584,10 @@ BEGIN
       Npp.AddMenuItem (fname, funcs [i], FALSE, NIL);
       INC (i)
    END;
+   NEW (shortcut);
+   shortcut.ctrl := TRUE;
+   shortcut.key := EnterKey;
+   Npp.AddMenuItem (ReplaceTagStr, ReplaceTag, FALSE, shortcut);
    Npp.AddMenuSeparator;
    Npp.AddMenuItem (EditConfigStr, EditConfig, FALSE, NIL);
    Npp.AddMenuItem (LoadConfigStr, LoadConfig, FALSE, NIL);
