@@ -50,6 +50,7 @@ CONST
 
    CommandsIniSection = 'Commands';
    ToolbarIniSection  = 'Toolbar';
+   TagsIniSection     = 'Tags';
    IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
@@ -402,7 +403,33 @@ VAR
       END
    END LineToToolbar;
 
+   PROCEDURE LineToTag ();
+   (* Create new tag with data from line. *)
+   VAR
+      eqPos, len: INTEGER;
+      key: Tags.KeyStr;
+      value: Str.Ptr;
+   BEGIN
+      eqPos := 0;
+      WHILE (line [eqPos] # Str.Null) & ~(line [eqPos] = '=') DO
+         INC (eqPos);
+      END;
+      IF (line [eqPos] # Str.Null) & (eqPos <= Tags.MaxKeyLen) THEN
+         len := eqPos + 1;
+         WHILE line [len] # Str.Null DO
+            INC (len);
+         END;
+         IF len > eqPos + 1 THEN
+            NEW (value, len - eqPos);
+            Str.CopyTo (line, key, 0, eqPos, 0);
+            Str.CopyTo (line, value^, eqPos + 1, len, 0);
+            Tags.Add (key, value);
+         END;
+      END;
+   END LineToTag;
+
 BEGIN
+   Tags.Clear;
    eof := FALSE;
    buffPos := 0;
    buffLen := 0;
@@ -434,6 +461,11 @@ BEGIN
             (* read toolbar items *)
             WHILE ReadLine () DO
                LineToToolbar ()
+            END
+         ELSIF line = '[' + TagsIniSection + ']' THEN
+            (* read tags *)
+            WHILE ReadLine () DO
+               LineToTag ()
             END
          ELSE
             WHILE ReadLine () DO
