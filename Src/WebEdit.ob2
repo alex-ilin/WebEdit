@@ -71,12 +71,17 @@ VAR
 
 PROCEDURE ClearPairs ();
 VAR
-   i: INTEGER;BEGIN   i := 0;
-   WHILE i < MaxFuncs DO      pairs [i].name := NIL;
+   i: INTEGER;
+BEGIN
+   i := 0;
+   WHILE i < MaxFuncs DO
+      pairs [i].name := NIL;
       pairs [i].left := NIL;
       pairs [i].right := NIL;
-      INC (i);   END;
-END ClearPairs;
+      INC (i);
+   END;
+END ClearPairs;
+
 PROCEDURE LoadBitmap (VAR fname: ARRAY OF CHAR): Win.HBITMAP;
 (* Load a bitmap image from the given file name and return the handle. *)
 BEGIN
