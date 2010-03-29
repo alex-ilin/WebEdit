@@ -41,12 +41,12 @@ if %errorlevel% NEQ 0 goto Makefailed
 :: create distribution package with version number in zip-file name and md5-file
 make dist -C Src
 if %errorlevel% NEQ 0 goto Makefailed
-move Src\%projectName%.zip Src\%projectName%.%1.zip
-sed -e "s/\*%projectName%\.zip/*%projectName%.%1.zip/" Src\%projectName%.zip.md5 > Src\%projectName%.%1.zip.md5
+move Src\%projectName%.zip Src\%projectName%.v%1.zip
+sed -e "s/\*%projectName%\.zip/*%projectName%.v%1.zip/" Src\%projectName%.zip.md5 > Src\%projectName%.v%1.zip.md5
 del Src\%projectName%.zip.md5
 
 :: create the tag
-svn copy . %projectPath%/tags/%1 -m "Tagged %projectName% v.%1 release."
+svn copy . %projectPath%/tags/%1 -m "Tagged %projectName% v%1 release."
 if %errorlevel% NEQ 0 goto :Svnfailed
 svn revert Src\%projectName%Ver Src\%projectName%UVer
 if %errorlevel% NEQ 0 goto :Svnfailed
