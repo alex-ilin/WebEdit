@@ -9,7 +9,8 @@ MODULE WebEdit;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,oberonRTS,Str,Tags;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,oberonRTS,Str,Tags,
+   Ver:=WebEditVer;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -240,7 +241,7 @@ END Func29;
 PROCEDURE ['C'] About ();
 (* Show info about this plugin. *)
 BEGIN
-   Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
+   Win.MessageBox (Npp.handle, AboutMsg, PluginName + ' ' + Ver.String, Win.MB_OK)
 END About;
 
 PROCEDURE ['C'] ReplaceTag ();
