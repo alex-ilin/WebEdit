@@ -120,7 +120,6 @@ VAR
    PROCEDURE PasteValue (pastePos: LONGINT; VAR value: ARRAY OF CHAR);
    CONST
       MaxIndent = 80;
-      CarriageReturnChar = 0DX;
       TabChar = 09X;
    VAR
       linePos: LONGINT; (* Line start position. *)
@@ -180,7 +179,7 @@ VAR
             INC (i);
             (* handle escaped characters *)
             IF value [i] = 'n' THEN         (* eol *)
-               PasteChar (pos, CarriageReturnChar);
+               INC (pos, Sci.InsertEol (sci, pos));
                PasteIndent (pos);
             ELSIF value [i] = '\' THEN      (* backslash *)
                PasteChar (pos, '\');
