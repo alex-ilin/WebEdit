@@ -1,5 +1,5 @@
 <*+main*> (* This marks the main module of a program or library.               *)
-<*heaplimit="20000"*> (* Maximum heap size should be set in the main module,
+<*heaplimit="0"*> (* Maximum heap size should be set in the main module,
 because the changes do not take effect until the main module is recompiled.    *)
 
 MODULE WebEditU;
@@ -9,7 +9,7 @@ MODULE WebEditU;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPPU,Str,StrU;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPPU,oberonRTS,Str,StrU,Tags;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -43,18 +43,20 @@ CONST
    (* Menu items *)
    NumChar = ORD ('X'); (* the placeholder character for a number in NotUsedFuncStr *)
    NotUsedFuncStr = 'WebEdit Slot XX';
+   ReplaceTagStr = 'Replace Tag';
    EditConfigStr = 'Edit Config';
    LoadConfigStr = 'Load Config';
    AboutStr = 'About...';
 
    CommandsIniSection = 'Commands';
    ToolbarIniSection  = 'Toolbar';
+   TagsIniSection     = 'Tags';
    IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
-   AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
+   AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs and expand abbreviations using a hotkey.'+CRLF
       +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - February 2010.'+CRLF
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.'+CRLF
       +'Contact e-mail: AlexIljin@users.SourceForge.net';
 
 TYPE
@@ -66,6 +68,19 @@ TYPE
 VAR
    pairs: ARRAY MaxFuncs OF Pair;
    numPairs: INTEGER;
+
+PROCEDURE ClearPairs ();
+VAR
+   i: INTEGER;
+BEGIN
+   i := 0;
+   WHILE i < MaxFuncs DO
+      pairs [i].name := NIL;
+      pairs [i].left := NIL;
+      pairs [i].right := NIL;
+      INC (i);
+   END;
+END ClearPairs;
 
 PROCEDURE LoadBitmap (VAR fname: ARRAY OF Npp.Char): Win.HBITMAP;
 (* Load a bitmap image from the given file name and return the handle. *)
@@ -228,6 +243,12 @@ BEGIN
    Win.MessageBox (Npp.handle, AboutMsg, PluginName, Win.MB_OK)
 END About;
 
+PROCEDURE ['C'] ReplaceTag ();
+(* Replace current tag with a replacement text. *)
+BEGIN
+   Tags.Do (Npp.GetCurrentScintilla ());
+END ReplaceTag;
+
 PROCEDURE IsDigit (ch: CHAR): BOOLEAN;
 BEGIN
    RETURN ('0' <= ch) & (ch <= '9')
@@ -248,7 +269,8 @@ END DigitToChar;
 PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
 CONST commentChar = ';';
 VAR
-   buff, line: ARRAY 1024 OF CHAR;
+   buff: ARRAY 1024 OF CHAR;
+   line: ARRAY 2049 OF CHAR;
    configDir, fname: ARRAY Win.MAX_PATH OF Npp.Char;
    buffPos, buffLen, configDirLen, maxFnameLen: INTEGER;
    hFile: Win.HANDLE;
@@ -395,7 +417,35 @@ VAR
       END
    END LineToToolbar;
 
+   PROCEDURE LineToTag ();
+   (* Create new tag with data from line. *)
+   VAR
+      eqPos, len: INTEGER;
+      key: Tags.KeyStr;
+      value: Str.Ptr;
+   BEGIN
+      eqPos := 0;
+      WHILE (line [eqPos] # Str.Null) & ~(line [eqPos] = '=') DO
+         INC (eqPos);
+      END;
+      IF (line [eqPos] # Str.Null) & (eqPos <= Tags.MaxKeyLen) THEN
+         len := eqPos + 1;
+         WHILE line [len] # Str.Null DO
+            INC (len);
+         END;
+         IF len > eqPos + 1 THEN
+            NEW (value, len - eqPos);
+            Str.CopyTo (line, key, 0, eqPos, 0);
+            Str.CopyTo (line, value^, eqPos + 1, len, 0);
+            Tags.Add (key, value);
+         END;
+      END;
+   END LineToTag;
+
 BEGIN
+   Tags.Clear;
+   ClearPairs;
+   oberonRTS.Collect;
    eof := FALSE;
    buffPos := 0;
    buffLen := 0;
@@ -427,6 +477,11 @@ BEGIN
             (* read toolbar items *)
             WHILE ReadLine () DO
                LineToToolbar ()
+            END
+         ELSIF line = '[' + TagsIniSection + ']' THEN
+            (* read tags *)
+            WHILE ReadLine () DO
+               LineToTag ()
             END
          ELSE
             WHILE ReadLine () DO
@@ -523,16 +578,21 @@ BEGIN
 END OnSetInfo;
 
 PROCEDURE Init ();
+CONST
+   AdditionalMenuItems = 5; (* Number of item added to MaxFuncs *)
+   EnterKey = 0DX;
 VAR
    i, numPos: INTEGER;
    funcs: ARRAY MaxFuncs OF Npp.Function;
    fname: ARRAY LEN (NotUsedFuncStr) OF Npp.Char;
+   replaceTagStr: ARRAY LEN (ReplaceTagStr) OF Npp.Char;
    editConfigStr: ARRAY LEN (EditConfigStr) OF Npp.Char;
    loadConfigStr: ARRAY LEN (LoadConfigStr) OF Npp.Char;
    aboutStr: ARRAY LEN (AboutStr) OF Npp.Char;
+   shortcut: Npp.Shortcut;
 BEGIN
-   IF MaxFuncs + 4 > Npp.DefNumMenuItems THEN
-      Npp.SetNumMenuItems (MaxFuncs + 4)
+   IF MaxFuncs + AdditionalMenuItems > Npp.DefNumMenuItems THEN
+      Npp.SetNumMenuItems (MaxFuncs + AdditionalMenuItems)
    END;
    funcs [00] := Func00;
    funcs [01] := Func01;
@@ -575,6 +635,11 @@ BEGIN
       Npp.AddMenuItem (fname, funcs [i], FALSE, NIL);
       INC (i)
    END;
+   NEW (shortcut);
+   shortcut.ctrl := TRUE;
+   shortcut.key := EnterKey;
+   StrU.Assign (ReplaceTagStr, replaceTagStr);
+   Npp.AddMenuItem (replaceTagStr, ReplaceTag, FALSE, shortcut);
    Npp.AddMenuSeparator;
    StrU.Assign (EditConfigStr, editConfigStr);
    Npp.AddMenuItem (editConfigStr, EditConfig, FALSE, NIL);
