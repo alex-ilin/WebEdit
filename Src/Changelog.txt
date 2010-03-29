@@ -1,6 +1,6 @@
 WebEdit changelog.
 
-Version 2.0, ??.???.2010.
+Version 2.0, $ReleaseDate.
 - Added "Replace Tag" menu item.
 
 Version 1.4, 23.02.2010.

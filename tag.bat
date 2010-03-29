@@ -21,6 +21,12 @@ sed -e "s@s/$FileFlags/.*/@s/$FileFlags/0/@" -e "s@s/$Ver4/999/@s/$Ver4/0/@" < S
 del Src\%projectName%UVer
 ren Src\%projectName%UVer.tmp %projectName%UVer
 
+:: set release date in the Changelog
+set ReleaseDate=%DATE%
+sed -e "s/$ReleaseDate/%ReleaseDate%/" < Src\Doc\Changelog.txt > Src\Doc\Changelog.txt.tmp
+del Src\Doc\Changelog.txt
+ren Src\Doc\Changelog.txt.tmp Changelog.txt
+
 :: make sure the project compiles and passes all tests
 make
 if %errorlevel% NEQ 0 goto Makefailed
