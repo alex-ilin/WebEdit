@@ -53,7 +53,7 @@ CONST
    TagsIniSection     = 'Tags';
    IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
-   AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
+   AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs and expand abbreviations using a hotkey.'+CRLF
       +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
       +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.'+CRLF
