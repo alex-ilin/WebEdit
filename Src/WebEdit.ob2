@@ -634,7 +634,7 @@ BEGIN
       INC (i)
    END;
    NEW (shortcut);
-   shortcut.ctrl := TRUE;
+   shortcut.alt := TRUE;
    shortcut.key := EnterKey;
    Npp.AddMenuItem (ReplaceTagStr, ReplaceTag, FALSE, shortcut);
    Npp.AddMenuSeparator;
