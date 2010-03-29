@@ -9,14 +9,14 @@ current caret position, and the Right text is inserted to the right. In any
 case the selection and relative cursor position are preserved. Clipboard is
 not used. Both text insertions can be undone/redone as a single action.
 
-Also you can define any number of Tags to be replaced by some Replacement text
-with the "Replace Tag" command. This functionality is very similar to the
+Also you can define any number of Tags to be replaced by the "Replace Tag"
+with some Replacement text. This functionality is very similar to the
 QuickText's "Replace Tag". I really liked and used QuickText extensively, but
 unfortunately it is not very well supported lately, which was the reason for
 adding the command to WebEdit.
 
 The idea is that you can type a short abbreviation, e.g. "p", then press a
-shortcut and have it replaced with a (possibly multiline) text of your choice.
+hotkey and have it replaced with a (possibly multiline) text of your choice.
 Ctrl+Enter is the default and recommended shortcut, although it does conflict
 with a command in newer versions of Notepad++. If all you need is a QuickText
 replacement (like myself), then you can put a semicolon (";") before the
@@ -53,14 +53,13 @@ tags. The commands are to be defined in the "[Commands]" section of the
 WebEdit.ini file. Ini-file format:
 - a character with code below 32 (space) terminates a line (i.e. end-of-line
   sequence does not matter), the only exception is the tab character;
-- line length must not exceed 1022 characters (if a longer line is encountered,
+- line length must not exceed 2046 characters (if a longer line is encountered,
   file processing is aborted at that point);
 - any line starting with a semicolon character (;) is considered a comment and
   ignored;
 - the file may contain any number of any sections. A section is a line of the
   following format: "[" <section name> "]". Only the sections with supported
   names are processed in order of appearance, all others are ignored.
-Any line longer than 2048 characters is truncated.
 
 You can edit the ini-file in Notepad++ by selecting "Edit Config" command from
 Plugins - WebEdit menu. Edit the file, save it, and update the plugin
@@ -91,15 +90,15 @@ The "[Commands]" section format:
     the Left text.
 At most 30 commands may be defined in the "[Commands]" section, all superfluous
 commands are ignored. The defined commands are listed in the plugin menu in the
-order they appear in the file. Unused menu slots appear as disabled and show
-text "WebEdit Slot XX", where XX is the number of the slot. The first slot is
-numbered "01".
+same order they appear in the file. Unused menu slots appear as disabled and
+show text "WebEdit Slot XX", where XX is the number of the slot. The first slot
+number is "01".
 
 The "[Toolbar]" section determines which of the command slots will be placed on
 the toolbar. Syntax: <slot number> "=" <file name>
 Example: 1=Paragraph.bmp
-Slot numbers are 1..30. The file should be placed in the plugins/Config folder
-and should contain a bitmap image suitable for the toolbar.
+Slot numbers are 1..30. The bitmap file should be placed in the plugins/Config
+folder and should contain a bitmap image suitable for the toolbar.
 
 To display custom toolbar buttons Notepad++ should be configured to use "Small
 standard icons" (it is by default). To find this option go to the "Settings -
@@ -120,13 +119,13 @@ The "[Tags]" section format:
   - <Replacement> is the text to be inserted instead of the Tag;
   - limitations: Tag can only contain character a..z, A..Z and 0..9. The Tag
     can be 1 to 32 characters long. Total length of a line is subject to the
-    global ini-file limitation of 2048 characters. This means that the
-    Replacement text can contain 2015..2046 characters, depending on the
+    global ini-file limitation of 2046 characters. This means that the
+    Replacement text can contain 2013..2044 characters, depending on the
     length of the corresponding Tag text. If a line is too long, it will be
     truncated. If a line does not adhere to the rest of the restrictions, it
     will be skipped;
   - since '\' character is not allowed in the Tag, only the Replacement text
-    can contain escape sequences and special characters;
+    can contain escape sequences and other special characters;
   - the pipe character "|" plays a special role in the Replacement text: it
     marks the position of the caret after tag replacement. All pipe characters
     will be removed from the Replacement text, unless prefixed with a '\', but
@@ -141,16 +140,16 @@ by Notepad++ the text in the Shortcut Mapper will only be updated on restart,
 even though you can change the command at run-time using the "Load Config"
 command.
 
-Hint: if you want to set a menu accelerator, use ampersand character (&) in the
-menu item text. For example: "&Paragraph tag=<p>|</p>". The character after the
-ampersand ("P" in this case) will be underlined in the plugin menu, which makes
-it possible to simply type "p" on the keyboard instead of selecting the menu
-item with mouse or cursor keys. The accelerator, of course, will only work when
-the plugin menu is displayed (press "Alt+p, w" to display the "Plugins -
+Hint: if you want to set a menu accelerator, use the ampersand character (&) in
+the menu item text. For example: "&Paragraph tag=<p>|</p>". The character after
+the ampersand ("P" in this case) will be underlined in the plugin menu, which
+makes it possible to simply type "p" on the keyboard instead of selecting the
+menu item with mouse or cursor keys. The accelerator, of course, will only work
+when the plugin menu is displayed (press "Alt+p, w" to display the "Plugins -
 WebEdit" menu).
 
 PS: If you feel that the limit of 30 functions maximum is too constricting, you
-may painlessly increase the number up to 99, but you will have to recompile the
+can painlessly increase the number up to 99, but you will have to recompile the
 plugin. See instructions in the WebEdit.ob2 source file.
 
 AUTHOR
