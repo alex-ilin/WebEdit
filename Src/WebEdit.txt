@@ -1,4 +1,4 @@
-WebEdit v.1.4 - freeware open-source plugin for Notepad++.
+WebEdit v.2.0 - freeware open-source plugin for Notepad++ ANSI/Unicode.
 
 INTRODUCTION
 
@@ -9,10 +9,31 @@ current caret position, and the Right text is inserted to the right. In any
 case the selection and relative cursor position are preserved. Clipboard is
 not used. Both text insertions can be undone/redone as a single action.
 
+Also you can define any number of Tags to be replaced by some Replacement text
+with the "Replace Tag" command. This functionality is very similar to the
+QuickText's "Replace Tag". I really liked and used QuickText extensively, but
+unfortunately it is not very well supported lately, which was the reason for
+adding the command to WebEdit.
+
+The idea is that you can type a short abbreviation, e.g. "p", then press a
+shortcut and have it replaced with a (possibly multiline) text of your choice.
+Ctrl+Enter is the default and recommended shortcut, although it does conflict
+with a command in newer versions of Notepad++. If all you need is a QuickText
+replacement (like myself), then you can put a semicolon (";") before the
+[Commands] and [Toolbar] sections in the sample WebEdit.ini, and then edit the
+[Tags] section to your liking.
+
 INSTALLATION AND SETUP
 
-To use this plugin you have to copy two files:
-- file 1: either WebEdit.dll (if you use ANSI version of Notepad++) 
+The easiest way to install WebEdit is via the Plugin Manager plugin. Keep in
+mind, though, that if you upgrade an existing installation of WebEdit, the
+WebEdit.ini file will be replaced with the sample version. Don't worry: your
+customized file is safely renamed WebEdit.ini.bak or WebEdit.ini.bak2, etc.
+All you need to do is go to the Config folder and manually rename it back. As
+usual, you can also use the "Edit Config" command to restore the file contents.
+
+To install this plugin manually you have to copy two files:
+- file 1: either WebEdit.dll (if you use ANSI version of Notepad++)
   or WebEditU.dll (for the Unicode version) to Notepad++\plugins\ folder;
 - file 2: WebEdit.ini to Notepad++\plugins\Config\ folder.
 Both folders are to be found either in "Program Files" or in "Application Data"
@@ -25,7 +46,7 @@ see the "WebEdit" menu under the Plugins menu. If the WebEdit.ini file is not
 installed, you will see that the Plugins - WebEdit menu consists entirely of
 disabled items.
 The Config folder of the distribution package contains a sample WebEdit.ini
-and a sample bitmap for the toolbar button.
+and a sample set of bitmaps for the toolbar buttons.
 
 The WebEdit plugin allows you to create commands to wrap the selected text in
 tags. The commands are to be defined in the "[Commands]" section of the
@@ -39,6 +60,13 @@ WebEdit.ini file. Ini-file format:
 - the file may contain any number of any sections. A section is a line of the
   following format: "[" <section name> "]". Only the sections with supported
   names are processed in order of appearance, all others are ignored.
+Any line longer than 2048 characters is truncated.
+
+You can edit the ini-file in Notepad++ by selecting "Edit Config" command from
+Plugins - WebEdit menu. Edit the file, save it, and update the plugin
+configuration by selecting "Load Config" command from the Plugins - WebEdit
+menu (you don't have to restart Notepad++, but note that toolbar is only
+updated on startup).
 
 The "[Commands]" section format:
 - if you want a line to contain a non-printable character, you must escape it
@@ -67,12 +95,6 @@ order they appear in the file. Unused menu slots appear as disabled and show
 text "WebEdit Slot XX", where XX is the number of the slot. The first slot is
 numbered "01".
 
-You may edit the ini-file in Notepad++ by selecting "Edit Config" command from
-Plugins - WebEdit menu. Edit the file, save it, and update the plugin
-configuration by selecting "Load Config" command from the Plugins - WebEdit
-menu (you don't have to restart Notepad++, but note that toolbar is only
-updated on startup).
-
 The "[Toolbar]" section determines which of the command slots will be placed on
 the toolbar. Syntax: <slot number> "=" <file name>
 Example: 1=Paragraph.bmp
@@ -83,12 +105,41 @@ To display custom toolbar buttons Notepad++ should be configured to use "Small
 standard icons" (it is by default). To find this option go to the "Settings -
 Preferences..." menu, and in the "Global" tab look for the "Tool bar" group.
 
-You may assign shortcuts to the plugin menu items via Settings - Shortcut
+The "[Tags]" section format:
+- if you want a line to contain a non-printable character, you must escape it
+  with a backslash; the following escape sequences are supported:
+  - \t - tab character;
+  - \n - new line, replaced with the current document's EOL sequence;
+  - \| = "|" - use it if you want to insert the "pipe" character;
+  - \\ = "\" - double backslash is replaced with a single backslash. This is
+    required if you need a backslash to appear in the Replacement text;
+  - any other escaped character will be simply removed from the string;
+- line syntax: <Tag> "=" <Replacement>, for example: "p=PROCEDURE | ;\n";
+- syntax explanation:
+  - <Tag> is the text in the document to be replaced;
+  - <Replacement> is the text to be inserted instead of the Tag;
+  - limitations: Tag can only contain character a..z, A..Z and 0..9. The Tag
+    can be 1 to 32 characters long. Total length of a line is subject to the
+    global ini-file limitation of 2048 characters. This means that the
+    Replacement text can contain 2015..2046 characters, depending on the
+    length of the corresponding Tag text. If a line is too long, it will be
+    truncated. If a line does not adhere to the rest of the restrictions, it
+    will be skipped;
+  - since '\' character is not allowed in the Tag, only the Replacement text
+    can contain escape sequences and special characters;
+  - the pipe character "|" plays a special role in the Replacement text: it
+    marks the position of the caret after tag replacement. All pipe characters
+    will be removed from the Replacement text, unless prefixed with a '\', but
+    only one of them (the last one) will mark the caret position.
+
+You can assign shortcuts to the plugin menu items via Settings - Shortcut
 Mapper - Plugin commands. If you are running Notepad++ 5.0 and later, you will
 see the actual command names, i.e. instead of the dummy text "WebEdit Slot XX"
 you will see "WebEdit - Command name", where the "Command name" is the text as
 displayed in the plugin menu. Due to insufficient support of the dynamic menus
-by Notepad++ the text in the Shortcut Mapper will only be updated on restart.
+by Notepad++ the text in the Shortcut Mapper will only be updated on restart,
+even though you can change the command at run-time using the "Load Config"
+command.
 
 Hint: if you want to set a menu accelerator, use ampersand character (&) in the
 menu item text. For example: "&Paragraph tag=<p>|</p>". The character after the
@@ -105,7 +156,7 @@ plugin. See instructions in the WebEdit.ob2 source file.
 AUTHOR
 
 The WebEdit plugin was created by Alexander Iljin (Amadeus IT Solutions) on
-March 2008 - February 2010.
+March 2008 - March 2010.
 You may contact me via e-mail: AlexIljin@users.SourceForge.net
 The preferred method for feedback is the Notepad++ forum. Post your feature
 requests and bug reports here:
