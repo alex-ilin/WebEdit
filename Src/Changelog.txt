@@ -2,6 +2,7 @@ WebEdit changelog.
 
 Version 2.0, $ReleaseDate.
 - Added "Replace Tag" menu item.
+- Added version number to the About box title.
 
 Version 1.4, 23.02.2010.
 - Added "Edit Config" menu item.
