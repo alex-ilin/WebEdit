@@ -9,7 +9,7 @@ MODULE WebEdit;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,Str,Tags;
+   SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,oberonRTS,Str,Tags;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -69,6 +69,14 @@ VAR
    pairs: ARRAY MaxFuncs OF Pair;
    numPairs: INTEGER;
 
+PROCEDURE ClearPairs ();
+VAR
+   i: INTEGER;BEGIN   i := 0;
+   WHILE i < MaxFuncs DO      pairs [i].name := NIL;
+      pairs [i].left := NIL;
+      pairs [i].right := NIL;
+      INC (i);   END;
+END ClearPairs;
 PROCEDURE LoadBitmap (VAR fname: ARRAY OF CHAR): Win.HBITMAP;
 (* Load a bitmap image from the given file name and return the handle. *)
 BEGIN
@@ -430,6 +438,8 @@ VAR
 
 BEGIN
    Tags.Clear;
+   ClearPairs;
+   oberonRTS.Collect;
    eof := FALSE;
    buffPos := 0;
    buffLen := 0;
