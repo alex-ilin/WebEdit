@@ -10,14 +10,14 @@ goto :eof
 :start
 svn update
 ::if %errorlevel% NEQ 0 goto :Svnfailed
-:: set FileFlags=0 in the version information
+:: set FileFlags=0, Ver4=0 in the version information
 :: - in the ANSI build
-sed -e "s/^FileFlags=.*/FileFlags=0/" Src\%projectName%Ver > Src\%projectName%Ver.tmp
+sed -e "s@s/$FileFlags/.*/@s/$FileFlags/0/@" -e "s@s/$Ver4/999/@s/$Ver4/0/@" < Src\%projectName%Ver > Src\%projectName%Ver.tmp
 del Src\%projectName%Ver
 ren Src\%projectName%Ver.tmp %projectName%Ver
 
 :: - in the Unicode build
-sed -e "s/^FileFlags=.*/FileFlags=0/" Src\%projectName%UVer > Src\%projectName%UVer.tmp
+sed -e "s@s/$FileFlags/.*/@s/$FileFlags/0/@" -e "s@s/$Ver4/999/@s/$Ver4/0/@" < Src\%projectName%UVer > Src\%projectName%UVer.tmp
 del Src\%projectName%UVer
 ren Src\%projectName%UVer.tmp %projectName%UVer
 
