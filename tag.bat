@@ -23,9 +23,9 @@ ren Src\%projectName%UVer.tmp %projectName%UVer
 
 :: set release date in the Changelog
 set ReleaseDate=%DATE%
-sed -e "s/$ReleaseDate/%ReleaseDate%/" < Src\Doc\Changelog.txt > Src\Doc\Changelog.txt.tmp
-del Src\Doc\Changelog.txt
-ren Src\Doc\Changelog.txt.tmp Changelog.txt
+sed -e "s/$ReleaseDate/%ReleaseDate%/" < Src\Changelog.txt > Src\Changelog.txt.tmp
+del Src\Changelog.txt
+ren Src\Changelog.txt.tmp Changelog.txt
 
 :: make release notes
 cd Src
