@@ -127,6 +127,7 @@ VAR
       indentLen: LONGINT; (* Really required length. Can be > MaxIndent. *)
       i, c: LONGINT;
       pos: LONGINT; (* Current text insertion position. *)
+      caretPos: LONGINT; (* Caret position after the operation. *)
 
       PROCEDURE PasteChar (VAR to: LONGINT; char: CHAR);
       VAR
@@ -162,6 +163,7 @@ VAR
       END PasteIndent;
 
    BEGIN (* PasteValue *)
+      caretPos := -1;
       linePos := Sci.PositionFromLine (sci, Sci.LineFromPosition (sci, pastePos));
       indentLen := pastePos - linePos;
       IF indentLen < MaxIndent THEN (* init indent once and for all *)
@@ -183,16 +185,26 @@ VAR
                PasteChar (pos, '\');
             ELSIF value [i] = 't' THEN      (* tab *)
                PasteChar (pos, TabChar);
+            ELSIF value [i] = '|' THEN      (* pipe *)
+               PasteChar (pos, '|');
             ELSIF value [i] = Str.Null THEN (* null? yes, it can happen *)
                DEC (i); (* step back to terminate the outer loop *)
             END;
+            c := i + 1;
+         ELSIF value [i] = '|' THEN
+            Sci.InsertBuff (sci, pos, value, c, i);
+            INC (pos, i - c);
+            caretPos := pos;
             c := i + 1;
          END;
          INC (i);
       END;
       Sci.InsertBuff (sci, pos, value, c, i); (* c = i is no problem *)
       INC (pos, i - c);
-      Sci.GotoPos (sci, pos);
+      IF caretPos = -1 THEN
+         caretPos := pos;
+      END;
+      Sci.GotoPos (sci, caretPos);
    END PasteValue;
 
 BEGIN (* Do *)
