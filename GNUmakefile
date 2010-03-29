@@ -13,4 +13,4 @@ default:
 	$(MAKE) -C Src
 
 test:
-	@echo No tests for this application exist.
+	@echo There are no tests for this application.
