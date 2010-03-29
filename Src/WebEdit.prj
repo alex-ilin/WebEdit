@@ -76,15 +76,15 @@
 
 % Linking
 !new linker = xds
-!new DLLNAME = WebEdit.dll
+!new DLLNAME = $(project).dll
 !new NoRuntimeLibs-
 % See notes on NoRuntimeLibs below
 -GENDLL+
 -USEDLL-
 -DLLEXPORT-
 -IMPLIB-
-!module WebEdit.ob2
-!module WebEditVer.res
+!module $(project).ob2
+!module $(project)Ver.res
 
 % Notes on NoRuntimeLibs option
 % Use it when you don't need the runtime library support for your application/library
