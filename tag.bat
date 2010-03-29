@@ -27,6 +27,11 @@ sed -e "s/$ReleaseDate/%ReleaseDate%/" < Src\Doc\Changelog.txt > Src\Doc\Changel
 del Src\Doc\Changelog.txt
 ren Src\Doc\Changelog.txt.tmp Changelog.txt
 
+:: make release notes
+cd Src
+call MakeReleaseNotes.bat v%1
+cd ..
+
 :: make sure the project compiles and passes all tests
 make
 if %errorlevel% NEQ 0 goto Makefailed
