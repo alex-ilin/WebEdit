@@ -116,6 +116,85 @@ VAR
       RETURN res
    END GetKey;
 
+   PROCEDURE PasteValue (pastePos: LONGINT; VAR value: ARRAY OF CHAR);
+   CONST
+      MaxIndent = 80;
+      CarriageReturnChar = 0DX;
+      TabChar = 09X;
+   VAR
+      linePos: LONGINT; (* Line start position. *)
+      indent: ARRAY MaxIndent + 1 OF CHAR; (* Indentation at line start. *)
+      indentLen: LONGINT; (* Really required length. Can be > MaxIndent. *)
+      i, c: LONGINT;
+      pos: LONGINT; (* Current text insertion position. *)
+
+      PROCEDURE PasteChar (VAR to: LONGINT; char: CHAR);
+      VAR
+         str: ARRAY 2 OF CHAR;
+      BEGIN
+         str [0] := char;
+         str [1] := Str.Null;
+         Sci.InsertText (sci, to, str);
+         INC (to);
+      END PasteChar;
+
+      PROCEDURE PasteIndent (VAR to: LONGINT);
+      (* Paste indentation characters. 'to' is increased by the pasted amount. *)
+      VAR from, endPos: LONGINT;
+      BEGIN
+         IF indentLen < MaxIndent THEN
+            Sci.InsertText (sci, to, indent);
+            INC (to, indentLen);
+         ELSE (* pump sci [linePos..pastePos] to 'to' using 'indent' as buffer *)
+            endPos := to + indentLen;
+            from := linePos;
+            WHILE ~(pastePos - from < LEN (indent) - 1) DO
+               indent [Sci.GetTextRange (sci, from, from + MaxIndent, indent)] := Str.Null;
+               Sci.InsertText (sci, to, indent);
+               INC (from, MaxIndent);
+               INC (to, MaxIndent);
+            END;
+            indent [Sci.GetTextRange (sci, from, pastePos, indent)] := Str.Null;
+            Sci.InsertText (sci, to, indent);
+            INC (to, pastePos - from);
+            ASSERT (to = endPos, 60);
+         END;
+      END PasteIndent;
+
+   BEGIN (* PasteValue *)
+      linePos := Sci.PositionFromLine (sci, Sci.LineFromPosition (sci, pastePos));
+      indentLen := pastePos - linePos;
+      IF indentLen < MaxIndent THEN (* init indent once and for all *)
+         indent [Sci.GetTextRange (sci, linePos, pastePos, indent)] := Str.Null;
+      END;
+      i := 0;
+      c := 0; (* value [c] is the next character to be pasted to 'sci' *)
+      pos := pastePos;
+      WHILE value [i] # Str.Null DO
+         IF value [i] = '\' THEN (* paste value [c..i - 1] to 'sci' *)
+            Sci.InsertBuff (sci, pos, value, c, i);
+            INC (pos, i - c);
+            INC (i);
+            (* handle escaped characters *)
+            IF value [i] = 'n' THEN         (* eol *)
+               PasteChar (pos, CarriageReturnChar);
+               PasteIndent (pos);
+            ELSIF value [i] = '\' THEN      (* backslash *)
+               PasteChar (pos, '\');
+            ELSIF value [i] = 't' THEN      (* tab *)
+               PasteChar (pos, TabChar);
+            ELSIF value [i] = Str.Null THEN (* null? yes, it can happen *)
+               DEC (i); (* step back to terminate the outer loop *)
+            END;
+            c := i + 1;
+         END;
+         INC (i);
+      END;
+      Sci.InsertBuff (sci, pos, value, c, i); (* c = i is no problem *)
+      INC (pos, i - c);
+      Sci.GotoPos (sci, pos);
+   END PasteValue;
+
 BEGIN (* Do *)
    pos := Sci.GetCurrentPos (sci);
    IF root = NIL THEN
@@ -123,8 +202,12 @@ BEGIN (* Do *)
    ELSIF GetKey () THEN
       tag := Find (key);
       IF tag # NIL THEN
+         Sci.BeginUndoAction (sci);
+         msg := ''; (* msg is just a temp variable here *)
          Sci.SetSel (sci, posLeft, posRight);
-         Sci.ReplaceSel (sci, tag.value^);
+         Sci.ReplaceSel (sci, msg);
+         PasteValue (posLeft, tag.value^);
+         Sci.EndUndoAction (sci);
       ELSE
          msg := KeyNotFoundMsg;
          Str.Append (msg, key);
