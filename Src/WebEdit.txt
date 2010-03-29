@@ -17,11 +17,9 @@ adding the command to WebEdit.
 
 The idea is that you can type a short abbreviation, e.g. "p", then press a
 hotkey and have it replaced with a (possibly multiline) text of your choice.
-Ctrl+Enter is the default and recommended shortcut, although it does conflict
-with a command in newer versions of Notepad++. If all you need is a QuickText
-replacement (like myself), then you can put a semicolon (";") before the
-[Commands] and [Toolbar] sections in the sample WebEdit.ini, and then edit the
-[Tags] section to your liking.
+Alt+Enter is the default shortcut. If all you need is a QuickText replacement,
+then you can put a semicolon (";") before the [Commands] and [Toolbar] sections
+in the sample WebEdit.ini, and then edit the [Tags] section to your liking.
 
 INSTALLATION AND SETUP
 

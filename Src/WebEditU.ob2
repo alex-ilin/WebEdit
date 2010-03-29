@@ -637,7 +637,7 @@ BEGIN
       INC (i)
    END;
    NEW (shortcut);
-   shortcut.ctrl := TRUE;
+   shortcut.alt := TRUE;
    shortcut.key := EnterKey;
    StrU.Assign (ReplaceTagStr, replaceTagStr);
    Npp.AddMenuItem (replaceTagStr, ReplaceTag, FALSE, shortcut);
