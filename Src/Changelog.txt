@@ -1,5 +1,8 @@
 WebEdit changelog.
 
+Version 2.0, ?? ??? 2010.
+- Added "Replace Tag" menu item.
+
 Version 1.4, 23 Feb 2010.
 - Added "Edit Config" menu item.
 - Updated documentation, clarified wording.
