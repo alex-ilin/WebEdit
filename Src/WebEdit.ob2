@@ -264,7 +264,8 @@ END DigitToChar;
 PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
 CONST commentChar = ';';
 VAR
-   buff, line: ARRAY 1024 OF CHAR;
+   buff: ARRAY 1024 OF CHAR;
+   line: ARRAY 2049 OF CHAR;
    configDir, fname: ARRAY Win.MAX_PATH OF CHAR;
    buffPos, buffLen, configDirLen, maxFnameLen: INTEGER;
    hFile: Win.HANDLE;
