@@ -56,7 +56,7 @@ CONST
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs.'+CRLF
       +'For more information refer to '+PluginName+'.txt.'+CRLF
       +CRLF
-      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - February 2010.'+CRLF
+      +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.'+CRLF
       +'Contact e-mail: AlexIljin@users.SourceForge.net';
 
 TYPE
