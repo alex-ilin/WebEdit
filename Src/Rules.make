@@ -16,7 +16,8 @@ include ../A3Lib/Rules.make
 .PRECIOUS: %Ver.res
 
 %Ver.ob2: %Ver %Ver.obt
-	sed --file=$< < $<.obt > $@
+	sed --file=$< -e "s/\.0';/';/" -e "s/\.0';/';/" < $<.obt > $@
+# The additional regex removes two trailing zeroes from the version string.
 
 %Ver.rc: %Ver %Ver.rct
 	sed --file=$< < $<.rct > $@
