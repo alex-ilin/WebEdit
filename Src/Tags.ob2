@@ -109,7 +109,7 @@ VAR
          stop := Sci.GetTextRange (sci, posLeft, posRight, key);
          res := stop = posRight - posLeft;
          IF res THEN
-            key [stop] := 0X;         END;
+            key [stop] := Str.Null;         END;
       ELSE
          ShowMsg (MaxKeyMsg);
       END;
