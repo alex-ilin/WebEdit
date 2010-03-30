@@ -68,6 +68,8 @@ END Find;
 
 PROCEDURE Do* (sci: Sci.Handle);
 (** Either replace the current tag or jump to the next hotspot. *)
+TYPE
+   ScintillaCommand = PROCEDURE (sci: Sci.Handle);
 VAR
    pos: LONGINT;
    key: KeyStr;
@@ -162,16 +164,16 @@ VAR
          END;
       END PasteIndent;
 
-      PROCEDURE PasteClipboard (VAR to: LONGINT);
-      (* Paste Clipboard contents. 'to' is increased by the pasted amount. *)
+      PROCEDURE PasteByCommand (VAR to: LONGINT; cmd: ScintillaCommand);
+      (* Paste something using 'cmd'. 'to' is increased by the pasted amount. *)
       VAR prevLen: LONGINT;
       BEGIN
          Sci.SetCurrentPos (sci, to);
          Sci.SetAnchor (sci, to);
          prevLen := Sci.GetTextLength (sci);
-         Sci.Paste (sci);
+         cmd (sci);
          INC (to, Sci.GetTextLength (sci) - prevLen);
-      END PasteClipboard;
+      END PasteByCommand;
 
    BEGIN (* PasteValue *)
       caretPos := -1;
@@ -199,7 +201,7 @@ VAR
             ELSIF value [i] = '|' THEN      (* pipe *)
                PasteChar (pos, '|');
             ELSIF value [i] = 'c' THEN      (* clipboard *)
-               PasteClipboard (pos);
+               PasteByCommand (pos, Sci.Paste);
             ELSIF value [i] = Str.Null THEN (* null? yes, it can happen *)
                DEC (i); (* step back to terminate the outer loop *)
             END;
