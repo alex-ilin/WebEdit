@@ -558,7 +558,7 @@ BEGIN
    Str.AppendC (fname, '\');
    Str.AppendC (fname, IniFileName);
    IF ~Npp.OpenFile (fname) THEN
-      Win.MessageBox (Npp.handle, 'Error while opening config file.', PluginName, Win.MB_OK);
+      -- just ignore the result
    END;
 END EditConfig;
 
