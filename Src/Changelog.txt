@@ -1,7 +1,7 @@
 WebEdit changelog.
 
 Version 2.1, $ReleaseDate.
-
+- Added "\c" escape sequence to paste clipboard contents when replacing a tag.
 
 Version 2.0, 29.03.2010.
 - Added "Replace Tag" menu item.

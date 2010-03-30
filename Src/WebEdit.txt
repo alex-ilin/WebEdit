@@ -105,8 +105,9 @@ Preferences..." menu, and in the "Global" tab look for the "Tool bar" group.
 The "[Tags]" section format:
 - if you want a line to contain a non-printable character, you must escape it
   with a backslash; the following escape sequences are supported:
-  - \t - tab character;
+  - \c - replaced with the current clipboard contents;
   - \n - new line, replaced with the current document's EOL sequence;
+  - \t - tab character;
   - \| = "|" - use it if you want to insert the "pipe" character;
   - \\ = "\" - double backslash is replaced with a single backslash. This is
     required if you need a backslash to appear in the Replacement text;

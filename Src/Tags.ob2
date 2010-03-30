@@ -162,6 +162,17 @@ VAR
          END;
       END PasteIndent;
 
+      PROCEDURE PasteClipboard (VAR to: LONGINT);
+      (* Paste Clipboard contents. 'to' is increased by the pasted amount. *)
+      VAR prevLen: LONGINT;
+      BEGIN
+         Sci.SetCurrentPos (sci, to);
+         Sci.SetAnchor (sci, to);
+         prevLen := Sci.GetTextLength (sci);
+         Sci.Paste (sci);
+         INC (to, Sci.GetTextLength (sci) - prevLen);
+      END PasteClipboard;
+
    BEGIN (* PasteValue *)
       caretPos := -1;
       linePos := Sci.PositionFromLine (sci, Sci.LineFromPosition (sci, pastePos));
@@ -187,6 +198,8 @@ VAR
                PasteChar (pos, TabChar);
             ELSIF value [i] = '|' THEN      (* pipe *)
                PasteChar (pos, '|');
+            ELSIF value [i] = 'c' THEN      (* clipboard *)
+               PasteClipboard (pos);
             ELSIF value [i] = Str.Null THEN (* null? yes, it can happen *)
                DEC (i); (* step back to terminate the outer loop *)
             END;
