@@ -1,6 +1,6 @@
 WebEdit changelog.
 
-Version 2.0, $ReleaseDate.
+Version 2.1, $ReleaseDate.
 
 
 Version 2.0, 29.03.2010.
