@@ -1,6 +1,9 @@
 WebEdit changelog.
 
 Version 2.1, $ReleaseDate.
+
+
+Version 2.1, 31.03.2010.
 - Added "\c" escape sequence to paste clipboard contents when replacing a tag.
 - Added "\i" escape sequence to increase indentation level when replacing a tag.
 - Removed error message box from the "Edit Config" command.
