@@ -222,6 +222,13 @@ VAR
          caretPos := pos;
       END;
       Sci.GotoPos (sci, caretPos);
+      (* move the caret about the target position to avoid invalid caret
+       * placement on subsequent moves with up and down keys (wrong column) *)
+      Sci.CharLeft (sci);
+      Sci.CharRight (sci);
+      IF caretPos = 0 THEN
+         Sci.CharLeft (sci);
+      END;
    END PasteValue;
 
 BEGIN (* Do *)

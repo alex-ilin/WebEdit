@@ -5,6 +5,7 @@ Version 2.1, $ReleaseDate.
 - Added "\i" escape sequence to increase indentation level when replacing a tag.
 - Removed error message box from the "Edit Config" command.
 - Fixed: "\n" now indents by copying only the empty part of the first line, not the whole part up to the tag.
+- Fixed invalid caret placement after replacing a tag when you move the caret with up and down keys (it jumped to a different column on adjacent lines).
 
 Version 2.0, 29.03.2010.
 - Added "Replace Tag" menu item.
