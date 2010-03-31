@@ -1,4 +1,4 @@
-WebEdit v2.0 - freeware open-source plugin for Notepad++ ANSI/Unicode.
+WebEdit v2.1 - freeware open-source plugin for Notepad++ ANSI/Unicode.
 
 INTRODUCTION
 
