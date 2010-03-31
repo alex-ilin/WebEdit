@@ -194,6 +194,8 @@ VAR
             IF value [i] = 'n' THEN         (* eol *)
                INC (pos, Sci.InsertEol (sci, pos));
                PasteIndent (pos);
+            ELSIF value [i] = 'i' THEN      (* indentation *)
+               PasteByCommand (pos, Sci.Tab);
             ELSIF value [i] = '\' THEN      (* backslash *)
                PasteChar (pos, '\');
             ELSIF value [i] = 't' THEN      (* tab *)

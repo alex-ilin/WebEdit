@@ -106,6 +106,7 @@ The "[Tags]" section format:
 - if you want a line to contain a non-printable character, you must escape it
   with a backslash; the following escape sequences are supported:
   - \c - replaced with the current clipboard contents;
+  - \i - add one level of indentation (same as pressing the Tab key);
   - \n - new line, replaced with the current document's EOL sequence;
   - \t - tab character;
   - \| = "|" - use it if you want to insert the "pipe" character;
