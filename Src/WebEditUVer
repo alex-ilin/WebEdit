@@ -1,7 +1,7 @@
 s/$Ver1/2/
 s/$Ver2/1/
 s/$Ver3/0/
-s/$Ver4/999/
+s/$Ver4/0/
 # Available file flags (VS_FF_XXX): 0 | DEBUG | PATCHED | PRERELEASE | INFOINFERRED | PRIVATEBUILD | SPECIALBUILD 
-s/$FileFlags/VS_FF_DEBUG | VS_FF_PRIVATEBUILD/
+s/$FileFlags/0/
 s/$Authors/Alexander Iljin/
