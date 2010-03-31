@@ -75,7 +75,8 @@ VAR
    key: KeyStr;
    tag: Tag;
    msg: ARRAY LEN (KeyNotFoundMsg) + MaxKeyLen OF CHAR; (* Error message *)
-   posLeft, posRight: LONGINT;
+   posLeft, posRight, line: LONGINT;
+   indentBeg, indentEnd: LONGINT;
 
    PROCEDURE ShowMsg (msg: ARRAY OF CHAR);
    BEGIN
@@ -119,12 +120,12 @@ VAR
       RETURN res
    END GetKey;
 
-   PROCEDURE PasteValue (pastePos: LONGINT; VAR value: ARRAY OF CHAR);
+   PROCEDURE PasteValue (pastePos: LONGINT; VAR value: ARRAY OF CHAR;
+      indentBeg, indentEnd: LONGINT);
    CONST
       MaxIndent = 80;
       TabChar = 09X;
    VAR
-      linePos: LONGINT; (* Line start position. *)
       indent: ARRAY MaxIndent + 1 OF CHAR; (* Indentation at line start. *)
       indentLen: LONGINT; (* Really required length. Can be > MaxIndent. *)
       i, c: LONGINT;
@@ -148,18 +149,18 @@ VAR
          IF indentLen < MaxIndent THEN
             Sci.InsertText (sci, to, indent);
             INC (to, indentLen);
-         ELSE (* pump sci [linePos..pastePos] to 'to' using 'indent' as buffer *)
+         ELSE (* pump sci [indentBeg..indentEnd] to 'to' using 'indent' as buffer *)
             endPos := to + indentLen;
-            from := linePos;
-            WHILE ~(pastePos - from < LEN (indent) - 1) DO
+            from := indentBeg;
+            WHILE ~(indentEnd - from < LEN (indent) - 1) DO
                indent [Sci.GetTextRange (sci, from, from + MaxIndent, indent)] := Str.Null;
                Sci.InsertText (sci, to, indent);
                INC (from, MaxIndent);
                INC (to, MaxIndent);
             END;
-            indent [Sci.GetTextRange (sci, from, pastePos, indent)] := Str.Null;
+            indent [Sci.GetTextRange (sci, from, indentEnd, indent)] := Str.Null;
             Sci.InsertText (sci, to, indent);
-            INC (to, pastePos - from);
+            INC (to, indentEnd - from);
             ASSERT (to = endPos, 60);
          END;
       END PasteIndent;
@@ -177,10 +178,9 @@ VAR
 
    BEGIN (* PasteValue *)
       caretPos := -1;
-      linePos := Sci.PositionFromLine (sci, Sci.LineFromPosition (sci, pastePos));
-      indentLen := pastePos - linePos;
+      indentLen := indentEnd - indentBeg;
       IF indentLen < MaxIndent THEN (* init indent once and for all *)
-         indent [Sci.GetTextRange (sci, linePos, pastePos, indent)] := Str.Null;
+         indent [Sci.GetTextRange (sci, indentBeg, indentEnd, indent)] := Str.Null;
       END;
       i := 0;
       c := 0; (* value [c] is the next character to be pasted to 'sci' *)
@@ -232,10 +232,13 @@ BEGIN (* Do *)
       tag := Find (key);
       IF tag # NIL THEN
          Sci.BeginUndoAction (sci);
+         line := Sci.LineFromPosition (sci, posLeft);
+         indentBeg := Sci.PositionFromLine (sci, line);
+         indentEnd := Sci.GetLineIndentPosition (sci, line);
          msg := ''; (* msg is just a temp variable here *)
          Sci.SetSel (sci, posLeft, posRight);
          Sci.ReplaceSel (sci, msg);
-         PasteValue (posLeft, tag.value^);
+         PasteValue (posLeft, tag.value^, indentBeg, indentEnd);
          Sci.EndUndoAction (sci);
       ELSE
          msg := KeyNotFoundMsg;

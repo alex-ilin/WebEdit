@@ -4,6 +4,7 @@ Version 2.1, $ReleaseDate.
 - Added "\c" escape sequence to paste clipboard contents when replacing a tag.
 - Added "\i" escape sequence to increase indentation level when replacing a tag.
 - Removed error message box from the "Edit Config" command.
+- Fixed: "\n" now indents by copying only the empty part of the first line, not the whole part up to the tag.
 
 Version 2.0, 29.03.2010.
 - Added "Replace Tag" menu item.
