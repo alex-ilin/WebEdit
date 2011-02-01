@@ -10,7 +10,7 @@ MODULE WebEdit;
 
 IMPORT
    SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,oberonRTS,Str,Tags,
-   Ver:=WebEditVer,Ini:=IniFiles;
+   Ver:=WebEditVer,Ini:=IniFiles,Settings;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -38,7 +38,6 @@ IMPORT
  * --------------------------------------------------------------------------- *)
 
 CONST
-   PluginName = 'WebEdit';
    MaxFuncs = 30; (* 0 < MaxFuncs < 100 *)
 
    (* Menu items *)
@@ -52,10 +51,9 @@ CONST
    CommandsIniSection = 'Commands';
    ToolbarIniSection  = 'Toolbar';
    TagsIniSection     = 'Tags';
-   IniFileName = PluginName + '.ini';
    CRLF = ''+0DX+0AX;
    AboutMsg = 'This small freeware plugin allows you to wrap the selected text in tag pairs and expand abbreviations using a hotkey.'+CRLF
-      +'For more information refer to '+PluginName+'.txt.'+CRLF
+      +'For more information refer to '+Settings.PluginName+'.txt.'+CRLF
       +CRLF
       +'Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.'+CRLF
       +'Contact e-mail: AlexIljin@users.SourceForge.net';
@@ -241,7 +239,7 @@ END Func29;
 PROCEDURE ['C'] About ();
 (* Show info about this plugin. *)
 BEGIN
-   Win.MessageBox (Npp.handle, AboutMsg, PluginName + ' ' + Ver.String, Win.MB_OK)
+   Win.MessageBox (Npp.handle, AboutMsg, Settings.PluginName + ' ' + Ver.String, Win.MB_OK)
 END About;
 
 PROCEDURE ['C'] ReplaceTag ();
@@ -269,8 +267,8 @@ END DigitToChar;
 
 PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
 VAR
-   configDir, fname: ARRAY Win.MAX_PATH OF CHAR;
-   configDirLen, maxFnameLen: INTEGER;
+   fname: ARRAY Win.MAX_PATH OF CHAR;
+   maxFnameLen: INTEGER;
    file: Ini.File;
 
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
@@ -351,8 +349,8 @@ VAR
             DEC (num); (* items are numbered from 1, in ini-file *)
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
-               COPY (configDir, fname);
-               Str.CopyTo (file.line, fname, i, len, configDirLen);
+               COPY (Settings.configDir, fname);
+               Str.CopyTo (file.line, fname, i, len, Settings.configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
          END
@@ -389,12 +387,8 @@ BEGIN
    ClearPairs;
    oberonRTS.Collect;
    numRead := 0;
-   Npp.GetPluginConfigDir (configDir);
-   Str.AppendC (configDir, '\');
-   configDirLen := SHORT (Str.Length (configDir));
-   maxFnameLen := LEN (configDir) - configDirLen - 1;
-   COPY (configDir, fname);
-   Str.AppendC (fname, IniFileName);
+   maxFnameLen := LEN (Settings.configDir) - Settings.configDirLen - 1;
+   Settings.GetIniFileName (fname);
    Ini.Open (file, fname);
    IF Ini.IsOpen (file) THEN
       WHILE Ini.ReadLine (file) DO
@@ -464,7 +458,7 @@ BEGIN
    i := 0;
    WHILE i < numPairs DO
       IF forShortcutMapper THEN
-         fname := PluginName;
+         fname := Settings.PluginName;
          Str.AppendC (fname, ' - ')
       ELSE
          fname := ''
@@ -491,9 +485,7 @@ PROCEDURE ['C'] EditConfig ();
 (* Open ini-file for editing in Notepad++. *)
 VAR fname: ARRAY Win.MAX_PATH OF Npp.Char;
 BEGIN
-   Npp.GetPluginConfigDir (fname);
-   Str.AppendC (fname, '\');
-   Str.AppendC (fname, IniFileName);
+   Settings.GetIniFileName (fname);
    IF ~Npp.OpenFile (fname) THEN
       -- just ignore the result
    END;
@@ -559,7 +551,7 @@ BEGIN
    funcs [27] := Func27;
    funcs [28] := Func28;
    funcs [29] := Func29;
-   Npp.PluginName := PluginName;
+   Npp.PluginName := Settings.PluginName;
    Npp.onReady := OnReady;
    Npp.onSetInfo := OnSetInfo;
    fname := NotUsedFuncStr;
