@@ -27,7 +27,7 @@ BEGIN
    f.line := '';
    f.buffPos := 0;
    f.buffLen := 0;
-   f.hFile := NIL
+   f.hFile := NIL;
    f.eof := FALSE;
    f.section := FALSE;
 END Init;
