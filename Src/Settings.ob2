@@ -21,13 +21,16 @@ BEGIN
    Str.AppendC (res, IniFileName);
 END GetIniFileName;
 
-PROCEDURE Init;
+PROCEDURE Init*;
+(* This procedure must be called when Notepad++ handle is assigned. *)
 BEGIN
+   ASSERT (Npp.handle # NIL, 20);
    Npp.GetPluginConfigDir (configDir);
    Str.AppendC (configDir, '\');
    configDirLen := SHORT (Str.Length (configDir));
 END Init;
 
 BEGIN
-   Init;
+   configDir := '';
+   configDirLen := 0;
 END Settings.

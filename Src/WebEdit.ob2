@@ -504,6 +504,7 @@ END OnReady;
 
 PROCEDURE OnSetInfo ();
 BEGIN
+   Settings.Init;
    ReadConfig (numPairs, TRUE);
    UpdateMenuItems (TRUE)
 END OnSetInfo;
