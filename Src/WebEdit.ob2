@@ -10,7 +10,7 @@ MODULE WebEdit;
 
 IMPORT
    SYSTEM,Win:=Windows,Sci:=Scintilla,Npp:=NotepadPP,oberonRTS,Str,Tags,
-   Ver:=WebEditVer;
+   Ver:=WebEditVer,Ini:=IniFiles;
 
 (* ---------------------------------------------------------------------------
  * This is a simple Notepad++ plugin (XDS Oberon module). It can surround a
@@ -268,72 +268,13 @@ BEGIN
 END DigitToChar;
 
 PROCEDURE ReadConfig (VAR numRead: INTEGER; initToolbar: BOOLEAN);
-CONST commentChar = ';';
 VAR
-   buff: ARRAY 1024 OF CHAR;
-   line: ARRAY 2049 OF CHAR;
    configDir, fname: ARRAY Win.MAX_PATH OF CHAR;
-   buffPos, buffLen, configDirLen, maxFnameLen: INTEGER;
-   hFile: Win.HANDLE;
-   ch: CHAR;
-   eof, section: BOOLEAN;
-
-   PROCEDURE ReadChar;
-   (* Read ch from hFile, set eof = TRUE on error. *)
-   VAR read: Win.DWORD;
-   BEGIN
-      IF buffPos >= buffLen THEN;
-         buffPos := 0;
-         eof := ~Win.ReadFile (hFile, SYSTEM.VAL (Win.PVOID, SYSTEM.ADR (buff)), LEN (buff), read, NIL)
-            OR (read = 0) OR (read > LEN (buff));
-         buffLen := SHORT (read)
-      END;
-      IF ~eof THEN
-         ch := buff [buffPos];
-         INC (buffPos)
-      END
-   END ReadChar;
-
-   PROCEDURE ReadLine (): BOOLEAN;
-   (* Read until not empty line is read, return TRUE on success. If a new section header is found,
-    * return FALSE, line will contain the section string "[section name]", section = TRUE, otherwise
-    * section = FALSE.   *)
-   CONST Tab = 09X;
-   VAR
-      i: INTEGER;
-      eol: BOOLEAN;
-   BEGIN
-      section := FALSE;
-      REPEAT
-         i := 0;
-         eol := FALSE;
-         ReadChar;
-         WHILE ~eof & ~eol & (i < LEN (line) - 1) DO
-            IF (ch < ' ') & (ch # Tab) THEN
-               eol := TRUE
-            ELSE
-               line [i] := ch;
-               INC (i);
-               ReadChar
-            END
-         END;
-         IF (i = LEN (line) - 1) & ~eol & ~eof THEN (* line too long *)
-            i := 0;
-            eof := TRUE
-         ELSIF i > 0 THEN
-            IF line [0] = commentChar THEN (* comment *)
-               i := 0
-            ELSIF (line [0] = '[') & (line [i - 1] = ']') THEN (* new section *)
-               section := TRUE
-            END
-         END
-      UNTIL eof OR section OR (i > 0);
-      line [i] := Str.Null;
-      RETURN (i > 0) & ~section
-   END ReadLine;
+   configDirLen, maxFnameLen: INTEGER;
+   file: Ini.File;
 
    PROCEDURE LineToPair (VAR pair: Pair): BOOLEAN;
-   (* Initialize pair with data from line, return TRUE on success. *)
+   (* Initialize pair with data from file.line, return TRUE on success. *)
    VAR eqPos, selPos, len: INTEGER;
 
       PROCEDURE UnescapeStr (VAR str: ARRAY OF CHAR);
@@ -362,29 +303,29 @@ VAR
 
    BEGIN
       eqPos := 0;
-      WHILE (line [eqPos] # Str.Null) & (line [eqPos] # '=') DO
+      WHILE (file.line [eqPos] # Str.Null) & (file.line [eqPos] # '=') DO
          INC (eqPos)
       END;
-      IF line [eqPos] = Str.Null THEN
+      IF file.line [eqPos] = Str.Null THEN
          RETURN FALSE
       END;
       selPos := eqPos + 1;
-      WHILE (line [selPos] # Str.Null) & (line [selPos] # '|') DO
+      WHILE (file.line [selPos] # Str.Null) & (file.line [selPos] # '|') DO
          INC (selPos)
       END;
-      IF line [selPos] = Str.Null THEN
+      IF file.line [selPos] = Str.Null THEN
          RETURN FALSE
       END;
       len := selPos + 1;
-      WHILE line [len] # Str.Null DO
+      WHILE file.line [len] # Str.Null DO
          INC (len)
       END;
       NEW (pair.name, eqPos + 1);
       NEW (pair.left, selPos - eqPos);
       NEW (pair.right, len - selPos);
-      Str.CopyTo (line, pair.name^, 0, eqPos, 0);
-      Str.CopyTo (line, pair.left^, eqPos + 1, selPos, 0);
-      Str.CopyTo (line, pair.right^, selPos + 1, len, 0);
+      Str.CopyTo (file.line, pair.name^, 0, eqPos, 0);
+      Str.CopyTo (file.line, pair.left^, eqPos + 1, selPos, 0);
+      Str.CopyTo (file.line, pair.right^, selPos + 1, len, 0);
       UnescapeStr (pair.left^);
       UnescapeStr (pair.right^);
       RETURN TRUE
@@ -394,24 +335,24 @@ VAR
    VAR i, num, len: INTEGER;
    BEGIN
       i := 0;
-      len := SHORT (Str.Length (line));
-      WHILE (i < len) & (line [i] # '=') DO
+      len := SHORT (Str.Length (file.line));
+      WHILE (i < len) & (file.line [i] # '=') DO
          INC (i)
       END;
       ASSERT ((0 < MaxFuncs) & (MaxFuncs < 100), 20);
       IF (i > 0) & (i <= 2) (* 2 digits maximum *)
-         & IsDigit (line [0]) & ((i = 1) OR (IsDigit (line [1])))
+         & IsDigit (file.line [0]) & ((i = 1) OR (IsDigit (file.line [1])))
       THEN
-         num := CharToDigit (line [0]);
+         num := CharToDigit (file.line [0]);
          IF i = 2 THEN
-            num := num * 10 + CharToDigit (line [1])
+            num := num * 10 + CharToDigit (file.line [1])
          END;
          IF (0 < num) & (num <= numRead) THEN
             DEC (num); (* items are numbered from 1, in ini-file *)
             INC (i); (* skip '=' *)
             IF (i < len) & (len - i <= maxFnameLen) THEN
                COPY (configDir, fname);
-               Str.CopyTo (line, fname, i, len, configDirLen);
+               Str.CopyTo (file.line, fname, i, len, configDirLen);
                Npp.MenuItemToToolbar (num, LoadBitmap (fname), NIL)
             END
          END
@@ -419,25 +360,25 @@ VAR
    END LineToToolbar;
 
    PROCEDURE LineToTag ();
-   (* Create new tag with data from line. *)
+   (* Create new tag with data from file.line. *)
    VAR
       eqPos, len: INTEGER;
       key: Tags.KeyStr;
       value: Str.Ptr;
    BEGIN
       eqPos := 0;
-      WHILE (line [eqPos] # Str.Null) & ~(line [eqPos] = '=') DO
+      WHILE (file.line [eqPos] # Str.Null) & ~(file.line [eqPos] = '=') DO
          INC (eqPos);
       END;
-      IF (line [eqPos] # Str.Null) & (eqPos <= Tags.MaxKeyLen) THEN
+      IF (file.line [eqPos] # Str.Null) & (eqPos <= Tags.MaxKeyLen) THEN
          len := eqPos + 1;
-         WHILE line [len] # Str.Null DO
+         WHILE file.line [len] # Str.Null DO
             INC (len);
          END;
          IF len > eqPos + 1 THEN
             NEW (value, len - eqPos);
-            Str.CopyTo (line, key, 0, eqPos, 0);
-            Str.CopyTo (line, value^, eqPos + 1, len, 0);
+            Str.CopyTo (file.line, key, 0, eqPos, 0);
+            Str.CopyTo (file.line, value^, eqPos + 1, len, 0);
             Tags.Add (key, value);
          END;
       END;
@@ -447,9 +388,6 @@ BEGIN
    Tags.Clear;
    ClearPairs;
    oberonRTS.Collect;
-   eof := FALSE;
-   buffPos := 0;
-   buffLen := 0;
    numRead := 0;
    Npp.GetPluginConfigDir (configDir);
    Str.AppendC (configDir, '\');
@@ -457,39 +395,38 @@ BEGIN
    maxFnameLen := LEN (configDir) - configDirLen - 1;
    COPY (configDir, fname);
    Str.AppendC (fname, IniFileName);
-   hFile := Win.CreateFile (fname, Win.FILE_READ_DATA, Win.FILE_SHARE_READ,
-      NIL, Win.OPEN_EXISTING, Win.FILE_ATTRIBUTE_NORMAL, NIL);
-   IF (hFile # Win.INVALID_HANDLE_VALUE) THEN
-      WHILE ReadLine () DO
+   Ini.Open (file, fname);
+   IF Ini.IsOpen (file) THEN
+      WHILE Ini.ReadLine (file) DO
       END;
-      WHILE section DO
-         IF line = '[' + CommandsIniSection + ']' THEN
+      WHILE file.section DO
+         IF file.line = '[' + CommandsIniSection + ']' THEN
             (* read menu items *)
-            WHILE (numRead < MaxFuncs) & ReadLine () DO
+            WHILE (numRead < MaxFuncs) & Ini.ReadLine (file) DO
                IF LineToPair (pairs [numRead]) THEN
                   INC (numRead)
                END
             END;
             IF ~(numRead < MaxFuncs) THEN
-               WHILE ReadLine () DO
+               WHILE Ini.ReadLine (file) DO
                END
             END
-         ELSIF initToolbar & (line = '[' + ToolbarIniSection + ']') THEN
+         ELSIF initToolbar & (file.line = '[' + ToolbarIniSection + ']') THEN
             (* read toolbar items *)
-            WHILE ReadLine () DO
+            WHILE Ini.ReadLine (file) DO
                LineToToolbar ()
             END
-         ELSIF line = '[' + TagsIniSection + ']' THEN
+         ELSIF file.line = '[' + TagsIniSection + ']' THEN
             (* read tags *)
-            WHILE ReadLine () DO
+            WHILE Ini.ReadLine (file) DO
                LineToTag ()
             END
          ELSE
-            WHILE ReadLine () DO
+            WHILE Ini.ReadLine (file) DO
             END
          END
       END;
-      Win.CloseHandle (hFile)
+      Ini.Close (file)
    END
 END ReadConfig;
 
