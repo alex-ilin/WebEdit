@@ -106,6 +106,10 @@ The "[Tags]" section format:
 - if you want a line to contain a non-printable character, you must escape it
   with a backslash; the following escape sequences are supported:
   - \c - replaced with the current clipboard contents;
+  - \f[FileName:Section] - insert contents of an ini-file section. The file
+    name should be relative to the Config folder. If "FileName" part is
+    missing, then "WebEdit.ini" is assumed. If ":Section" part is missing,
+    then the entire file is inserted;
   - \i - add one level of indentation (same as pressing the Tab key);
   - \n - new line, replaced with the current document's EOL sequence;
   - \t - tab character;
