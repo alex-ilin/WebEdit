@@ -77,6 +77,7 @@ VAR
    msg: ARRAY LEN (KeyNotFoundMsg) + MaxKeyLen OF CHAR; (* Error message *)
    posLeft, posRight, line: LONGINT;
    indentBeg, indentEnd: LONGINT;
+   fname, section: Str.Ptr;
 
    PROCEDURE ShowMsg (msg: ARRAY OF CHAR);
    BEGIN
@@ -176,6 +177,61 @@ VAR
          INC (to, Sci.GetTextLength (sci) - prevLen);
       END PasteByCommand;
 
+      PROCEDURE ReadFileNameAndSection (VAR str: ARRAY OF CHAR; VAR index: LONGINT; VAR outFileName, outSection: Str.Ptr): BOOLEAN;
+      (* Read "[" <outFileName> [":" <outSection>] "]" from str [index]...
+       * Return TRUE on success. Both out-variables can be NIL on success. *)
+      VAR
+         res: BOOLEAN;
+         i: LONGINT;
+      BEGIN
+         res := FALSE;
+         outFileName := NIL;
+         outSection := NIL;
+         IF str [index] = '[' THEN
+            INC (index);
+            i := index; (* read outFileName *)
+            WHILE (str [index] # Str.Null) & (str [index] # ':') & (str [index] # ']') DO
+               INC (index);
+            END;
+            IF (str [index] # Str.Null) & (index > i) THEN
+               NEW (outFileName, index - i + 1);
+               Str.CopyTo (str, outFileName^, i, index, 0);
+            END;
+            IF str [index] = ':' THEN
+               INC (index);
+               i := index; (* read outSection *)
+               WHILE (str [index] # Str.Null) & (str [index] # ']') DO
+                  INC (index);
+               END;
+               IF (str [index] # Str.Null) & (index > i) THEN
+                  NEW (outSection, index - i + 1);
+                  Str.CopyTo (str, outSection^, i, index, 0);
+               END;
+            END;
+            res := str [index] # Str.Null;
+            IF str [index] = ']' THEN
+               INC (index);
+            END;
+         END;
+         RETURN res
+      END ReadFileNameAndSection;
+
+      PROCEDURE PasteFileContents (VAR fname, section: Str.Ptr);
+      (* Try to read 'fname' file. If 'section' # NIL, then treat the file as
+       * an ini-file and paste the contents of the 'section' section to the
+       * Scintilla text, otherwise paste the entire file. *)
+      BEGIN
+         (* Test code: paste contents of 'fname' and 'section'
+         IF fname # NIL THEN
+            Sci.InsertText (sci, pos, fname^);
+            INC (pos, Str.Length (fname^));
+         END;
+         IF section # NIL THEN
+            Sci.InsertText (sci, pos, section^);
+            INC (pos, Str.Length (section^));
+         END; *)
+      END PasteFileContents;
+
    BEGIN (* PasteValue *)
       caretPos := -1;
       indentLen := indentEnd - indentBeg;
@@ -204,6 +260,12 @@ VAR
                PasteChar (pos, '|');
             ELSIF value [i] = 'c' THEN      (* clipboard *)
                PasteByCommand (pos, Sci.Paste);
+            ELSIF value [i] = 'f' THEN      (* file contents *)
+               INC (i); (* step to the next character *)
+               IF ReadFileNameAndSection (value, i, fname, section) THEN
+                  PasteFileContents (fname, section);
+               END;
+               DEC (i); (* step back to re-parse the last character *)
             ELSIF value [i] = Str.Null THEN (* null? yes, it can happen *)
                DEC (i); (* step back to terminate the outer loop *)
             END;
