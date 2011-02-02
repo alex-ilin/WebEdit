@@ -180,6 +180,10 @@ VAR
       PROCEDURE ReadFileNameAndSection (VAR str: ARRAY OF CHAR; VAR index: LONGINT; VAR outFileName, outSection: Str.Ptr): BOOLEAN;
       (* Read "[" <outFileName> [":" <outSection>] "]" from str [index]...
        * Return TRUE on success. Both out-variables can be NIL on success. *)
+      CONST
+         StartChar = '[';
+         Separator = ':';
+         EndChar = ']';
       VAR
          res: BOOLEAN;
          i: LONGINT;
@@ -187,20 +191,20 @@ VAR
          res := FALSE;
          outFileName := NIL;
          outSection := NIL;
-         IF str [index] = '[' THEN
+         IF str [index] = StartChar THEN
             INC (index);
             i := index; (* read outFileName *)
-            WHILE (str [index] # Str.Null) & (str [index] # ':') & (str [index] # ']') DO
+            WHILE (str [index] # Str.Null) & (str [index] # Separator) & (str [index] # EndChar) DO
                INC (index);
             END;
             IF (str [index] # Str.Null) & (index > i) THEN
                NEW (outFileName, index - i + 1);
                Str.CopyTo (str, outFileName^, i, index, 0);
             END;
-            IF str [index] = ':' THEN
+            IF str [index] = Separator THEN
                INC (index);
                i := index; (* read outSection *)
-               WHILE (str [index] # Str.Null) & (str [index] # ']') DO
+               WHILE (str [index] # Str.Null) & (str [index] # EndChar) DO
                   INC (index);
                END;
                IF (str [index] # Str.Null) & (index > i) THEN
@@ -209,7 +213,7 @@ VAR
                END;
             END;
             res := str [index] # Str.Null;
-            IF str [index] = ']' THEN
+            IF str [index] = EndChar THEN
                INC (index);
             END;
          END;
