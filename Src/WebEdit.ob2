@@ -5,7 +5,7 @@ because the changes do not take effect until the main module is recompiled.    *
 MODULE WebEdit;
 
 (* ---------------------------------------------------------------------------
- * (C) 2008 - 2010 by Alexander Iljin
+ * (C) 2008 - 2011 by Alexander Iljin
  * --------------------------------------------------------------------------- *)
 
 IMPORT
