@@ -110,4 +110,38 @@ BEGIN (* ReadLine *)
    RETURN (i > 0) & ~f.section
 END ReadLine;
 
+PROCEDURE ReadSection* (VAR file: File): BOOLEAN;
+(* Read next line and keep reading until a new section is found. Return TRUE
+ * on success, FALSE on EOF. *)
+BEGIN
+   WHILE ReadLine (file) DO
+   END;
+   RETURN file.section
+END ReadSection;
+
+PROCEDURE FindSection* (VAR file: File; VAR section: ARRAY OF CHAR): BOOLEAN;
+(* Read next line and keep reading until the section is found. Return TRUE if
+ * found, FALSE otherwise. *)
+
+   PROCEDURE MatchSection (): BOOLEAN;
+   (* file.line is known to contain a Null-terminated section name in brackets,
+    * return TRUE if it matches the 'section' string. *)
+   VAR
+      i: INTEGER;
+   BEGIN
+      i := 0;
+      WHILE (section [i] # Str.Null) & (section [i] = file.line [i + 1]) DO
+         INC (i);
+      END;
+      RETURN (section [i] = Str.Null)
+         & (file.line [i + 1] = ']')
+         & (file.line [i + 2] = Str.Null)
+   END MatchSection;
+
+BEGIN (* FindSection *)
+   WHILE ReadSection (file) & ~MatchSection () DO
+   END;
+   RETURN ~file.eof
+END FindSection;
+
 END IniFiles.

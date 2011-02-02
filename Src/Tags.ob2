@@ -5,7 +5,7 @@ MODULE Tags;
  * --------------------------------------------------------------------------- *)
 
 IMPORT
-   Sci:=Scintilla, Str;
+   Ini:=IniFiles, Sci:=Scintilla, Settings, Str, Win:=Windows;
 
 (* ---------------------------------------------------------------------------
  * This module deals with tag replacements. It was made as a substitute for
@@ -220,7 +220,36 @@ VAR
       (* Try to read 'fname' file. If 'section' # NIL, then treat the file as
        * an ini-file and paste the contents of the 'section' section to the
        * Scintilla text, otherwise paste the entire file. *)
+      VAR
+         file: Ini.File;
+
+         PROCEDURE PasteFileLine (VAR pos: LONGINT);
+         BEGIN
+            Sci.InsertText (sci, pos, file.line);
+            INC (pos, Str.Length (file.line));
+         END PasteFileLine;
+
       BEGIN
+         IF fname = NIL THEN
+            NEW (fname, Win.MAX_PATH);
+            Settings.GetIniFileName (fname^);
+         END;
+         Ini.Open (file, fname^);
+         IF Ini.IsOpen (file) THEN
+            IF (section = NIL) OR Ini.FindSection (file, section^) THEN
+               (* Processing is terminated either by reaching the end of the
+                * current section, or EOF if section = NIL. *)
+               IF Ini.ReadLine (file) OR (section = NIL) & ~file.eof THEN
+                  PasteFileLine (pos);
+               END;
+               WHILE Ini.ReadLine (file) OR (section = NIL) & ~file.eof DO
+                  INC (pos, Sci.InsertEol (sci, pos));
+                  PasteIndent (pos);
+                  PasteFileLine (pos);
+               END;
+            END;
+            Ini.Close (file);
+         END;
          (* Test code: paste contents of 'fname' and 'section'
          IF fname # NIL THEN
             Sci.InsertText (sci, pos, fname^);
