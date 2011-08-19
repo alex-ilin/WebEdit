@@ -13,3 +13,5 @@ Release checklist.
    https://sourceforge.net/forum/forum.php?thread_id=1959856&forum_id=482781
 - Update PluginCentral Wiki page:
    https://sourceforge.net/apps/mediawiki/notepad-plus/index.php?title=Plugin_Central
+- Notify Softpedia.com (find "Tell us about an update" link):
+  http://www.softpedia.com/get/Office-tools/Text-editors/Iljin-WebEdit.shtml
