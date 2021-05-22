@@ -61,7 +61,7 @@ namespace Kbg.NppPluginNET {
       PluginBase.SetCommand(
         i++, "Replace Tag", ReplaceTag,
         new ShortcutKey(false, true, false, Keys.Enter));
-
+      PluginBase.SetCommand(0, "", null);
       PluginBase.SetCommand(i++, "Edit Config", EditConfig);
       PluginBase.SetCommand(i++, "Load Config", LoadConfig);
       PluginBase.SetCommand(i++, "About...", About);
