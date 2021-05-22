@@ -186,10 +186,10 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
         internal static void About()
         {
             MessageBox.Show(@"This small freeware plugin allows you to wrap the selected text in tag pairs and expand abbreviations using a hotkey.
-for more information refer to WebEdit.txt
+For more information refer to WebEdit.txt.
 
-Created by Alexander lljin(Amadeus IT Solutions), March 2008 - March 2021.
-Contact e-mail: Alexlljin @user.SourceForge.net", "WebEdit 2.7");
+Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.
+Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
         }
 
         /// <summary>
