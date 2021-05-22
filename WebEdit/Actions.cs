@@ -6,7 +6,7 @@ using WebEdit.PluginInfraestructureCustom;
 
 namespace WebEdit {
   public class Actions {
-    private IDictionary<int, string> _commands;
+    private readonly IDictionary<int, string> _commands;
 
     public Actions(string[] keys, string iniFilePath)
     {
