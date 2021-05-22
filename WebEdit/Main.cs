@@ -15,6 +15,7 @@ namespace Kbg.NppPluginNET {
     internal const string PluginName = "WebEdit";
     private const string IniFileName = PluginName + ".ini";
     private const string Version = "2.1";
+    private const string MsgBoxCaption = PluginName + " " + Version;
     private const string AboutMsg =
       "This small freeware plugin allows you to wrap the selected text in "
       + "tag pairs and expand abbreviations using a hotkey.\n"
@@ -193,7 +194,7 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
     /// Show internal information.
     /// </summary>
     internal static void About()
-      => _ = MessageBox.Show(AboutMsg, PluginName + " " + Version);
+      => _ = MessageBox.Show(AboutMsg, MsgBoxCaption);
 
     /// <summary>
     /// Set toolbar icons.
