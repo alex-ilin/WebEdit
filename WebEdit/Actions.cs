@@ -5,7 +5,7 @@ using System.Text;
 using WebEdit.IniFiles;
 
 namespace WebEdit {
-  public class Actions {
+  class Actions {
     private readonly IDictionary<int, string> _commands;
 
     public Actions(string[] keys, string iniFilePath)
