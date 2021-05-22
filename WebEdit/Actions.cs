@@ -6,13 +6,14 @@ using WebEdit.IniFiles;
 namespace WebEdit {
   class Actions {
     private readonly IDictionary<int, string> _commands;
+    public readonly string[] iniKeys;
 
-    public Actions(string[] keys, string iniFilePath)
+    public Actions(IniFile ini)
     {
+      iniKeys = ini.GetKeys("Commands");
       _commands = new Dictionary<int, string>();
-      IniFile ini = new IniFile(iniFilePath);
       int i = 0;
-      foreach (var key in keys) {
+      foreach (var key in iniKeys) {
         _commands.Add(i++, ini.Get("Commands", key));
       }
     }

@@ -42,9 +42,9 @@ namespace Kbg.NppPluginNET {
       if (!File.Exists(iniFilePath)) {
         LoadConfig();
       }
-      string[] keys = new IniFile(iniFilePath).GetKeys("Commands");
-      var actions = new Actions(keys, iniFilePath);
-      foreach (string key in keys) {
+      var ini = new IniFile(iniFilePath);
+      var actions = new Actions(ini);
+      foreach (string key in actions.iniKeys) {
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
         PluginBase.SetCommand(i++, key.Replace("&", ""), (NppFuncItemDelegate) Delegate.CreateDelegate(typeof(NppFuncItemDelegate), actions, methodInfo.Name), new ShortcutKey(false, false, false, Keys.None));
       }
@@ -192,7 +192,7 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
     {
       if (File.Exists(iniFilePath)) {
         toolbarIcons tbIcons = new toolbarIcons();
-        IniFile ini = new IniFile(iniFilePath);
+        var ini = new IniFile(iniFilePath);
         foreach (string key in ini.GetKeys("Toolbar")) {
           string value = ini.Get("Toolbar", key);
           var pathIcon = Path.Combine(iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
@@ -244,7 +244,7 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
           throw new Exception("No tag here.");
         }
         byte[] buffer = new byte[1048];
-        IniFile ini = new IniFile(iniFilePath);
+        var ini = new IniFile(iniFilePath);
         string value = ini.Get("Tags", selectedText, 1048);
         if (string.IsNullOrEmpty(value.Trim('\0'))) {
           throw new Exception("No tag here.");
