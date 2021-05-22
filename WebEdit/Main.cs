@@ -46,13 +46,17 @@ namespace Kbg.NppPluginNET {
       var actions = new Actions(ini);
       foreach (string key in actions.iniKeys) {
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
-        PluginBase.SetCommand(i++, key.Replace("&", ""), (NppFuncItemDelegate) Delegate.CreateDelegate(typeof(NppFuncItemDelegate), actions, methodInfo.Name), new ShortcutKey(false, false, false, Keys.None));
+        PluginBase.SetCommand(
+          i++,
+          key.Replace("&", ""),
+          (NppFuncItemDelegate) Delegate.CreateDelegate(
+            typeof(NppFuncItemDelegate), actions, methodInfo.Name));
       }
       PluginBase.SetCommand(i++, "Replace Tag", ChangeModule, new ShortcutKey(false, true, false, Keys.Enter));
 
-      PluginBase.SetCommand(i++, "Edit Config", EditConfig, new ShortcutKey(false, false, false, Keys.None));
-      PluginBase.SetCommand(i++, "Load Config", LoadConfig, new ShortcutKey(false, false, false, Keys.None));
-      PluginBase.SetCommand(i++, "About..", About, new ShortcutKey(false, false, false, Keys.None));
+      PluginBase.SetCommand(i++, "Edit Config", EditConfig);
+      PluginBase.SetCommand(i++, "Load Config", LoadConfig);
+      PluginBase.SetCommand(i++, "About..", About);
     }
 
     /// <summary>
