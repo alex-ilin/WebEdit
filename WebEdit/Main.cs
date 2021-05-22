@@ -48,7 +48,7 @@ namespace Kbg.NppPluginNET {
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
         PluginBase.SetCommand(
           i++,
-          key.Replace("&", ""),
+          key,
           (NppFuncItemDelegate) Delegate.CreateDelegate(
             typeof(NppFuncItemDelegate), actions, methodInfo.Name));
       }
@@ -56,7 +56,7 @@ namespace Kbg.NppPluginNET {
 
       PluginBase.SetCommand(i++, "Edit Config", EditConfig);
       PluginBase.SetCommand(i++, "Load Config", LoadConfig);
-      PluginBase.SetCommand(i++, "About..", About);
+      PluginBase.SetCommand(i++, "About...", About);
     }
 
     /// <summary>
