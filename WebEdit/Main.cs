@@ -13,6 +13,7 @@ using WebEdit.IniFiles;
 namespace Kbg.NppPluginNET {
   class Main {
     internal const string PluginName = "WebEdit";
+    private const string IniFileName = PluginName + ".ini";
     private const string Version = "2.1";
     private const string AboutMsg =
       "This small freeware plugin allows you to wrap the selected text in "
@@ -41,9 +42,7 @@ namespace Kbg.NppPluginNET {
       if (!Directory.Exists(iniDirectory)) {
         Directory.CreateDirectory(iniDirectory);
       }
-
-      iniFilePath = Path.Combine(iniDirectory, PluginName + ".ini");
-
+      iniFilePath = Path.Combine(iniDirectory, IniFileName);
       if (!File.Exists(iniFilePath)) {
         LoadConfig();
       }
