@@ -8,10 +8,12 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 	{
 		void FileNew();
 
+		string GetNppPath();
+		string GetPluginConfigPath();
 		string GetCurrentFilePath();
 		unsafe string GetFilePath(int bufferId);
 		void SetCurrentLanguage(LangType language);
-	}
+  }
 
 	/// <summary>
 	/// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
@@ -25,6 +27,32 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		{
 			Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_MENUCOMMAND, Unused, NppMenuCmd.IDM_FILE_NEW);
 		}
+
+		/// <summary>
+		/// This method incapsulates a common pattern in the Notepad++ API: when
+		/// you need to retrieve a string, you can first query the buffer size.
+		/// Query the buffer size, allocate the necessary minimum, then return the
+		/// retrieved string.
+		/// </summary>
+		/// <param name="message">Message ID of the data to query.</param>
+		/// <returns>String returned by Notepad++</returns>
+		public string GetString(NppMsg message)
+		{
+			int len = Win32.SendMessage(
+					PluginBase.nppData._nppHandle,
+					(uint) message, Unused, Unused).ToInt32()
+				+ 1;
+			var res = new StringBuilder(len);
+			_ = Win32.SendMessage(
+				PluginBase.nppData._nppHandle, (uint) message, len, res);
+			return res.ToString();
+		}
+
+		public string GetNppPath()
+			=> GetString(NppMsg.NPPM_GETNPPDIRECTORY);
+
+		public string GetPluginConfigPath()
+			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 
 		/// <summary>
 		/// Gets the path of the current document.

@@ -35,14 +35,9 @@ namespace Kbg.NppPluginNET {
     internal static void CommandMenuInit()
     {
       int i = 0;
-
-      StringBuilder npath = new StringBuilder(Win32.MAX_PATH);
-      Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETNPPDIRECTORY, 0, npath);
-      nppPath = npath.ToString();
-
-      StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-      Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-      iniDirectory = sbIniFilePath.ToString();
+      var npp = new NotepadPPGateway();
+      nppPath = npp.GetNppPath();
+      iniDirectory = npp.GetPluginConfigPath();
       if (!Directory.Exists(iniDirectory)) {
         Directory.CreateDirectory(iniDirectory);
       }
