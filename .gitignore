@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Build artefacts and other binaries.
+*.dll
+*.exe
+
+# Files generated from *.resx.
+*.Designer.cs
+
 # User-specific files
 *.rsuser
 *.suo
