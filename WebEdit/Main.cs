@@ -278,18 +278,13 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
     {
       // TODO: add more commands: \\, \t.
       // TODO: does indentation work? I don't see insertions before \n.
-      // TODO: do we need the if-contains before every replacement?
-      if (value.Contains("\\n")) {
-        value = value.Replace("\\n", "\n");
-      }
+      value = value.Replace("\\n", "\n");
       if (value.Contains("\\c")) {
         // TODO: what the heck is this? It's supposed to insert text from the
         // system Clipboard.
         value = value.Replace("\\c", "ScintillaGateway scintillaGateway = new ScintillaGateway(currentScint)");
       }
-      if (value.Contains("\\i")) {
-        value = value.Replace("\\i", "  ");
-      }
+      value = value.Replace("\\i", "  ");
       return value;
     }
 
