@@ -90,14 +90,6 @@ namespace Kbg.NppPluginNET {
           byte[] info = new UTF8Encoding(true).GetBytes(Resources.WebEditIni);
           fs.Write(info, 0, info.Length);
         }
-        // TODO: remove the cmd.exe call.
-        System.Diagnostics.Process process = new System.Diagnostics.Process();
-        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-        startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-        startInfo.FileName = "cmd.exe";
-        startInfo.Arguments = "/C taskkill /pid notepad++.exe";
-        process.StartInfo = startInfo;
-        process.Start();
       }
     }
 
