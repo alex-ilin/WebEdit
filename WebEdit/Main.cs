@@ -16,7 +16,6 @@ namespace Kbg.NppPluginNET
     {
         internal const string PluginName = "WebEdit";
         static string iniDirectory, iniFilePath, nppPath = null;
-        static bool someSetting = false;
 
         public static void OnNotification(ScNotification notification)
         {
@@ -43,8 +42,6 @@ namespace Kbg.NppPluginNET
             {
                 LoadConfig();
             }
-            someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, iniFilePath) != 0);
-
             byte[] buffer = new byte[1048];
             Win32Custom.GetPrivateProfileString("Commands", null, "", buffer, 1048, iniFilePath);
             String[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
@@ -233,11 +230,10 @@ Contact e-mail: Alexlljin @user.SourceForge.net", "WebEdit 2.7");
             }
         }
 
-        internal static void PluginCleanUp()
-        {
-           Win32.WritePrivateProfileString("SomeSection", "SomeKey", someSetting ? "1" : "0", Path.Combine(iniDirectory, PluginName + ".ini"));
-        }
-
+    internal static void PluginCleanUp()
+    {
+      // This method is called when the plugin is notified about Npp shutdown.
+    }
 
         ///// <summary>
         ///// Change text for module
