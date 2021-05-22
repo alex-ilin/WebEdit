@@ -13,6 +13,16 @@ using WebEdit.IniFiles;
 namespace Kbg.NppPluginNET {
   class Main {
     internal const string PluginName = "WebEdit";
+    private const string Version = "2.1";
+    private const string AboutMsg =
+      "This small freeware plugin allows you to wrap the selected text in "
+      + "tag pairs and expand abbreviations using a hotkey.\n"
+      + "For more information refer to " + PluginName + ".txt.\n"
+      + "\n"
+      + "Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, "
+      + "March 2008 - March 2010.\n"
+      + "Contact e-mail: AlexIljin@users.SourceForge.net";
+
     static string iniDirectory, iniFilePath, nppPath = null;
 
     public static void OnNotification(ScNotification notification)
@@ -183,13 +193,7 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
     /// Show internal information.
     /// </summary>
     internal static void About()
-    {
-      MessageBox.Show(@"This small freeware plugin allows you to wrap the selected text in tag pairs and expand abbreviations using a hotkey.
-For more information refer to WebEdit.txt.
-
-Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, March 2008 - March 2010.
-Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
-    }
+      => _ = MessageBox.Show(AboutMsg, PluginName + " " + Version);
 
     /// <summary>
     /// Set toolbar icons.
