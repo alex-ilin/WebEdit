@@ -49,9 +49,10 @@ namespace Kbg.NppPluginNET {
       var ini = new IniFile(iniFilePath);
       var actions = new Actions(ini);
       foreach (string key in actions.iniKeys) {
-        // TODO: limit the number of commands by the number of methods
-        // available in the Actions class.
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
+        if (methodInfo == null)
+          break;
+
         PluginBase.SetCommand(
           i++,
           key,
