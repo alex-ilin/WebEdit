@@ -55,6 +55,8 @@ namespace Kbg.NppPluginNET {
       var ini = new IniFile(iniFilePath);
       var actions = new Actions(ini);
       foreach (string key in actions.iniKeys) {
+        // TODO: limit the number of commands by the number of methods
+        // available in the Actions class.
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
         PluginBase.SetCommand(
           i++,
@@ -76,6 +78,7 @@ namespace Kbg.NppPluginNET {
     /// </summary>
     internal static void EditConfig()
     {
+      // TODO: open the file in Notepad++ without starting the cmd.exe.
       if (!string.IsNullOrEmpty(iniFilePath)) {
         System.Diagnostics.Process process = new System.Diagnostics.Process();
         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -96,6 +99,7 @@ namespace Kbg.NppPluginNET {
     {
       if (!File.Exists(iniFilePath)) {
         using (FileStream fs = File.Create(iniFilePath)) {
+          // TODO: replace hardcoded constant with a resource embedded in DLL.
           byte[] info = new UTF8Encoding(true).GetBytes(@"[Commands]
 ; Syntax: <Item name>=<Left text>|<Right text>
 ; Known escape sequences: \\ \t \n \r
@@ -179,6 +183,7 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
           // Add some information to the file.
           fs.Write(info, 0, info.Length);
         }
+        // TODO: remove the cmd.exe call.
         System.Diagnostics.Process process = new System.Diagnostics.Process();
         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
         startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
@@ -240,6 +245,8 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
 
       string selectedText = scintillaGateway.GetSelText();
       if (string.IsNullOrEmpty(selectedText)) {
+        // TODO: remove this hardcoded 10 crap. Remove selection manipulation:
+        // user will not be happy to see any such side-effects.
         scintillaGateway.SetSelection(position > 10 ? (position - 10) : (position - position), position);
         selectedText = scintillaGateway.GetSelText();
         var reges = Regex.Matches(scintillaGateway.GetSelText(), @"(\w+)");
@@ -274,10 +281,15 @@ p=PROCEDURE \c|;\nBEGIN\n\i\nEND \c;\n");
     /// <returns></returns>
     private static string TransformTags(string value)
     {
+      // TODO: add more commands: \\, \t.
+      // TODO: does indentation work? I don't see insertions before \n.
+      // TODO: do we need the if-contains before every replacement?
       if (value.Contains("\\n")) {
         value = value.Replace("\\n", "\n");
       }
       if (value.Contains("\\c")) {
+        // TODO: what the heck is this? It's supposed to insert text from the
+        // system Clipboard.
         value = value.Replace("\\c", "ScintillaGateway scintillaGateway = new ScintillaGateway(currentScint)");
       }
       if (value.Contains("\\i")) {
