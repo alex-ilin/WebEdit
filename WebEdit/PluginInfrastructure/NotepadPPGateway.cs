@@ -58,11 +58,7 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		/// Gets the path of the current document.
 		/// </summary>
 		public string GetCurrentFilePath()
-		{
-			var path = new StringBuilder(2000);
-			Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETFULLCURRENTPATH, 0, path);
-			return path.ToString();
-		}
+			=> GetString(NppMsg.NPPM_GETFULLCURRENTPATH);
 
 		/// <summary>
 		/// Gets the path of the current document.
