@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WebEdit;
-using WebEdit.PluginInfraestructureCustom;
+using WebEdit.IniFiles;
 
 namespace Kbg.NppPluginNET {
   class Main {
@@ -43,7 +43,7 @@ namespace Kbg.NppPluginNET {
         LoadConfig();
       }
       byte[] buffer = new byte[1048];
-      Win32Custom.GetPrivateProfileString("Commands", null, "", buffer, 1048, iniFilePath);
+      IniFile.GetPrivateProfileString("Commands", null, "", buffer, 1048, iniFilePath);
       string[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
 
       var actions = new Actions(keys, iniFilePath);
@@ -196,11 +196,11 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
       if (File.Exists(iniFilePath)) {
         toolbarIcons tbIcons = new toolbarIcons();
         byte[] buffer = new byte[1048];
-        Win32Custom.GetPrivateProfileString("Toolbar", null, "", buffer, 1048, iniFilePath);
+        IniFile.GetPrivateProfileString("Toolbar", null, "", buffer, 1048, iniFilePath);
         string[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
         foreach (string key in keys) {
           byte[] text = new byte[255];
-          Win32Custom.GetPrivateProfileString("Toolbar", key, "", text, 255, iniFilePath);
+          IniFile.GetPrivateProfileString("Toolbar", key, "", text, 255, iniFilePath);
           string value = Encoding.ASCII.GetString(text);
           var pathIcon = Path.Combine(iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
           if (File.Exists(pathIcon)) {
@@ -252,7 +252,7 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
         }
         byte[] buffer = new byte[1048];
 
-        Win32Custom.GetPrivateProfileString("Tags", selectedText, "", buffer, 1048, iniFilePath);
+        IniFile.GetPrivateProfileString("Tags", selectedText, "", buffer, 1048, iniFilePath);
         string value = Encoding.ASCII.GetString(buffer);
         if (string.IsNullOrEmpty(value.Trim('\0'))) {
           throw new Exception("No tag here.");

@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions.cs" />
-    <Compile Include="PluginInfraestructureCustom\Win32Custom.cs" />
+    <Compile Include="IniFiles.cs" />
     <Compile Include="PluginInfrastructure\ClikeStringArray.cs" />
     <Compile Include="PluginInfrastructure\DllExport\DllExportAttribute.cs" />
     <Compile Include="PluginInfrastructure\Win32.cs" />

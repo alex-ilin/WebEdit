@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WebEdit.PluginInfraestructureCustom;
+using WebEdit.IniFiles;
 
 namespace WebEdit {
   public class Actions {
@@ -14,7 +14,7 @@ namespace WebEdit {
       int i = 0;
       foreach (var key in keys) {
         byte[] text = new byte[255];
-        Win32Custom.GetPrivateProfileString("Commands", key, "", text, 255, iniFilePath);
+        IniFile.GetPrivateProfileString("Commands", key, "", text, 255, iniFilePath);
         string value = Encoding.ASCII.GetString(text);
         _commands.Add(i++, value);
       }
