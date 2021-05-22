@@ -52,7 +52,9 @@ namespace Kbg.NppPluginNET {
           (NppFuncItemDelegate) Delegate.CreateDelegate(
             typeof(NppFuncItemDelegate), actions, methodInfo.Name));
       }
-      PluginBase.SetCommand(i++, "Replace Tag", ChangeModule, new ShortcutKey(false, true, false, Keys.Enter));
+      PluginBase.SetCommand(
+        i++, "Replace Tag", ReplaceTag,
+        new ShortcutKey(false, true, false, Keys.Enter));
 
       PluginBase.SetCommand(i++, "Edit Config", EditConfig);
       PluginBase.SetCommand(i++, "Load Config", LoadConfig);
@@ -222,11 +224,11 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
       // This method is called when the plugin is notified about Npp shutdown.
     }
 
-
-    ///// <summary>
-    ///// Change text for module
-    ///// </summary>
-    internal static void ChangeModule()
+    /// <summary>
+    /// Replace the tag at the caret with an expansion defined in the [Tags]
+    /// ini-file section.
+    /// </summary>
+    internal static void ReplaceTag()
     {
       IntPtr currentScint = PluginBase.GetCurrentScintilla();
       ScintillaGateway scintillaGateway = new ScintillaGateway(currentScint);
