@@ -25,7 +25,7 @@ namespace Kbg.NppPluginNET {
       + "March 2008 - March 2010.\n"
       + "Contact e-mail: AlexIljin@users.SourceForge.net";
 
-    static string iniDirectory, iniFilePath, nppPath = null;
+    static string iniDirectory, iniFilePath = null;
 
     public static void OnNotification(ScNotification notification)
     {
@@ -38,7 +38,6 @@ namespace Kbg.NppPluginNET {
     {
       int i = 0;
       var npp = new NotepadPPGateway();
-      nppPath = npp.GetNppPath();
       iniDirectory = npp.GetPluginConfigPath();
       if (!Directory.Exists(iniDirectory)) {
         Directory.CreateDirectory(iniDirectory);
@@ -70,22 +69,14 @@ namespace Kbg.NppPluginNET {
     }
 
     /// <summary>
-    /// Edit config file in notepad ++
+    /// Edit the plugin ini-file in Notepad++.
     /// </summary>
     internal static void EditConfig()
     {
-      // TODO: open the file in Notepad++ without starting the cmd.exe.
-      if (!string.IsNullOrEmpty(iniFilePath)) {
-        System.Diagnostics.Process process = new System.Diagnostics.Process();
-        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-        startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-        startInfo.FileName = "cmd.exe";
-        //MessageBox.Show("/C \"\"" + nppPath + "\\notepad++.exe\"" + " \"" + iniFilePath + "\"\"");
-        startInfo.Arguments = "/C \"\"" + nppPath + "\\notepad++.exe\"" + " \"" + iniFilePath + "\"\"";
-        process.StartInfo = startInfo;
-        process.Start();
-      }
-
+      if (!new NotepadPPGateway().OpenFile(iniFilePath))
+        _ = MessageBox.Show(
+          "Failed to open the configuration file for editing:\n" + iniFilePath,
+          MsgBoxCaption);
     }
 
     /// <summary>
