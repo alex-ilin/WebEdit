@@ -1,18 +1,15 @@
 ﻿using Kbg.NppPluginNET.PluginInfrastructure;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using WebEdit.PluginInfraestructureCustom;
 
 namespace WebEdit {
   public class Actions {
-    private StackTrace _stackTrace;
     private IDictionary<int, string> _commands;
 
     public Actions(string[] keys, string iniFilePath)
     {
-      _stackTrace = new StackTrace();
       _commands = new Dictionary<int, string>();
       int i = 0;
       foreach (var key in keys) {
