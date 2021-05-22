@@ -13,6 +13,7 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		string GetCurrentFilePath();
 		unsafe string GetFilePath(int bufferId);
 		void SetCurrentLanguage(LangType language);
+		bool OpenFile(string path);
   }
 
 	/// <summary>
@@ -53,6 +54,11 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 
 		public string GetPluginConfigPath()
 			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
+
+		public bool OpenFile(string path)
+			=> Win32.SendMessage(
+				PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DOOPEN, Unused, path).ToInt32()
+			!= 0;
 
 		/// <summary>
 		/// Gets the path of the current document.
