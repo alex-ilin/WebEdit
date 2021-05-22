@@ -11,12 +11,10 @@ namespace WebEdit {
     public Actions(string[] keys, string iniFilePath)
     {
       _commands = new Dictionary<int, string>();
+      IniFile ini = new IniFile(iniFilePath);
       int i = 0;
       foreach (var key in keys) {
-        byte[] text = new byte[255];
-        IniFile.GetPrivateProfileString("Commands", key, "", text, 255, iniFilePath);
-        string value = Encoding.ASCII.GetString(text);
-        _commands.Add(i++, value);
+        _commands.Add(i++, ini.Get("Commands", key));
       }
     }
 

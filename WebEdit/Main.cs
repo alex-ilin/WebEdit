@@ -195,13 +195,12 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
     {
       if (File.Exists(iniFilePath)) {
         toolbarIcons tbIcons = new toolbarIcons();
+        IniFile ini = new IniFile(iniFilePath);
         byte[] buffer = new byte[1048];
         IniFile.GetPrivateProfileString("Toolbar", null, "", buffer, 1048, iniFilePath);
         string[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
         foreach (string key in keys) {
-          byte[] text = new byte[255];
-          IniFile.GetPrivateProfileString("Toolbar", key, "", text, 255, iniFilePath);
-          string value = Encoding.ASCII.GetString(text);
+          string value = ini.Get("Toolbar", key);
           var pathIcon = Path.Combine(iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
           if (File.Exists(pathIcon)) {
             try {
@@ -251,9 +250,8 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
           throw new Exception("No tag here.");
         }
         byte[] buffer = new byte[1048];
-
-        IniFile.GetPrivateProfileString("Tags", selectedText, "", buffer, 1048, iniFilePath);
-        string value = Encoding.ASCII.GetString(buffer);
+        IniFile ini = new IniFile(iniFilePath);
+        string value = ini.Get("Tags", selectedText, 1048);
         if (string.IsNullOrEmpty(value.Trim('\0'))) {
           throw new Exception("No tag here.");
         }
