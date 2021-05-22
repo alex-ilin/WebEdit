@@ -3,35 +3,32 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TestWebEdit
-{
-    class Program
+namespace TestWebEdit {
+  class Program {
+
+    [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString")]
+    public static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, byte[] lpReturnedString, int nSize, string lpFileName);
+
+    public static void Main()
     {
 
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString")]
-        public static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, byte[] lpReturnedString, int nSize, string lpFileName);
+      string section = "Commands";
+      string filename = @"D:\Proyectos\Freelancer\Miguel\WebEdit\webedit\WebEdit\TestWebEdit\WebEdit.ini";
 
-        public static void Main()
-        {
+      byte[] buffer = new byte[1048];
+      GetPrivateProfileString(section, null, "", buffer, 1048, filename);
 
-            string section = "Commands";
-            string filename = @"D:\Proyectos\Freelancer\Miguel\WebEdit\webedit\WebEdit\TestWebEdit\WebEdit.ini";
+      string[] tmp = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
 
-            byte[] buffer = new byte[1048];
-            GetPrivateProfileString(section, null, "", buffer, 1048, filename);
+      List<string> result = new List<string>();
 
-            String[] tmp = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
+      foreach (string entry in tmp) {
+        byte[] text = new byte[255];
+        int resText = GetPrivateProfileString(section, entry, "", buffer, 255, filename);
 
-            List<string> result = new List<string>();
-
-            foreach (String entry in tmp)
-            {
-                byte[] text = new byte[255];
-                int resText = GetPrivateProfileString(section, entry, "", buffer, 255, filename);
-
-                String tmpText = Encoding.ASCII.GetString(buffer);
-            }
-        }
-
+        string tmpText = Encoding.ASCII.GetString(buffer);
+      }
     }
+
+  }
 }
