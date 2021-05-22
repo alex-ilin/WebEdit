@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEdit", "WebEdit\WebEdit.csproj", "{EF01E646-72A4-4960-9A06-8FF86D800ABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebEdit", "TestWebEdit\TestWebEdit.csproj", "{4A5304CF-0AF5-4A37-B566-289A462AE6AD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,18 +25,6 @@ Global
 		{EF01E646-72A4-4960-9A06-8FF86D800ABE}.Release|x64.Build.0 = Release|x64
 		{EF01E646-72A4-4960-9A06-8FF86D800ABE}.Release|x86.ActiveCfg = Release|x86
 		{EF01E646-72A4-4960-9A06-8FF86D800ABE}.Release|x86.Build.0 = Release|x86
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|x64.Build.0 = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Debug|x86.Build.0 = Debug|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|x64.ActiveCfg = Release|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|x64.Build.0 = Release|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|x86.ActiveCfg = Release|Any CPU
-		{4A5304CF-0AF5-4A37-B566-289A462AE6AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
