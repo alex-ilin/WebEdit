@@ -5,6 +5,7 @@ namespace WebEdit.IniFiles {
   class IniFile {
 
     private const int maxValueLength = 256;
+    private const int maxKeysBuffer = 1024;
 
     [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString")]
     public static extern int GetPrivateProfileString(
@@ -28,5 +29,8 @@ namespace WebEdit.IniFiles {
       _ = GetPrivateProfileString(section, key, "", res, res.Length, _FileName);
       return Encoding.UTF8.GetString(res);
     }
+
+    public string[] GetKeys(string section, int maxBuffer = maxKeysBuffer)
+      => Get(section, null, maxBuffer).Trim('\0').Split('\0');
   }
 }

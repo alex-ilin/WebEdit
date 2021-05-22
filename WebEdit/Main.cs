@@ -42,10 +42,7 @@ namespace Kbg.NppPluginNET {
       if (!File.Exists(iniFilePath)) {
         LoadConfig();
       }
-      byte[] buffer = new byte[1048];
-      IniFile.GetPrivateProfileString("Commands", null, "", buffer, 1048, iniFilePath);
-      string[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
-
+      string[] keys = new IniFile(iniFilePath).GetKeys("Commands");
       var actions = new Actions(keys, iniFilePath);
       foreach (string key in keys) {
         var methodInfo = typeof(Actions).GetMethod("ExecuteCommand" + i);
@@ -196,10 +193,7 @@ Contact e-mail: AlexIljin@users.SourceForge.net", "WebEdit 2.1");
       if (File.Exists(iniFilePath)) {
         toolbarIcons tbIcons = new toolbarIcons();
         IniFile ini = new IniFile(iniFilePath);
-        byte[] buffer = new byte[1048];
-        IniFile.GetPrivateProfileString("Toolbar", null, "", buffer, 1048, iniFilePath);
-        string[] keys = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
-        foreach (string key in keys) {
+        foreach (string key in ini.GetKeys("Toolbar")) {
           string value = ini.Get("Toolbar", key);
           var pathIcon = Path.Combine(iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
           if (File.Exists(pathIcon)) {
