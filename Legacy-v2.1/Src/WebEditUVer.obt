@@ -1,0 +1,6 @@
+MODULE WebEditUVer;
+
+CONST
+   String* = '$Ver1.$Ver2.$Ver3.$Ver4';
+
+END WebEditUVer.

@@ -1,0 +1,31 @@
+LANGUAGE LANG_ENGLISH, 1
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION $Ver1, $Ver2, $Ver3, $Ver4
+PRODUCTVERSION $Ver1, $Ver2, $Ver3, $Ver4
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS $FileFlags
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_DLL
+{
+ BLOCK "StringFileInfo"
+ {
+  BLOCK "040904b0"
+  {
+   VALUE "CompanyName", "Amadeus IT Solutions\000"
+   VALUE "LegalCopyright", "© 2008 - 2010 by $Authors\000"
+   VALUE "FileDescription", "WebEdit plugin for Notepad++ (ANSI).\000"
+   VALUE "FileVersion", "$Ver1.$Ver2.$Ver3.$Ver4\000"
+   VALUE "ProductVersion", "$Ver1.$Ver2.$Ver3.$Ver4\000"
+   VALUE "ProductName", "WebEdit\000"
+   VALUE "InternalName", "WebEdit\000"
+   VALUE "OriginalFilename", "WebEdit.dll\000"
+   VALUE "Programming language", "Oberon-2\000"
+   VALUE "Tools", "XDS, Notepad++, GNU Make, GoRC\000"
+   VALUE "Comments", "This plugin is freeware and open-source. You may contact me via e-mail: AlexIljin@users.SourceForge.net.\000"
+  }
+ }
+ BLOCK "VarFileInfo"
+ {
+  VALUE "Translation", 0x0409, 0x04b0 // U.S. English, Unicode
+ }
+}
