@@ -107,24 +107,26 @@ namespace Kbg.NppPluginNET {
     /// </summary>
     internal static void SetToolBarIcon()
     {
-      if (File.Exists(iniFilePath)) {
-        toolbarIcons tbIcons = new toolbarIcons();
-        var ini = new IniFile(iniFilePath);
-        foreach (string key in ini.GetKeys("Toolbar")) {
-          string value = ini.Get("Toolbar", key);
-          var pathIcon = Path.Combine(iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
-          if (File.Exists(pathIcon)) {
-            try {
-              Bitmap icon = new Bitmap(pathIcon);
-              tbIcons.hToolbarBmp = icon.GetHbitmap();
-              IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-              Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-              Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_ADDTOOLBARICON,
-                  PluginBase._funcItems.Items[Convert.ToInt32(key) - 1]._cmdID, pTbIcons);
-              Marshal.FreeHGlobal(pTbIcons);
-            } catch {
+      toolbarIcons tbIcons = new toolbarIcons();
+      var ini = new IniFile(iniFilePath);
+      foreach (string key in ini.GetKeys("Toolbar")) {
+        string value = ini.Get("Toolbar", key);
+        var pathIcon = Path.Combine(
+          iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
+        if (File.Exists(pathIcon)) {
+          try {
+            Bitmap icon = new Bitmap(pathIcon);
+            tbIcons.hToolbarBmp = icon.GetHbitmap();
+            IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
+            Marshal.StructureToPtr(tbIcons, pTbIcons, false);
+            Win32.SendMessage(
+              PluginBase.nppData._nppHandle,
+              (uint) NppMsg.NPPM_ADDTOOLBARICON,
+              PluginBase._funcItems.Items[Convert.ToInt32(key) - 1]._cmdID,
+              pTbIcons);
+            Marshal.FreeHGlobal(pTbIcons);
+          } catch {
 
-            }
           }
         }
       }
