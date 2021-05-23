@@ -5,11 +5,7 @@
 #
 # The XDS/BIN directory should be in the PATH environment variable.
 #
-
 # ============================================================================
-# Common rules for building Amadeus-based applications
-
-include ../A3Lib/Rules.make
 
 .PHONY: dist
 
