@@ -44,9 +44,8 @@ namespace Kbg.NppPluginNET {
         Directory.CreateDirectory(iniDirectory);
       }
       iniFilePath = Path.Combine(iniDirectory, IniFileName);
-      if (!File.Exists(iniFilePath)) {
-        LoadConfig();
-      }
+      LoadConfig();
+      // TODO: move the menu initialization to the LoadConfig method.
       var ini = new IniFile(iniFilePath);
       var actions = new Actions(ini);
       foreach (string key in actions.iniKeys) {
@@ -81,7 +80,9 @@ namespace Kbg.NppPluginNET {
     }
 
     /// <summary>
-    /// Load Config File to setting
+    /// Load the settings from the ini-file. This is done on startup and when
+    /// requested by the user via the Load Config menu. The iniFilePath member
+    /// must be initialized prior to calling this method.
     /// </summary>
     internal static unsafe void LoadConfig()
     {
@@ -90,6 +91,8 @@ namespace Kbg.NppPluginNET {
           byte[] info = new UTF8Encoding(true).GetBytes(Resources.WebEditIni);
           fs.Write(info, 0, info.Length);
         }
+      // TODO: load the ini-file contents and update the menu and tag
+      // replacement data.
     }
 
     /// <summary>
