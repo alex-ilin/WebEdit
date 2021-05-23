@@ -40,9 +40,7 @@ namespace Kbg.NppPluginNET {
       int i = 0;
       var npp = new NotepadPPGateway();
       iniDirectory = npp.GetPluginConfigPath();
-      if (!Directory.Exists(iniDirectory)) {
-        Directory.CreateDirectory(iniDirectory);
-      }
+      _ = Directory.CreateDirectory(iniDirectory);
       iniFilePath = Path.Combine(iniDirectory, IniFileName);
       LoadConfig();
       // TODO: move the menu initialization to the LoadConfig method.
