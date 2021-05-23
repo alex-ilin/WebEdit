@@ -41,7 +41,7 @@ namespace Kbg.NppPluginNET {
     {
       int i = 0;
       var npp = new NotepadPPGateway();
-      iniDirectory = npp.GetPluginConfigPath();
+      iniDirectory = Path.Combine(npp.GetPluginConfigPath(), PluginName);
       _ = Directory.CreateDirectory(iniDirectory);
       iniFilePath = Path.Combine(iniDirectory, IniFileName);
       LoadConfig();
@@ -112,7 +112,7 @@ namespace Kbg.NppPluginNET {
       foreach (string key in ini.GetKeys("Toolbar")) {
         string value = ini.Get("Toolbar", key);
         var pathIcon = Path.Combine(
-          iniDirectory, PluginName, value.Trim('\0').Replace("\0", ""));
+          iniDirectory, value.Trim('\0').Replace("\0", ""));
         if (File.Exists(pathIcon)) {
           try {
             Bitmap icon = new Bitmap(pathIcon);
