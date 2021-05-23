@@ -33,7 +33,9 @@ namespace Kbg.NppPluginNET {
     }
 
     /// <summary>
-    /// Load Menu section
+    /// Load the ini-file and initialize the menu items. The toolbar will be
+    /// initialized later and will use the commands used in the menu added here
+    /// to get the command identifiers for the toolbar buttons.
     /// </summary>
     internal static void CommandMenuInit()
     {
@@ -94,13 +96,14 @@ namespace Kbg.NppPluginNET {
     }
 
     /// <summary>
-    /// Show internal information.
+    /// Show the About message with copyright and version information.
     /// </summary>
     internal static void About()
       => _ = MessageBox.Show(AboutMsg, MsgBoxCaption);
 
     /// <summary>
-    /// Set toolbar icons.
+    /// Add the toolbar icons for the menu items that have the configured
+    /// bitmap files in the iniDirectory folder.
     /// </summary>
     internal static void SetToolBarIcon()
     {
@@ -174,10 +177,17 @@ namespace Kbg.NppPluginNET {
     }
 
     /// <summary>
-    /// Transform string to uncode
+    /// Transform string by replacing:
+    /// \c with the system Clipboard contents,
+    /// \i with a single indentation level,
+    /// \n with a new line,
+    /// \t with tab character,
+    /// \| with |,
+    /// \\ with \.
+    /// The order of replacements is important.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
+    /// <param name="value">Input string from the ini-file's value of the tag.</param>
+    /// <returns>Expanded value with escape sequences replaced.</returns>
     private static string TransformTags(string value)
     {
       // TODO: add more commands: \\, \t.
