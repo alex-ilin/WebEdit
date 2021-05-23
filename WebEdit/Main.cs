@@ -24,6 +24,7 @@ namespace Kbg.NppPluginNET {
       + "\n"
       + "Created by Alexander Iljin (Amadeus IT Solutions) using XDS Oberon, "
       + "March 2008 - March 2010.\n"
+      + "Ported to C# by Miguel Febres, May 2021.\n"
       + "Contact e-mail: AlexIljin@users.SourceForge.net";
 
     static string iniDirectory, iniFilePath = null;
