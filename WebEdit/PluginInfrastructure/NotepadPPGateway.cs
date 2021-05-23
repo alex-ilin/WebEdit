@@ -1,4 +1,7 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
+using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using NppPluginNET.PluginInfrastructure;
 
@@ -8,6 +11,8 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 	{
 		void FileNew();
 
+		void AddToolbarIcon(int funcItemsIndex, toolbarIcons icon);
+		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
 		string GetNppPath();
 		string GetPluginConfigPath();
 		string GetCurrentFilePath();
@@ -27,6 +32,28 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		public void FileNew()
 		{
 			Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_MENUCOMMAND, Unused, NppMenuCmd.IDM_FILE_NEW);
+		}
+
+		public void AddToolbarIcon(int funcItemsIndex, toolbarIcons icon)
+		{
+			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(icon));
+			try {
+				Marshal.StructureToPtr(icon, pTbIcons, false);
+				_ = Win32.SendMessage(
+					PluginBase.nppData._nppHandle,
+					(uint) NppMsg.NPPM_ADDTOOLBARICON,
+					PluginBase._funcItems.Items[funcItemsIndex]._cmdID,
+					pTbIcons);
+			} finally {
+				Marshal.FreeHGlobal(pTbIcons);
+			}
+		}
+
+		public void AddToolbarIcon(int funcItemsIndex, Bitmap icon)
+		{
+			var tbi = new toolbarIcons();
+			tbi.hToolbarBmp = icon.GetHbitmap();
+			AddToolbarIcon(funcItemsIndex, tbi);
 		}
 
 		/// <summary>

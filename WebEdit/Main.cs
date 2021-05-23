@@ -105,31 +105,22 @@ namespace Kbg.NppPluginNET {
     /// Add the toolbar icons for the menu items that have the configured
     /// bitmap files in the iniDirectory folder.
     /// </summary>
-    internal static void SetToolBarIcon()
+    internal static void AddToolbarIcons()
     {
-      toolbarIcons tbIcons = new toolbarIcons();
+      var npp = new NotepadPPGateway();
       var ini = new IniFile(iniFilePath);
-      foreach (string key in ini.GetKeys("Toolbar")) {
-        string value = ini.Get("Toolbar", key);
-        var pathIcon = Path.Combine(
-          iniDirectory, value.Trim('\0').Replace("\0", ""));
-        if (File.Exists(pathIcon)) {
-          try {
-            Bitmap icon = new Bitmap(pathIcon);
-            tbIcons.hToolbarBmp = icon.GetHbitmap();
-            IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-            Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-            Win32.SendMessage(
-              PluginBase.nppData._nppHandle,
-              (uint) NppMsg.NPPM_ADDTOOLBARICON,
-              PluginBase._funcItems.Items[Convert.ToInt32(key) - 1]._cmdID,
-              pTbIcons);
-            Marshal.FreeHGlobal(pTbIcons);
-          } catch {
-
-          }
+      foreach (string key in ini.GetKeys("Toolbar"))
+        try {
+          npp.AddToolbarIcon(
+            Convert.ToInt32(key) - 1,
+            new Bitmap(
+              Path.Combine(
+                iniDirectory,
+                ini.Get("Toolbar", key).Replace("\0", ""))));
+        } catch {
+          // Ignore any errors like missing or corrupt bitmap files, or
+          // incorrect command index values.
         }
-      }
     }
 
     internal static void PluginCleanUp()
