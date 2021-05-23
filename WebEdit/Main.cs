@@ -85,12 +85,11 @@ namespace Kbg.NppPluginNET {
     /// </summary>
     internal static unsafe void LoadConfig()
     {
-      if (!File.Exists(iniFilePath)) {
+      if (!File.Exists(iniFilePath))
         using (FileStream fs = File.Create(iniFilePath)) {
           byte[] info = new UTF8Encoding(true).GetBytes(Resources.WebEditIni);
           fs.Write(info, 0, info.Length);
         }
-      }
     }
 
     /// <summary>
