@@ -28,7 +28,7 @@ namespace Kbg.NppPluginNET {
 
     static string iniDirectory, iniFilePath = null;
 
-    public static void OnNotification(ScNotification notification)
+    public static void OnNotification(ScNotification _)
     {
     }
 
