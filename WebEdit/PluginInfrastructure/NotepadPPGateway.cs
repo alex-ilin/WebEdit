@@ -19,7 +19,7 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		unsafe string GetFilePath(int bufferId);
 		void SetCurrentLanguage(LangType language);
 		bool OpenFile(string path);
-  }
+	}
 
 	/// <summary>
 	/// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
