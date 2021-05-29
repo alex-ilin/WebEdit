@@ -59,11 +59,11 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 		/// <summary>
 		/// This method incapsulates a common pattern in the Notepad++ API: when
 		/// you need to retrieve a string, you can first query the buffer size.
-		/// Query the buffer size, allocate the necessary minimum, then return the
-		/// retrieved string.
+		/// This method queries the necessary buffer size, allocates the temporary
+		/// memory, then returns the string retrieved through that buffer.
 		/// </summary>
-		/// <param name="message">Message ID of the data to query.</param>
-		/// <returns>String returned by Notepad++</returns>
+		/// <param name="message">Message ID of the data string to query.</param>
+		/// <returns>String returned by Notepad++.</returns>
 		public string GetString(NppMsg message)
 		{
 			int len = Win32.SendMessage(
@@ -76,12 +76,20 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 			return res.ToString();
 		}
 
+		/// <returns>The path to the Notepad++ executable.</returns>
 		public string GetNppPath()
 			=> GetString(NppMsg.NPPM_GETNPPDIRECTORY);
 
+		/// <returns>The path to the Config folder for plugins.</returns>
 		public string GetPluginConfigPath()
 			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 
+		/// <summary>
+		/// Open a file for editing in Notepad++, pretty much like using the app's
+		/// File - Open menu.
+		/// </summary>
+		/// <param name="path">The path to the file to open.</param>
+		/// <returns>True on success.</returns>
 		public bool OpenFile(string path)
 			=> Win32.SendMessage(
 				PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DOOPEN, Unused, path).ToInt32()
