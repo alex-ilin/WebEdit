@@ -38,6 +38,7 @@ WebEdit.zip: Changelog.txt compile.bat ..\..\ReadMe.txt \
   *.ob2 WebEdit.dll WebEditU.dll WebEdit.prj WebEditU.prj \
   WebEditVer.res WebEditVer.ob2 WebEditUVer.res WebEditUVer.ob2 \
   Config/WebEdit.ini Config/*.bmp
+	if exist WebEdit rd /s /q WebEdit
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
@@ -49,8 +50,13 @@ WebEdit.zip: Changelog.txt compile.bat ..\..\ReadMe.txt \
 	7z a -mx9 -r -tzip WebEdit WebEdit/*
 	rd /s /q WebEdit
 
+# Create the MD5 sum only after verifying the archive contents are compilable.
+# This way we don't need to unpack and verify it if the MD5 file is up to date.
 %.md5: %
+	7z x -y $<
+	cd WebEdit\Source && compile.bat
 	md5sum $< > $@
+	@rd /s /q WebEdit
 
 dist: WebEdit.zip.md5
 	md5sum --check $<
