@@ -9,7 +9,7 @@
 
 SHELL := cmd.exe
 
-.PHONY: dist
+.PHONY: dist clean
 
 .PRECIOUS: %Ver.res
 
@@ -54,3 +54,7 @@ WebEdit.zip: Changelog.txt compile.bat ..\..\ReadMe.txt \
 
 dist: WebEdit.zip.md5
 	md5sum --check $<
+
+clean:
+	-rd /s /q obj WebEdit
+	del *.dll *.md5 *.zip
