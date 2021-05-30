@@ -23,7 +23,7 @@ SHELL := cmd.exe
 %Ver.res: %Ver.rc
 	gorc /r $<
 
-%.dll: %.prj %Ver.res %Ver.ob2 ../Lib/*.ob2 %.ob2 IniFiles.ob2 Settings.ob2 Tags.ob2 $(sym_files)
+%.dll: %.prj %Ver.res %Ver.ob2 ../Lib/*.ob2 %.ob2 IniFiles.ob2 Settings.ob2 Tags.ob2
 	xc =project $<
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
