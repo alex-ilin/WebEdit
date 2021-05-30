@@ -52,7 +52,7 @@ WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob
 	$(if $(findstring ReadMe.txt,    $?), mv WebEdit\Source\ReadMe.txt    WebEdit\WebEdit.txt)
 	$(if $(findstring Changelog.txt, $?), mv WebEdit\Source\Changelog.txt WebEdit)
 	7z a -mx9 -r -tzip WebEdit WebEdit/*
-	rd WebEdit
+	rd /s /q WebEdit
 
 %.md5: %
 	md5sum $< > $@
