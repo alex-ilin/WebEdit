@@ -161,6 +161,5 @@ AUTHOR
 The WebEdit plugin was created by Alexander Iljin (Amadeus IT Solutions) on
 March 2008 - March 2010.
 You may contact me via e-mail: AlexIljin@users.SourceForge.net
-The preferred method for feedback is the Notepad++ forum. Post your feature
-requests and bug reports here:
-https://sourceforge.net/forum/forum.php?thread_id=1959856&forum_id=482781
+The preferred feedback channel is GitHub. Post your feature requests and bug
+reports here: https://github.com/alex-ilin/WebEdit/issues
