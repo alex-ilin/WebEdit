@@ -23,7 +23,7 @@ SHELL := cmd.exe
 %Ver.res: %Ver.rc
 	gorc /r $<
 
-%.dll: %.prj %Ver.res %Ver.ob2 ../Lib/*.ob2 %.ob2 IniFiles.ob2 Settings.ob2 Tags.ob2
+%.dll: %.prj %Ver.res %Ver.ob2 %.ob2 *.ob2
 	xc =project $<
 	-@echo off && mkdir obj 2> NUL
 	-@echo off && mv *.obj *.sym tmp.lnk obj 2> NUL
@@ -34,8 +34,10 @@ install: WebEdit.dll
 	cp -f $< "d:/Program Files/Utils/Notepad++/plugins"
 	start "" "d:\Program Files\Utils\Notepad++\Notepad++.exe"
 
-WebEdit.zip: Changelog.txt compile.bat ..\Lib\NotepadPP.ob2 ..\Lib\NotepadPPU.ob2 ..\Lib\Scintilla.ob2 WebEdit.dll WebEditU.dll WebEdit.ob2 WebEditU.ob2 IniFiles.ob2 Settings.ob2 Tags.ob2 WebEdit.prj WebEditU.prj \
-  ..\..\ReadMe.txt WebEditVer.res WebEditVer.ob2 WebEditUVer.res WebEditUVer.ob2 Config/WebEdit.ini Config/*.bmp ..\Lib\Str.ob2 ..\Lib\StrU.ob2
+WebEdit.zip: Changelog.txt compile.bat ..\..\ReadMe.txt \
+  *.ob2 WebEdit.dll WebEditU.dll WebEdit.prj WebEditU.prj \
+  WebEditVer.res WebEditVer.ob2 WebEditUVer.res WebEditUVer.ob2 \
+  Config/WebEdit.ini Config/*.bmp
 	md WebEdit\Config
 	md WebEdit\Source
 	cp $? WebEdit\Source
