@@ -1,11 +1,14 @@
 Release checklist.
 
 - Update Changelog.
-- Update WebEdit.txt (copyright dates, feature list).
-- Update Version Information (ObideVer, ObideUVer, ObideVer.rct, ObideUVer.rct).
+- Update ReadMe.txt (copyright dates, feature list).
+- Update Version Information (WebEditVer, WebEditUVer, WebEditVer.rct,
+  WebEditUVer.rct).
 - Update WebEdit/WebEditU.AboutMsg text.
 - Update copyright years in the sources.
 - Tag the release using tag.bat.
+- Upload the release zip-file to SF.net and/or GitHub.
 - Update Plugin Manager's plugin list.
+- Make an announcement at https://community.notepad-plus-plus.org/
 - Notify Softpedia.com (find "Tell us about an update" link):
   http://www.softpedia.com/get/Office-tools/Text-editors/Iljin-WebEdit.shtml
