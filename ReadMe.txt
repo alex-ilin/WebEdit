@@ -160,6 +160,6 @@ AUTHOR
 
 The WebEdit plugin was created by Alexander Iljin (Amadeus IT Solutions) on
 March 2008 - March 2010.
-You may contact me via e-mail: AlexIljin@users.SourceForge.net
-The preferred feedback channel is GitHub. Post your feature requests and bug
-reports here: https://github.com/alex-ilin/WebEdit/issues
+Project page with contact information:
+https://www.notion.so/abb42c4224f245a9a678f983c30d258c
+Support me on Patreon: https://www.patreon.com/alexilin
