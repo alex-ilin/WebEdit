@@ -1,4 +1,4 @@
-WebEdit v2.1 - freeware open-source plugin for Notepad++ ANSI/Unicode.
+WebEdit v2.1 - freeware open-source plugin for 32-bit Notepad++ ANSI/Unicode.
 
 INTRODUCTION
 
@@ -23,6 +23,13 @@ in the sample WebEdit.ini, and then edit the [Tags] section to your liking.
 
 INSTALLATION AND SETUP
 
+Only the 32-bit Notepad++ is supported. There is no 64-bit version of WebEdit.
+Before Notepad++ v6.0 there were two versions: ANSI and Unicode. Starting with
+v6.0 and newer there is only the Unicode build of Notepad++. The installation
+instructions below were written for Notepad++ before v7.6. Since v7.6 it comes
+with a new plugin loading mechanism, so you should ignore the parts about the
+manual installation and the "Plugin Manager" plugin in the following text.
+
 The easiest way to install WebEdit is via the Plugin Manager plugin. Keep in
 mind, though, that if you upgrade an existing installation of WebEdit, the
 WebEdit.ini file will be replaced with the sample version. Don't worry: your
@@ -31,8 +38,8 @@ All you need to do is go to the Config folder and manually rename it back. As
 usual, you can also use the "Edit Config" command to restore the file contents.
 
 To install this plugin manually you have to copy two files:
-- file 1: either WebEdit.dll (if you use ANSI version of Notepad++)
-  or WebEditU.dll (for the Unicode version) to Notepad++\plugins\ folder;
+- file 1: either WebEdit.dll (if you use Unicode version of Notepad++)
+  or WebEdit-ansi.dll (for the ANSI version) to Notepad++\plugins\ folder;
 - file 2: WebEdit.ini to Notepad++\plugins\Config\ folder.
 Both folders are to be found either in "Program Files" or in "Application Data"
 of your current user, depending on whether you installed Notepad++ in the

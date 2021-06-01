@@ -2,6 +2,10 @@ WebEdit changelog.
 
 Version 2.1, $ReleaseDate.
 
+Version 2.1, 17.11.2018.
+- Repackaged the plugin for comatibility with Notepad++ v7.6 (new plugin loader).
+- Renamed WedEdit.dll to WebEdit-ansi.dll.
+- Renamed WedEditU.dll to WebEdit.dll.
 
 Version 2.1, 31.03.2010.
 - Added "\c" escape sequence to paste clipboard contents when replacing a tag.

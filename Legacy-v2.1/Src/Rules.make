@@ -43,8 +43,8 @@ WebEdit.zip: Changelog.txt compile.bat ..\..\ReadMe.txt \
 	md WebEdit\Source
 	cp $? WebEdit\Source
 	$(if $(filter Config/%,          $?), mv $(subst Config/, WebEdit/Source/, $(filter Config/%, $?)) WebEdit/Config)
-	$(if $(findstring WebEdit.dll,   $?), mv WebEdit\Source\WebEdit.dll   WebEdit)
-	$(if $(findstring WebEditU.dll,  $?), mv WebEdit\Source\WebEditU.dll  WebEdit)
+	$(if $(findstring WebEdit.dll,   $?), mv WebEdit\Source\WebEdit.dll   WebEdit\WebEdit-ansi.dll)
+	$(if $(findstring WebEditU.dll,  $?), mv WebEdit\Source\WebEditU.dll  WebEdit\WebEdit.dll)
 	$(if $(findstring ReadMe.txt,    $?), mv WebEdit\Source\ReadMe.txt    WebEdit\WebEdit.txt)
 	$(if $(findstring Changelog.txt, $?), mv WebEdit\Source\Changelog.txt WebEdit)
 	cd WebEdit && 7z a -mx9 -r -tzip WebEdit *.* && mv WebEdit.zip ..
