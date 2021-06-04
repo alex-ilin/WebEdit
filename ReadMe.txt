@@ -170,3 +170,4 @@ March 2008 - March 2010.
 Project page with contact information:
 https://www.notion.so/abb42c4224f245a9a678f983c30d258c
 Support me on Patreon: https://www.patreon.com/alexilin
+Or on Flattr: https://flattr.com/@alex.ilin
