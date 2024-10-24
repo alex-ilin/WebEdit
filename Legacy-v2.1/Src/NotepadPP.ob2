@@ -215,7 +215,7 @@ BEGIN
       IF enable THEN
          Win.EnableMenuItem (hMenu, MI [index].cmdID, Win.MF_BYCOMMAND + Win.MF_ENABLED)
       ELSE
-         Win.EnableMenuItem (hMenu, MI [index].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED)
+         Win.EnableMenuItem (hMenu, MI [index].cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED + Win.MF_DISABLED)
       END;
    ELSE
       menuItemInfo [index].enabled := enable
@@ -306,7 +306,7 @@ BEGIN
          Win.CheckMenuItem (hMenu, cmdID, Win.MF_BYCOMMAND + Win.MF_CHECKED);
       END;
       IF ~menuItemInfo [i].enabled THEN
-         Win.EnableMenuItem (hMenu, cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED)
+         Win.EnableMenuItem (hMenu, cmdID, Win.MF_BYCOMMAND + Win.MF_GRAYED + Win.MF_DISABLED)
       END;
       INC (i)
    END;
